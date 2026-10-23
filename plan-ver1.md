@@ -13,7 +13,7 @@ and URLs to keep track of.
    assigned member, status, asset links, comments
 2. **Team sign-in**: email + password, invite-only (I add members; no public sign-up)
 3. **Views**: calendar, and "My tasks" for each member
-4. **Agent integration (API/MCP)**: agents generate content ideas into the plan as *Proposed*;
+4. **Agent integration (API/MCP)**: agents generate content ideas into the plan as _Proposed_;
    I approve them
 
 **Done when:** I no longer message the plan to each member or the group, and the team
@@ -39,4 +39,5 @@ checks one place for the latest state.
 - Sign-in with Google or email link
 
 ## Open questions
+
 - N/A
