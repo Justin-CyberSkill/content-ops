@@ -4,7 +4,10 @@ import { getSession } from "@/shared/auth/index.server";
 import { Button } from "@/shared/ui/button";
 import { signOut } from "./sign-out";
 
-const links = [{ href: "/content", label: "Content plan" }] as const;
+const links = [
+  { href: "/content", label: "Content plan" },
+  { href: "/my-tasks", label: "My tasks" },
+] as const;
 
 export function AppHeader() {
   return (

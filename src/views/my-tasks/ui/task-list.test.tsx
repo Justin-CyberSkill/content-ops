@@ -1,0 +1,40 @@
+import { render, screen } from "@testing-library/react";
+import { expect, test, vi } from "vitest";
+import type { Task } from "../api/list-my-tasks";
+import { TaskList } from "./task-list";
+
+vi.mock("../api/update-status", () => ({ updateTaskStatus: vi.fn() }));
+
+const task: Task = {
+  id: "8f6c1c1e-0000-4000-8000-000000000000",
+  idea: "60s reel: 3 security myths",
+  goal: "Grow sign-ups",
+  platforms: ["tiktok"],
+  type: "short_video",
+  publishDate: "2026-10-27",
+  goldenTime: "19:30:00",
+  status: "in_review",
+  assetLinks: ["https://drive.example/a"],
+};
+
+test("shows each task with its schedule and current status", () => {
+  render(<TaskList tasks={[task]} />);
+  expect(
+    screen.getByText("Tue, 27 Oct 2026 · 19:30 · Short video · TikTok"),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole("link", { name: "60s reel: 3 security myths" }),
+  ).toHaveAttribute("href", `/content/${task.id}`);
+  expect(
+    screen.getByRole("combobox", {
+      name: "Status of 60s reel: 3 security myths",
+    }),
+  ).toHaveValue("in_review");
+});
+
+test("shows an empty state", () => {
+  render(<TaskList tasks={[]} />);
+  expect(
+    screen.getByText("Nothing is assigned to you yet."),
+  ).toBeInTheDocument();
+});
