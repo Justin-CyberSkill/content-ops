@@ -4,13 +4,13 @@ import { getSession } from "@/shared/auth/index.server";
 import { Button } from "@/shared/ui/button";
 import { signOut } from "./sign-out";
 
-const links = [{ href: "/", label: "Home" }] as const;
+const links = [{ href: "/content", label: "Content plan" }] as const;
 
 export function AppHeader() {
   return (
     <header className="border-b">
       <div className="mx-auto flex h-14 w-full max-w-5xl items-center gap-6 px-4">
-        <Link href="/" className="font-semibold tracking-tight">
+        <Link href="/content" className="font-semibold tracking-tight">
           CS Content Ops
         </Link>
         <nav className="flex items-center gap-4 text-sm">
