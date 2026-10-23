@@ -1,0 +1,217 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.2/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!dist", "!build", "!drizzle"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  // Feature-Sliced Design import rules (see AGENTS.md).
+  // Layers, high to low: app > views > features > entities > shared.
+  // Biome replaces rule options per override, so each block repeats the public-API patterns.
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "patterns": [
+              {
+                "group": ["@/views/*/**", "@/features/*/**", "@/entities/*/**"],
+                "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
+              },
+              {
+                "group": ["@/shared/*/*/**"],
+                "message": "Import shared by segment (@/shared/db) or a top-level module (@/shared/ui/button)."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/views/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**"],
+                    "message": "\"views\" may only import from layers below it."
+                  },
+                  {
+                    "group": ["@/views", "@/views/**"],
+                    "message": "No imports between \"views\" slices. Inside a slice, use relative imports."
+                  },
+                  {
+                    "group": [
+                      "@/views/*/**",
+                      "@/features/*/**",
+                      "@/entities/*/**"
+                    ],
+                    "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
+                  },
+                  {
+                    "group": ["@/shared/*/*/**"],
+                    "message": "Import shared by segment (@/shared/db) or a top-level module (@/shared/ui/button)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/features/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@/app", "@/app/**", "@/views", "@/views/**"],
+                    "message": "\"features\" may only import from layers below it."
+                  },
+                  {
+                    "group": ["@/features", "@/features/**"],
+                    "message": "No imports between \"features\" slices. Inside a slice, use relative imports."
+                  },
+                  {
+                    "group": [
+                      "@/views/*/**",
+                      "@/features/*/**",
+                      "@/entities/*/**"
+                    ],
+                    "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
+                  },
+                  {
+                    "group": ["@/shared/*/*/**"],
+                    "message": "Import shared by segment (@/shared/db) or a top-level module (@/shared/ui/button)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/entities/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@/views",
+                      "@/views/**",
+                      "@/features",
+                      "@/features/**"
+                    ],
+                    "message": "\"entities\" may only import from layers below it."
+                  },
+                  {
+                    "group": ["@/entities", "@/entities/**"],
+                    "message": "No imports between \"entities\" slices. Inside a slice, use relative imports."
+                  },
+                  {
+                    "group": [
+                      "@/views/*/**",
+                      "@/features/*/**",
+                      "@/entities/*/**"
+                    ],
+                    "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
+                  },
+                  {
+                    "group": ["@/shared/*/*/**"],
+                    "message": "Import shared by segment (@/shared/db) or a top-level module (@/shared/ui/button)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/shared/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@/app",
+                      "@/app/**",
+                      "@/views",
+                      "@/views/**",
+                      "@/features",
+                      "@/features/**",
+                      "@/entities",
+                      "@/entities/**"
+                    ],
+                    "message": "\"shared\" may only import from layers below it."
+                  },
+                  {
+                    "group": [
+                      "@/views/*/**",
+                      "@/features/*/**",
+                      "@/entities/*/**"
+                    ],
+                    "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
+                  },
+                  {
+                    "group": ["@/shared/*/*/**"],
+                    "message": "Import shared by segment (@/shared/db) or a top-level module (@/shared/ui/button)."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

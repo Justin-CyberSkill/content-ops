@@ -7,3 +7,12 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Project
+
+- Verify before finishing: `pnpm lint && pnpm typecheck && pnpm test`.
+- Structure is Feature-Sliced Design: `src/app` > `src/views` > `features` > `entities` > `shared`. Import only from lower layers, through a slice's `index.ts`. `pnpm lint` enforces this.
+- Put new code in the view that uses it. Server-only exports go in `index.server.ts`.
+- Read `docs/architecture.md` before you add a slice, move code, or fix an import-boundary lint error.
+- Read `docs/tech-stack.md` before you add a dependency.
+- New env var: add it to `.env.example` and `src/shared/config/env.ts`, then run `pnpm env:sync`.
