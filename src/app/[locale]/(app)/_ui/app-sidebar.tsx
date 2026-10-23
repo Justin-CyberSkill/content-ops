@@ -1,4 +1,5 @@
 import {
+  CalendarDaysIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   SquareCheckBigIcon,
@@ -40,6 +41,10 @@ export function AppSidebar() {
           <SidebarLink href="/content">
             <LayoutDashboardIcon aria-hidden="true" />
             {t("contentPlan")}
+          </SidebarLink>
+          <SidebarLink href="/calendar">
+            <CalendarDaysIcon aria-hidden="true" />
+            {t("calendar")}
           </SidebarLink>
           <SidebarLink href="/my-tasks">
             <SquareCheckBigIcon aria-hidden="true" />

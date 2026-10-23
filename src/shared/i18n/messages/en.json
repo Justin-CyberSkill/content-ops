@@ -15,6 +15,7 @@
   "nav": {
     "label": "Main",
     "contentPlan": "Content plan",
+    "calendar": "Calendar",
     "myTasks": "My tasks",
     "members": "Members",
     "account": "Account: {name}",
@@ -132,6 +133,21 @@
       "published": "Published"
     },
     "assetLinks": "{count, plural, one {# asset link} other {# asset links}}"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "metaTitle": "Calendar · CS Content Ops",
+    "intro": "Every dated item by publish day and golden time.",
+    "mineOnly": "Mine only",
+    "dragHint": "Drag an item to change its publish day or golden time.",
+    "legend": "Status colours",
+    "proposedHint": "Faded items are proposed ideas waiting for review. Only admins see them.",
+    "noTime": "All day",
+    "errors": {
+      "invalidSchedule": "Pick a valid day and time.",
+      "deleted": "This content was deleted.",
+      "failed": "Couldn't move it. Try again."
+    }
   },
   "contentEditor": {
     "newTitle": "New content",

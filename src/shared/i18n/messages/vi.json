@@ -15,6 +15,7 @@
   "nav": {
     "label": "Chính",
     "contentPlan": "Kế hoạch nội dung",
+    "calendar": "Lịch",
     "myTasks": "Việc của tôi",
     "members": "Thành viên",
     "account": "Tài khoản: {name}",
@@ -132,6 +133,21 @@
       "published": "Đã đăng"
     },
     "assetLinks": "{count} liên kết tài nguyên"
+  },
+  "calendar": {
+    "title": "Lịch",
+    "metaTitle": "Lịch · CS Content Ops",
+    "intro": "Mọi nội dung có ngày đăng, theo ngày và khung giờ vàng.",
+    "mineOnly": "Chỉ của tôi",
+    "dragHint": "Kéo một mục để đổi ngày đăng hoặc khung giờ vàng.",
+    "legend": "Màu trạng thái",
+    "proposedHint": "Mục mờ là ý tưởng đề xuất đang chờ duyệt. Chỉ admin nhìn thấy.",
+    "noTime": "Cả ngày",
+    "errors": {
+      "invalidSchedule": "Chọn ngày và giờ hợp lệ.",
+      "deleted": "Nội dung này đã bị xoá.",
+      "failed": "Không di chuyển được. Hãy thử lại."
+    }
   },
   "contentEditor": {
     "newTitle": "Nội dung mới",
