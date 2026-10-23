@@ -174,7 +174,22 @@
       "invalidTime": "Chọn khung giờ vàng hợp lệ.",
       "invalidLinks": "Link tài nguyên phải là URL http(s), mỗi dòng một link.",
       "assigneeGone": "Thành viên này không còn tồn tại. Hãy chọn người khác.",
-      "deleted": "Nội dung này đã bị xoá."
+      "deleted": "Nội dung này đã bị xoá.",
+      "commentRequired": "Hãy viết gì đó trước khi gửi.",
+      "commentTooLong": "Bình luận không được quá 5.000 ký tự."
+    },
+    "comments": {
+      "title": "Bình luận",
+      "count": "{count, plural, =0 {Chưa có bình luận} other {# bình luận}}",
+      "empty": "Chưa có bình luận. Hãy đặt câu hỏi hoặc để lại ghi chú cho cả nhóm.",
+      "label": "Viết bình luận",
+      "placeholder": "Viết bình luận…",
+      "hint": "Nhấn Ctrl+Enter (⌘+Enter trên Mac) để gửi.",
+      "send": "Bình luận",
+      "sending": "Đang gửi…",
+      "delete": "Xoá bình luận của {name}",
+      "confirmDelete": "Xoá bình luận này?",
+      "removedMember": "Thành viên đã bị xoá"
     }
   },
   "myTasks": {

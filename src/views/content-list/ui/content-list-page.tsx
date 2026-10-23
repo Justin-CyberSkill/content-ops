@@ -4,10 +4,10 @@ import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
+import { TEAM_TIME_ZONE } from "@/shared/config";
 import { Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
 import { listContent } from "../api/list-content";
-import { TEAM_TIME_ZONE } from "../config/team-time-zone";
 import { todayIn } from "../model/content-groups";
 import { ContentTable } from "./content-table";
 

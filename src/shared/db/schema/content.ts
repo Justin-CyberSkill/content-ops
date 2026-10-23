@@ -81,3 +81,20 @@ export const content = pgTable(
 );
 
 export type Content = typeof content.$inferSelect;
+
+export const contentComment = pgTable(
+  "content_comment",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    contentId: uuid()
+      .notNull()
+      .references(() => content.id, { onDelete: "cascade" }),
+    // Kept when the author is removed, so the thread still reads in order.
+    authorId: text().references(() => user.id, { onDelete: "set null" }),
+    body: text().notNull(),
+    createdAt: timestamp().defaultNow().notNull(),
+  },
+  (table) => [index("content_comment_content_id_idx").on(table.contentId)],
+);
+
+export type ContentComment = typeof contentComment.$inferSelect;

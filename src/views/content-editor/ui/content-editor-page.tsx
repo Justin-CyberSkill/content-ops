@@ -2,13 +2,16 @@ import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
-import { Link } from "@/shared/i18n";
+import { TEAM_TIME_ZONE } from "@/shared/config";
+import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
-import { getContent, listMembers } from "../api/queries";
+import { getContent, listComments, listMembers } from "../api/queries";
+import { formatCommentTime } from "../lib/format-comment-time";
 import { emptyContentForm, toFormValues } from "../model/content-form";
+import { CommentThread } from "./comment-thread";
 import { ContentForm } from "./content-form";
 import { DeleteContentButton } from "./delete-content-button";
 
@@ -97,30 +100,57 @@ async function EditContentForm({
   const [{ id }, me] = await Promise.all([params, requireUser()]);
   const [item, members] = await Promise.all([getContent(id), listMembers()]);
   if (!item) notFound();
-  const t = await getTranslations("contentEditor");
+  const isAdmin = me.role === "admin";
+  const [t, locale, comments] = await Promise.all([
+    getTranslations("contentEditor"),
+    getLocale(),
+    listComments(item.id),
+  ]);
+  const now = new Date();
   return (
-    <ContentForm
-      id={item.id}
-      initial={toFormValues(item)}
-      members={members}
-      aside={
-        me.role === "admin" ? (
-          <section
-            aria-labelledby="delete-heading"
-            className="flex flex-col gap-3 rounded-2xl bg-card p-6 shadow-card"
-          >
-            <div className="flex flex-col gap-1">
-              <h2 id="delete-heading" className="text-lg font-semibold">
-                {t("deleteTitle")}
-              </h2>
-              <p className="text-[13px] text-muted-foreground">
-                {t("deleteHint")}
-              </p>
-            </div>
-            <DeleteContentButton id={item.id} />
-          </section>
-        ) : null
-      }
-    />
+    <>
+      <ContentForm
+        id={item.id}
+        initial={toFormValues(item)}
+        members={members}
+        aside={
+          isAdmin ? (
+            <section
+              aria-labelledby="delete-heading"
+              className="flex flex-col gap-3 rounded-2xl bg-card p-6 shadow-card"
+            >
+              <div className="flex flex-col gap-1">
+                <h2 id="delete-heading" className="text-lg font-semibold">
+                  {t("deleteTitle")}
+                </h2>
+                <p className="text-[13px] text-muted-foreground">
+                  {t("deleteHint")}
+                </p>
+              </div>
+              <DeleteContentButton id={item.id} />
+            </section>
+          ) : null
+        }
+      />
+      {/* Same columns as the form, so the thread lines up under the brief. */}
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
+        <CommentThread
+          contentId={item.id}
+          comments={comments.map((comment) => ({
+            id: comment.id,
+            body: comment.body,
+            authorName: comment.authorName,
+            createdAt: comment.createdAt.toISOString(),
+            time: formatCommentTime(
+              comment.createdAt,
+              isLocale(locale) ? locale : DEFAULT_LOCALE,
+              TEAM_TIME_ZONE,
+              now,
+            ),
+            canDelete: isAdmin || comment.authorId === me.id,
+          }))}
+        />
+      </div>
+    </>
   );
 }

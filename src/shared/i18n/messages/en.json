@@ -174,7 +174,22 @@
       "invalidTime": "Pick a valid golden time.",
       "invalidLinks": "Asset links must be http(s) URLs, one per line.",
       "assigneeGone": "That member no longer exists. Pick another.",
-      "deleted": "This content was deleted."
+      "deleted": "This content was deleted.",
+      "commentRequired": "Write something before you send.",
+      "commentTooLong": "Keep the comment under 5,000 characters."
+    },
+    "comments": {
+      "title": "Comments",
+      "count": "{count, plural, =0 {No comments} one {# comment} other {# comments}}",
+      "empty": "No comments yet. Ask a question or leave a note for the team.",
+      "label": "Write a comment",
+      "placeholder": "Write a comment…",
+      "hint": "Press Ctrl+Enter (⌘+Enter on Mac) to send.",
+      "send": "Comment",
+      "sending": "Sending…",
+      "delete": "Delete comment by {name}",
+      "confirmDelete": "Delete this comment?",
+      "removedMember": "Removed member"
     }
   },
   "myTasks": {
