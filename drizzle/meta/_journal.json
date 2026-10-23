@@ -29,6 +29,20 @@
       "when": 1792772198898,
       "tag": "0003_content_comments",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792772991764,
+      "tag": "0004_content_proposals",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792774088876,
+      "tag": "0005_agent_keys",
+      "breakpoints": true
     }
   ]
 }

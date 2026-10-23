@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { statusColorClasses } from "@/entities/content";
-import { CONTENT_STATUSES, type ContentStatus } from "@/shared/db/schema";
+import { type ContentStatus, PLAN_STATUSES } from "@/shared/db/schema";
 import { cn } from "@/shared/lib";
 import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select";
 import { updateTaskStatus } from "../api/update-status";
@@ -44,7 +44,7 @@ export function StatusSelect({
           });
         }}
       >
-        {CONTENT_STATUSES.map((option) => (
+        {PLAN_STATUSES.map((option) => (
           <NativeSelectOption key={option} value={option}>
             {t(option)}
           </NativeSelectOption>

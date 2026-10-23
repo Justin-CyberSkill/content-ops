@@ -3,7 +3,7 @@
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { startTransition, useActionState } from "react";
-import { CONTENT_STATUSES, CONTENT_TYPES, PLATFORMS } from "@/shared/db/schema";
+import { CONTENT_TYPES, PLAN_STATUSES, PLATFORMS } from "@/shared/db/schema";
 import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { Button, buttonVariants } from "@/shared/ui/button";
@@ -21,9 +21,17 @@ type Props = {
   members: Member[];
   /** Extra cards under the status card, such as the admin-only delete. */
   aside?: React.ReactNode;
+  /** Reviewing an agent's proposal: saving approves it. */
+  approving?: boolean;
 };
 
-export function ContentForm({ id, initial: values, members, aside }: Props) {
+export function ContentForm({
+  id,
+  initial: values,
+  members,
+  aside,
+  approving,
+}: Props) {
   const [state, action, pending] = useActionState<SaveContentState, FormData>(
     saveContent.bind(null, id),
     {},
@@ -176,7 +184,7 @@ export function ContentForm({ id, initial: values, members, aside }: Props) {
               defaultValue={values.status}
               className="w-full"
             >
-              {CONTENT_STATUSES.map((status) => (
+              {PLAN_STATUSES.map((status) => (
                 <NativeSelectOption key={status} value={status}>
                   {t(`content.status.${status}`)}
                 </NativeSelectOption>
@@ -223,9 +231,11 @@ export function ContentForm({ id, initial: values, members, aside }: Props) {
           <Button type="submit" disabled={pending}>
             {pending
               ? t("common.saving")
-              : id
-                ? t("contentEditor.saveChanges")
-                : t("contentEditor.addToPlan")}
+              : approving
+                ? t("contentEditor.proposal.approve")
+                : id
+                  ? t("contentEditor.saveChanges")
+                  : t("contentEditor.addToPlan")}
           </Button>
         </div>
       </div>

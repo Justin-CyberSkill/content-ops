@@ -20,7 +20,10 @@
     "members": "Members",
     "account": "Account: {name}",
     "signOut": "Sign out",
-    "language": "Language"
+    "language": "Language",
+    "review": "Review",
+    "reviewWaiting": "{count} waiting",
+    "agents": "Agents"
   },
   "content": {
     "status": {
@@ -149,6 +152,17 @@
       "failed": "Couldn't move it. Try again."
     }
   },
+  "review": {
+    "title": "Review",
+    "metaTitle": "Review · CS Content Ops",
+    "intro": "Ideas agents proposed. Open one to edit, assign and date it, then approve or reject it.",
+    "emptyTitle": "Nothing to review",
+    "emptyBody": "New agent proposals show up here.",
+    "unknownAgent": "An agent",
+    "whyThis": "Why this",
+    "open": "Review",
+    "openLabel": "Review {idea}"
+  },
   "contentEditor": {
     "newTitle": "New content",
     "editTitle": "Edit content",
@@ -192,7 +206,11 @@
       "assigneeGone": "That member no longer exists. Pick another.",
       "deleted": "This content was deleted.",
       "commentRequired": "Write something before you send.",
-      "commentTooLong": "Keep the comment under 5,000 characters."
+      "commentTooLong": "Keep the comment under 5,000 characters.",
+      "adminOnly": "Only admins can approve proposals.",
+      "proposalReviewed": "This proposal was already reviewed.",
+      "rejectReasonRequired": "Write why you're rejecting it.",
+      "rejectReasonTooLong": "Keep the reason under 1,000 characters."
     },
     "comments": {
       "title": "Comments",
@@ -206,6 +224,19 @@
       "delete": "Delete comment by {name}",
       "confirmDelete": "Delete this comment?",
       "removedMember": "Removed member"
+    },
+    "proposal": {
+      "title": "Proposed by {name}",
+      "unknownAgent": "an agent",
+      "whyThis": "Why this",
+      "reviewHint": "Edit, assign and date it, then approve to add it to the plan.",
+      "approve": "Approve and add to plan",
+      "rejectedTitle": "Rejected",
+      "rejectTitle": "Reject proposal",
+      "rejectHint": "The agent can read your reason, so say what would make the next idea better.",
+      "rejectReason": "Reason",
+      "reject": "Reject",
+      "rejecting": "Rejecting…"
     }
   },
   "myTasks": {
@@ -218,6 +249,44 @@
     "errors": {
       "invalidStatus": "Pick a valid status.",
       "notAssigned": "This task is no longer assigned to you."
+    }
+  },
+  "agents": {
+    "title": "Agents",
+    "metaTitle": "Agents · CS Content Ops",
+    "intro": "Keys let AI agents read the plan and propose ideas. Their proposals wait in Review; agents can't edit, delete or approve anything.",
+    "keysTitle": "Agent keys",
+    "keyName": "Key name",
+    "keyNamePlaceholder": "Such as Claude planner",
+    "create": "Create key",
+    "creating": "Creating…",
+    "copyNow": "Copy the key for {name} now. It won't be shown again.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "empty": "No keys yet. Create one for each agent, so you can turn one off without touching the others.",
+    "unnamed": "Unnamed key",
+    "active": "Active",
+    "disabled": "Disabled",
+    "createdBy": "made by {name} on {when}",
+    "lastUsed": "last used {when}",
+    "neverUsed": "never used",
+    "removedMember": "a removed member",
+    "disable": "Disable",
+    "enable": "Enable",
+    "disableLabel": "Disable {name}",
+    "enableLabel": "Enable {name}",
+    "deleteLabel": "Delete {name}",
+    "confirmDelete": "Delete the key {name}? Agents using it stop working. Its proposals stay.",
+    "errors": {
+      "nameRequired": "Name the key after the agent that will use it.",
+      "nameTooLong": "Keep the name under 40 characters."
+    },
+    "connect": {
+      "title": "Connect an agent",
+      "step1": "Create a key for the agent and copy it.",
+      "step2": "Give the agent these two environment variables:",
+      "step3": "In Claude Code, the propose-content skill in this repo explains how to read the plan and propose ideas.",
+      "limits": "Each key can make 30 requests a minute."
     }
   }
 }

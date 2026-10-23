@@ -1,8 +1,8 @@
-import { asc, eq, sql } from "drizzle-orm";
+import { asc, eq, ne, sql } from "drizzle-orm";
 import { db } from "@/shared/db";
 import { content, user } from "@/shared/db/schema";
 
-/** Every content item, soonest publish day first; undated items last. */
+/** Every item on the plan, soonest publish day first; undated items last. Proposals wait in Review. */
 export async function listContent() {
   return db
     .select({
@@ -19,6 +19,7 @@ export async function listContent() {
     })
     .from(content)
     .leftJoin(user, eq(content.assigneeId, user.id))
+    .where(ne(content.status, "proposed"))
     .orderBy(
       sql`${content.publishDate} asc nulls last`,
       asc(content.goldenTime),

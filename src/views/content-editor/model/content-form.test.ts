@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import type { Content } from "@/shared/db/schema";
 import {
   createContentFormSchema,
   readContentForm,
@@ -84,26 +85,48 @@ describe("contentFormSchema", () => {
   });
 });
 
+const item: Content = {
+  id: "1",
+  goal: "g",
+  idea: "i",
+  platforms: ["x"],
+  type: "quiz",
+  publishDate: null,
+  goldenTime: "08:15:00",
+  assigneeId: null,
+  status: "planned",
+  assetLinks: ["https://a.example", "https://b.example"],
+  createdById: null,
+  proposedByKeyId: null,
+  proposedByName: null,
+  proposalReason: null,
+  rejectedAt: null,
+  rejectionReason: null,
+  reviewedById: null,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 test("toFormValues trims seconds from the golden time", () => {
-  expect(
-    toFormValues({
-      id: "1",
-      goal: "g",
-      idea: "i",
-      platforms: ["x"],
-      type: "quiz",
-      publishDate: null,
-      goldenTime: "08:15:00",
-      assigneeId: null,
-      status: "planned",
-      assetLinks: ["https://a.example", "https://b.example"],
-      createdById: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }),
-  ).toMatchObject({
+  expect(toFormValues(item)).toMatchObject({
     goldenTime: "08:15",
     publishDate: "",
     assetLinks: "https://a.example\nhttps://b.example",
   });
+});
+
+test("toFormValues turns a proposal into a planned item for approval", () => {
+  expect(toFormValues({ ...item, status: "proposed" }).status).toBe("planned");
+});
+
+test("rejects proposed as a status people set", () => {
+  const result = contentFormSchema.safeParse(
+    readContentForm(
+      formData([
+        ...valid.filter(([key]) => key !== "status"),
+        ["status", "proposed"],
+      ]),
+    ),
+  );
+  expect(result.success).toBe(false);
 });

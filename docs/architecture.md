@@ -23,6 +23,7 @@ src/
 - Import only from lower layers.
 - No imports between slices on the same layer. Inside a slice, use relative imports.
 - Import a slice through its `index.ts`: `@/views/home`, never `@/views/home/ui/home-page`.
+  Server-only code comes through its `index.server.ts`: `@/views/review/index.server`.
 - Import `shared` by segment (`@/shared/db`) or by a top-level module (`@/shared/ui/button`).
 - Server-only exports (DB, secrets, Better Auth server) go in `index.server.ts`, not `index.ts`.
 

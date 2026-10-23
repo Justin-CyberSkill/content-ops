@@ -20,7 +20,10 @@
     "members": "Thành viên",
     "account": "Tài khoản: {name}",
     "signOut": "Đăng xuất",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "review": "Duyệt đề xuất",
+    "reviewWaiting": "{count} đang chờ",
+    "agents": "Agent"
   },
   "content": {
     "status": {
@@ -149,6 +152,17 @@
       "failed": "Không di chuyển được. Hãy thử lại."
     }
   },
+  "review": {
+    "title": "Duyệt đề xuất",
+    "metaTitle": "Duyệt đề xuất · CS Content Ops",
+    "intro": "Ý tưởng do agent đề xuất. Mở từng ý tưởng để chỉnh sửa, giao người, chọn ngày, rồi duyệt hoặc từ chối.",
+    "emptyTitle": "Không có gì cần duyệt",
+    "emptyBody": "Đề xuất mới của agent sẽ hiện ở đây.",
+    "unknownAgent": "Một agent",
+    "whyThis": "Vì sao đề xuất",
+    "open": "Xem xét",
+    "openLabel": "Xem xét {idea}"
+  },
   "contentEditor": {
     "newTitle": "Nội dung mới",
     "editTitle": "Sửa nội dung",
@@ -192,7 +206,11 @@
       "assigneeGone": "Thành viên này không còn tồn tại. Hãy chọn người khác.",
       "deleted": "Nội dung này đã bị xoá.",
       "commentRequired": "Hãy viết gì đó trước khi gửi.",
-      "commentTooLong": "Bình luận không được quá 5.000 ký tự."
+      "commentTooLong": "Bình luận không được quá 5.000 ký tự.",
+      "adminOnly": "Chỉ admin mới duyệt được đề xuất.",
+      "proposalReviewed": "Đề xuất này đã được xem xét.",
+      "rejectReasonRequired": "Hãy viết lý do từ chối.",
+      "rejectReasonTooLong": "Lý do không được quá 1.000 ký tự."
     },
     "comments": {
       "title": "Bình luận",
@@ -206,6 +224,19 @@
       "delete": "Xoá bình luận của {name}",
       "confirmDelete": "Xoá bình luận này?",
       "removedMember": "Thành viên đã bị xoá"
+    },
+    "proposal": {
+      "title": "Đề xuất bởi {name}",
+      "unknownAgent": "một agent",
+      "whyThis": "Vì sao đề xuất",
+      "reviewHint": "Chỉnh sửa, giao người và chọn ngày, rồi duyệt để thêm vào kế hoạch.",
+      "approve": "Duyệt và thêm vào kế hoạch",
+      "rejectedTitle": "Đã từ chối",
+      "rejectTitle": "Từ chối đề xuất",
+      "rejectHint": "Agent đọc được lý do của bạn, nên hãy nói điều gì sẽ giúp ý tưởng sau tốt hơn.",
+      "rejectReason": "Lý do",
+      "reject": "Từ chối",
+      "rejecting": "Đang từ chối…"
     }
   },
   "myTasks": {
@@ -218,6 +249,44 @@
     "errors": {
       "invalidStatus": "Chọn trạng thái hợp lệ.",
       "notAssigned": "Việc này không còn được giao cho bạn."
+    }
+  },
+  "agents": {
+    "title": "Agent",
+    "metaTitle": "Agent · CS Content Ops",
+    "intro": "Khoá cho phép agent AI đọc kế hoạch và đề xuất ý tưởng. Đề xuất chờ ở mục Duyệt đề xuất; agent không thể sửa, xoá hay duyệt gì cả.",
+    "keysTitle": "Khoá agent",
+    "keyName": "Tên khoá",
+    "keyNamePlaceholder": "Ví dụ: Claude planner",
+    "create": "Tạo khoá",
+    "creating": "Đang tạo…",
+    "copyNow": "Sao chép khoá cho {name} ngay. Khoá sẽ không hiện lại.",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "empty": "Chưa có khoá. Hãy tạo một khoá cho mỗi agent để có thể tắt từng cái riêng.",
+    "unnamed": "Khoá chưa đặt tên",
+    "active": "Đang bật",
+    "disabled": "Đã tắt",
+    "createdBy": "tạo bởi {name} lúc {when}",
+    "lastUsed": "dùng lần cuối {when}",
+    "neverUsed": "chưa dùng",
+    "removedMember": "thành viên đã bị xoá",
+    "disable": "Tắt",
+    "enable": "Bật",
+    "disableLabel": "Tắt {name}",
+    "enableLabel": "Bật {name}",
+    "deleteLabel": "Xoá {name}",
+    "confirmDelete": "Xoá khoá {name}? Agent đang dùng khoá này sẽ ngừng hoạt động. Các đề xuất vẫn được giữ.",
+    "errors": {
+      "nameRequired": "Đặt tên khoá theo agent sẽ dùng nó.",
+      "nameTooLong": "Tên không được quá 40 ký tự."
+    },
+    "connect": {
+      "title": "Kết nối agent",
+      "step1": "Tạo khoá cho agent và sao chép.",
+      "step2": "Cấp cho agent hai biến môi trường sau:",
+      "step3": "Trong Claude Code, skill propose-content trong repo này hướng dẫn cách đọc kế hoạch và đề xuất ý tưởng.",
+      "limits": "Mỗi khoá được gửi 30 yêu cầu mỗi phút."
     }
   }
 }

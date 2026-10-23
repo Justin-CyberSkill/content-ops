@@ -14,6 +14,8 @@ import { emptyContentForm, toFormValues } from "../model/content-form";
 import { CommentThread } from "./comment-thread";
 import { ContentForm } from "./content-form";
 import { DeleteContentButton } from "./delete-content-button";
+import { ProposalCard } from "./proposal-card";
+import { RejectProposalForm } from "./reject-proposal-form";
 
 export async function generateNewMetadata(): Promise<Metadata> {
   const t = await getTranslations("contentEditor");
@@ -101,6 +103,10 @@ async function EditContentForm({
   const [item, members] = await Promise.all([getContent(id), listMembers()]);
   if (!item) notFound();
   const isAdmin = me.role === "admin";
+  const isProposal = item.status === "proposed";
+  // Proposals are for admins to review; members only see them once approved.
+  if (isProposal && !isAdmin) notFound();
+  const pendingProposal = isProposal && item.rejectedAt === null;
   const [t, locale, comments] = await Promise.all([
     getTranslations("contentEditor"),
     getLocale(),
@@ -109,10 +115,12 @@ async function EditContentForm({
   const now = new Date();
   return (
     <>
+      {isProposal ? <ProposalCard item={item} /> : null}
       <ContentForm
         id={item.id}
         initial={toFormValues(item)}
         members={members}
+        approving={pendingProposal}
         aside={
           isAdmin ? (
             <section
@@ -133,8 +141,15 @@ async function EditContentForm({
         }
       />
       {/* Same columns as the form, so the thread lines up under the brief. */}
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
+        {/* Outside the content form: a form can't hold another form. */}
+        {pendingProposal ? (
+          <div className="xl:col-start-2 xl:row-start-1">
+            <RejectProposalForm id={item.id} />
+          </div>
+        ) : null}
         <CommentThread
+          className="xl:col-start-1 xl:row-start-1"
           contentId={item.id}
           comments={comments.map((comment) => ({
             id: comment.id,

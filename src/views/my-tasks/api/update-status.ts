@@ -1,14 +1,14 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { refresh } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
-import { CONTENT_STATUSES, content } from "@/shared/db/schema";
+import { content, PLAN_STATUSES } from "@/shared/db/schema";
 
-const schema = z.object({ id: z.uuid(), status: z.enum(CONTENT_STATUSES) });
+const schema = z.object({ id: z.uuid(), status: z.enum(PLAN_STATUSES) });
 
 export async function updateTaskStatus(
   id: string,
@@ -23,7 +23,13 @@ export async function updateTaskStatus(
   const updated = await db
     .update(content)
     .set({ status: parsed.data.status })
-    .where(and(eq(content.id, parsed.data.id), eq(content.assigneeId, me.id)))
+    .where(
+      and(
+        eq(content.id, parsed.data.id),
+        eq(content.assigneeId, me.id),
+        ne(content.status, "proposed"),
+      ),
+    )
     .returning({ id: content.id });
   if (!updated.length) return { error: t("notAssigned") };
 

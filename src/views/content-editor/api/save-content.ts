@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireAdmin, requireUser } from "@/shared/auth/index.server";
@@ -35,12 +35,34 @@ export async function saveContent(
   }
 
   if (id) {
+    const [current] = await db
+      .select({ status: content.status, rejectedAt: content.rejectedAt })
+      .from(content)
+      .where(eq(content.id, id));
+    if (!current) return { error: t("deleted") };
+
+    // Saving a proposal approves it, which only admins do.
+    const approving = current.status === "proposed";
+    if (approving) {
+      if (me.role !== "admin") return { error: t("adminOnly") };
+      if (current.rejectedAt) return { error: t("proposalReviewed") };
+    }
+
     const updated = await db
       .update(content)
-      .set(data)
-      .where(eq(content.id, id))
+      .set(approving ? { ...data, reviewedById: me.id } : data)
+      .where(
+        approving
+          ? and(
+              eq(content.id, id),
+              eq(content.status, "proposed"),
+              isNull(content.rejectedAt),
+            )
+          : eq(content.id, id),
+      )
       .returning({ id: content.id });
-    if (!updated.length) return { error: t("deleted") };
+    if (!updated.length) return { error: t("proposalReviewed") };
+    if (approving) redirect("/review");
   } else {
     await db.insert(content).values({ ...data, createdById: me.id });
   }

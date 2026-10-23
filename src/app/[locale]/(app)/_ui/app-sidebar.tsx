@@ -1,5 +1,7 @@
 import {
+  BotIcon,
   CalendarDaysIcon,
+  InboxIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   SquareCheckBigIcon,
@@ -13,6 +15,7 @@ import { Link } from "@/shared/i18n";
 import { LanguageSwitch } from "@/shared/i18n/language-switch";
 import { Avatar } from "@/shared/ui/avatar";
 import { Button, buttonVariants } from "@/shared/ui/button";
+import { countPendingProposals } from "@/views/review/index.server";
 import { NavLink } from "./nav-link";
 import { navLinkClassName } from "./nav-link-class";
 import { signOut } from "./sign-out";
@@ -96,12 +99,33 @@ function SidebarLink({
 async function AdminLink() {
   const session = await getSession();
   if (session?.user.role !== "admin") return null;
-  const t = await getTranslations("nav");
+  const [t, waiting] = await Promise.all([
+    getTranslations("nav"),
+    countPendingProposals(),
+  ]);
   return (
-    <NavLink href="/admin">
-      <UsersIcon aria-hidden="true" />
-      {t("members")}
-    </NavLink>
+    <>
+      <NavLink href="/review">
+        <InboxIcon aria-hidden="true" />
+        {t("review")}
+        {waiting ? (
+          <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums">
+            <span aria-hidden="true">{waiting}</span>
+            <span className="sr-only">
+              {t("reviewWaiting", { count: waiting })}
+            </span>
+          </span>
+        ) : null}
+      </NavLink>
+      <NavLink href="/admin">
+        <UsersIcon aria-hidden="true" />
+        {t("members")}
+      </NavLink>
+      <NavLink href="/agents">
+        <BotIcon aria-hidden="true" />
+        {t("agents")}
+      </NavLink>
+    </>
   );
 }
 

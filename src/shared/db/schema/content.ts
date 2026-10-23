@@ -45,9 +45,19 @@ export const CONTENT_STATUSES = [
   "published",
 ] as const;
 
+/** Statuses people set on the plan. "proposed" is only set by agents and left by review. */
+export const PLAN_STATUSES = [
+  "planned",
+  "in_progress",
+  "in_review",
+  "scheduled",
+  "published",
+] as const satisfies readonly (typeof CONTENT_STATUSES)[number][];
+
 export type Platform = (typeof PLATFORMS)[number];
 export type ContentType = (typeof CONTENT_TYPES)[number];
 export type ContentStatus = (typeof CONTENT_STATUSES)[number];
+export type PlanStatus = (typeof PLAN_STATUSES)[number];
 
 export const platform = pgEnum("platform", PLATFORMS);
 export const contentType = pgEnum("content_type", CONTENT_TYPES);
@@ -68,6 +78,15 @@ export const content = pgTable(
     status: contentStatus().notNull().default("planned"),
     assetLinks: text().array().notNull().default(sql`'{}'`),
     createdById: text().references(() => user.id, { onDelete: "set null" }),
+    // Set when an agent proposed it. The agent's key name is kept even if the key is deleted.
+    proposedByKeyId: text(),
+    proposedByName: text(),
+    /** The agent's "why this". */
+    proposalReason: text(),
+    // A rejected proposal keeps status "proposed" and is hidden from the plan; agents read the reason.
+    rejectedAt: timestamp(),
+    rejectionReason: text(),
+    reviewedById: text().references(() => user.id, { onDelete: "set null" }),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
       .defaultNow()
@@ -77,6 +96,7 @@ export const content = pgTable(
   (table) => [
     index("content_assignee_id_idx").on(table.assigneeId),
     index("content_publish_date_idx").on(table.publishDate),
+    index("content_proposed_by_key_id_idx").on(table.proposedByKeyId),
   ],
 );
 

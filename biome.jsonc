@@ -30,6 +30,7 @@
   // Feature-Sliced Design import rules (see AGENTS.md).
   // Layers, high to low: app > views > features > entities > shared.
   // Biome replaces rule options per override, so each block repeats the public-API patterns.
+  // A slice's index.server.ts is public too: it holds the server-only exports.
   "linter": {
     "enabled": true,
     "rules": {
@@ -40,7 +41,12 @@
           "options": {
             "patterns": [
               {
-                "group": ["@/views/*/**", "@/features/*/**", "@/entities/*/**"],
+                "group": [
+                  "@/views/*/**",
+                  "@/features/*/**",
+                  "@/entities/*/**",
+                  "!@/*/*/index.server"
+                ],
                 "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
               },
               {
@@ -86,7 +92,8 @@
                     "group": [
                       "@/views/*/**",
                       "@/features/*/**",
-                      "@/entities/*/**"
+                      "@/entities/*/**",
+                      "!@/*/*/index.server"
                     ],
                     "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
                   },
@@ -122,7 +129,8 @@
                     "group": [
                       "@/views/*/**",
                       "@/features/*/**",
-                      "@/entities/*/**"
+                      "@/entities/*/**",
+                      "!@/*/*/index.server"
                     ],
                     "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
                   },
@@ -165,7 +173,8 @@
                     "group": [
                       "@/views/*/**",
                       "@/features/*/**",
-                      "@/entities/*/**"
+                      "@/entities/*/**",
+                      "!@/*/*/index.server"
                     ],
                     "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
                   },
@@ -206,7 +215,8 @@
                     "group": [
                       "@/views/*/**",
                       "@/features/*/**",
-                      "@/entities/*/**"
+                      "@/entities/*/**",
+                      "!@/*/*/index.server"
                     ],
                     "message": "Import a slice through its index.ts (@/<layer>/<slice>), not its internals."
                   },

@@ -1,8 +1,8 @@
 import { z } from "zod";
 import {
-  CONTENT_STATUSES,
   CONTENT_TYPES,
   type Content,
+  PLAN_STATUSES,
   PLATFORMS,
 } from "@/shared/db/schema";
 import type { Messages } from "@/shared/i18n";
@@ -27,7 +27,7 @@ export const createContentFormSchema = (t: (key: ErrorKey) => string) =>
     publishDate: optional(z.iso.date({ error: t("invalidDate") })),
     goldenTime: optional(z.iso.time({ error: t("invalidTime") })),
     assigneeId: optional(z.string()),
-    status: z.enum(CONTENT_STATUSES),
+    status: z.enum(PLAN_STATUSES),
     assetLinks: z
       .string()
       .transform((value) =>
@@ -77,7 +77,8 @@ export function toFormValues(item: Content): ContentFormValues {
     publishDate: item.publishDate ?? "",
     goldenTime: item.goldenTime?.slice(0, 5) ?? "",
     assigneeId: item.assigneeId ?? "",
-    status: item.status,
+    // Approving a proposal puts it on the plan as planned.
+    status: item.status === "proposed" ? "planned" : item.status,
     assetLinks: item.assetLinks.join("\n"),
   };
 }
