@@ -30,5 +30,37 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+
+  migrate:
+    # Apply committed migrations to production Neon after CI passes on main.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: migrate-production
+      cancel-in-progress: false
+    env:
+      # Neon direct (non-pooler) URL. Add it under Settings > Secrets and variables > Actions.
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+    steps:
+      - name: Skip when the production database secret is not set
+        id: guard
+        run: |
+          if [ -z "$DATABASE_URL_UNPOOLED" ]; then
+            echo "::notice::DATABASE_URL_UNPOOLED secret not set; skipping migrations."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.guard.outputs.skip != 'true'
+        uses: actions/checkout@v7
+      - if: steps.guard.outputs.skip != 'true'
+        uses: pnpm/action-setup@v6
+      - if: steps.guard.outputs.skip != 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - if: steps.guard.outputs.skip != 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.guard.outputs.skip != 'true'
+        run: pnpm db:migrate

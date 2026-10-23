@@ -13,7 +13,7 @@ Reference stack (verified 2026-10-14). A starting point, not a rule.
 - Zod v4 (validate all external input)
 - Server Actions for mutations, Route Handlers for webhooks and public endpoints, reads in Server Components
 - Biome (lint + format)
-- Vitest + Testing Library, Playwright
+- Vitest + Testing Library
 - GitHub Actions
 - pnpm
 - Feature-Sliced Design v2.1 on the App Router; boundaries enforced with Biome `noRestrictedImports`

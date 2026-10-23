@@ -21,7 +21,6 @@ pnpm dev
 | `pnpm lint` / `format`                          | Biome check / check with fixes                                              |
 | `pnpm typecheck`                                | Route types + `tsc --noEmit`                                                |
 | `pnpm test` / `test:watch`                      | Vitest unit tests (`src/**/*.test.tsx`)                                     |
-| `pnpm test:e2e`                                 | Playwright tests (`e2e/`)                                                   |
 | `pnpm env:sync` / `env:check`                   | Align `.env*` files with `.env.example` (order, missing keys) / report only |
 | `pnpm db:generate` / `db:migrate` / `db:studio` | drizzle-kit                                                                 |
 | `pnpm auth:generate`                            | Regenerate the Better Auth schema after changing auth plugins               |
