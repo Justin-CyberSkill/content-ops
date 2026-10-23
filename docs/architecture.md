@@ -31,7 +31,7 @@ src/
 Route files stay thin. A page re-exports its view. Layouts and route handlers may hold app-wide wiring.
 
 ```ts
-// src/app/profile/page.tsx
+// src/app/[locale]/profile/page.tsx  (every route sits under the language segment)
 export { ProfilePage as default, metadata } from "@/views/profile";
 ```
 

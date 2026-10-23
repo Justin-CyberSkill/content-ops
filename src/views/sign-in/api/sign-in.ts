@@ -2,10 +2,10 @@
 
 import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { auth } from "@/shared/auth/index.server";
+import { redirect } from "@/shared/i18n";
 import { safeNext } from "../lib/safe-next";
 
 export type SignInState = { error?: string; email?: string };
@@ -34,5 +34,8 @@ export async function signIn(
     if (error instanceof APIError) return { error: t("wrong"), email };
     throw error;
   }
-  redirect(safeNext(parsed.data.next));
+  return redirect({
+    href: safeNext(parsed.data.next),
+    locale: await getLocale(),
+  });
 }

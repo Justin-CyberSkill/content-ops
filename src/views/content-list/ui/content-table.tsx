@@ -1,7 +1,7 @@
 import { LinkIcon } from "lucide-react";
-import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { formatSchedule, StatusBadge } from "@/entities/content";
+import { Link } from "@/shared/i18n";
 import { Avatar } from "@/shared/ui/avatar";
 import {
   Table,

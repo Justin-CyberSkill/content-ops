@@ -1,6 +1,6 @@
 import { AppSidebar } from "./_ui/app-sidebar";
 
-export default function AppLayout({ children }: LayoutProps<"/">) {
+export default function AppLayout({ children }: LayoutProps<"/[locale]">) {
   return (
     <div className="flex flex-1 flex-col md:flex-row">
       <AppSidebar />

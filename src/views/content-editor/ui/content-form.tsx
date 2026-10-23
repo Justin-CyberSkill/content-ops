@@ -1,10 +1,10 @@
 "use client";
 
 import { CheckIcon } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { startTransition, useActionState } from "react";
 import { CONTENT_STATUSES, CONTENT_TYPES, PLATFORMS } from "@/shared/db/schema";
+import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";

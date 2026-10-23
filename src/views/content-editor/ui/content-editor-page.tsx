@@ -1,11 +1,11 @@
 import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
+import { Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
 import { getContent, listMembers } from "../api/queries";
 import { emptyContentForm, toFormValues } from "../model/content-form";

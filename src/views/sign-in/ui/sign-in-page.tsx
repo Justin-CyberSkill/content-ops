@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { LanguageSwitch } from "@/shared/i18n/language-switch";
 import { SignInForm } from "./sign-in-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -23,6 +24,7 @@ export function SignInPage({ searchParams }: { searchParams: SearchParams }) {
           CS
         </span>
         Content Ops
+        <LanguageSwitch className="ml-auto font-sans" />
       </div>
       <div className="flex flex-1 items-center justify-center px-4 pb-16">
         <div className="flex w-full max-w-240 flex-wrap gap-6">

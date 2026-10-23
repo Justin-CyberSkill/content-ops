@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
+import { notFound } from "next/navigation";
+import { locale as rootLocale } from "next/root-params";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Suspense } from "react";
-import { DEFAULT_LOCALE } from "@/shared/i18n";
-import { HtmlLang } from "./_ui/html-lang";
-import "./globals.css";
+import { isLocale, LOCALES } from "@/shared/i18n";
+import "../globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,25 +17,27 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("common");
   return { title: t("appTitle"), description: t("appDescription") };
 }
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({
+  children,
+}: LayoutProps<"/[locale]">) {
+  const locale = await rootLocale();
+  if (!isLocale(locale)) notFound();
   return (
     <html
-      lang={DEFAULT_LOCALE}
+      lang={locale}
       className={`${inter.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        {/* The language comes from a cookie, so every screen renders at request time. */}
-        <Suspense>
-          <NextIntlClientProvider>
-            <HtmlLang />
-            {children}
-          </NextIntlClientProvider>
-        </Suspense>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );

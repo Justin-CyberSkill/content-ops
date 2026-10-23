@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "cn";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/shared/i18n";
 
 /** Sidebar link, a charcoal pill when its section is open. */
 export function NavLink({
@@ -14,7 +13,7 @@ export function NavLink({
   children: React.ReactNode;
   className?: string;
 }) {
-  // After sign-in the URL can stay "/" while next.config redirects it to /content.
+  // Without the language prefix. After sign-in it can be "/" while next.config redirects to /content.
   const current = usePathname();
   const pathname = current === "/" ? "/content" : current;
   const active = pathname === href || pathname.startsWith(`${href}/`);

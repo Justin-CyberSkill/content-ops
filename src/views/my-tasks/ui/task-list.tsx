@@ -1,8 +1,7 @@
 import { ClockIcon, LinkIcon } from "lucide-react";
-import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { formatSchedule } from "@/entities/content";
-import { DATE_LOCALES, type Locale } from "@/shared/i18n";
+import { DATE_LOCALES, Link, type Locale } from "@/shared/i18n";
 import type { Task } from "../api/list-my-tasks";
 import { StatusSelect } from "./status-select";
 

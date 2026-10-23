@@ -27,7 +27,7 @@ test("shows each item with its schedule, labels and edit link", () => {
   expect(screen.getByText("In progress")).toBeInTheDocument();
   expect(
     screen.getByRole("link", { name: "60s reel: 3 security myths" }),
-  ).toHaveAttribute("href", `/content/${row.id}`);
+  ).toHaveAttribute("href", `/en/content/${row.id}`);
   expect(screen.getByRole("link", { name: "drive.example" })).toHaveAttribute(
     "href",
     "https://drive.example/a",

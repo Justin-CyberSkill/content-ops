@@ -1,10 +1,10 @@
 import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
+import { Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
 import { listContent } from "../api/list-content";
 import { ContentTable } from "./content-table";

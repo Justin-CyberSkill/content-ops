@@ -25,7 +25,7 @@ test("shows each task with its schedule and current status", () => {
   expect(screen.getByText("TikTok")).toBeInTheDocument();
   expect(
     screen.getByRole("link", { name: "60s reel: 3 security myths" }),
-  ).toHaveAttribute("href", `/content/${task.id}`);
+  ).toHaveAttribute("href", `/en/content/${task.id}`);
   expect(
     screen.getByRole("combobox", {
       name: "Status of 60s reel: 3 security myths",

@@ -4,14 +4,14 @@ import {
   SquareCheckBigIcon,
   UsersIcon,
 } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { getSession } from "@/shared/auth/index.server";
+import { Link } from "@/shared/i18n";
+import { LanguageSwitch } from "@/shared/i18n/language-switch";
 import { Avatar } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
-import { LanguageSwitch } from "./language-switch";
 import { NavLink } from "./nav-link";
 import { signOut } from "./sign-out";
 
@@ -49,7 +49,10 @@ export function AppSidebar() {
           </Suspense>
         </nav>
         <div className="ml-auto flex items-center gap-2 md:mt-auto md:ml-0 md:flex-wrap">
-          <LanguageSwitch />
+          <LanguageSwitch
+            className="md:basis-full"
+            buttonClassName="md:flex-1"
+          />
           <Suspense>
             <UserMenu />
           </Suspense>

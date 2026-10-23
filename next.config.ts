@@ -8,7 +8,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   async redirects() {
-    return [{ source: "/", destination: "/content", permanent: false }];
+    return [
+      {
+        source: "/:locale(vi|en)",
+        destination: "/:locale/content",
+        permanent: false,
+      },
+    ];
   },
   turbopack: {
     rules: {
