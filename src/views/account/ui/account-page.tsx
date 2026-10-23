@@ -24,11 +24,7 @@ export function AccountPage() {
           aria-label={t("account.profile")}
           className="flex min-w-0 flex-[1_1_18rem] flex-col items-start gap-4 rounded-2xl bg-card p-7 shadow-card"
         >
-          <Suspense
-            fallback={
-              <p className="text-muted-foreground">{t("common.loading")}</p>
-            }
-          >
+          <Suspense fallback={<ProfilePlaceholder />}>
             <Profile />
           </Suspense>
         </section>
@@ -68,6 +64,22 @@ async function Profile() {
         <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
         {t(user.role === "admin" ? "admin" : "member")}
       </Badge>
+    </>
+  );
+}
+
+/** Same boxes as Profile, so the password card below it doesn't jump on small screens. */
+function ProfilePlaceholder() {
+  return (
+    <>
+      <span className="size-20 rounded-full bg-muted-strong" />
+      <div className="flex flex-col items-start gap-1 text-transparent">
+        <span className="w-44 rounded-full bg-muted-strong text-2xl font-semibold">
+          &nbsp;
+        </span>
+        <span className="w-56 rounded-full bg-muted-strong">&nbsp;</span>
+      </div>
+      <Badge variant="secondary" className="w-24 bg-muted-strong" />
     </>
   );
 }

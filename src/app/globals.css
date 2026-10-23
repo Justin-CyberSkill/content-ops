@@ -199,6 +199,8 @@
   }
   html {
     @apply font-sans;
+    /* Reserve the scrollbar's width so pages don't jump sideways when content loads and grows past the screen. */
+    scrollbar-gutter: stable;
   }
   h1,
   h2,

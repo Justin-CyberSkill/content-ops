@@ -11,8 +11,9 @@ import { getSession } from "@/shared/auth/index.server";
 import { Link } from "@/shared/i18n";
 import { LanguageSwitch } from "@/shared/i18n/language-switch";
 import { Avatar } from "@/shared/ui/avatar";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonVariants } from "@/shared/ui/button";
 import { NavLink } from "./nav-link";
+import { navLinkClassName } from "./nav-link-class";
 import { signOut } from "./sign-out";
 
 export function AppSidebar() {
@@ -36,15 +37,16 @@ export function AppSidebar() {
           aria-label={t("label")}
           className="order-last flex w-full gap-1 overflow-x-auto md:order-none md:flex-col md:overflow-visible"
         >
+          <SidebarLink href="/content">
+            <LayoutDashboardIcon aria-hidden="true" />
+            {t("contentPlan")}
+          </SidebarLink>
+          <SidebarLink href="/my-tasks">
+            <SquareCheckBigIcon aria-hidden="true" />
+            {t("myTasks")}
+          </SidebarLink>
+          {/* Last in the list, so nothing moves when it shows up for admins. */}
           <Suspense>
-            <NavLink href="/content">
-              <LayoutDashboardIcon aria-hidden="true" />
-              {t("contentPlan")}
-            </NavLink>
-            <NavLink href="/my-tasks">
-              <SquareCheckBigIcon aria-hidden="true" />
-              {t("myTasks")}
-            </NavLink>
             <AdminLink />
           </Suspense>
         </nav>
@@ -53,12 +55,36 @@ export function AppSidebar() {
             className="md:basis-full"
             buttonClassName="md:flex-1"
           />
-          <Suspense>
+          <Suspense fallback={<UserMenuPlaceholder />}>
             <UserMenu />
           </Suspense>
         </div>
       </div>
     </aside>
+  );
+}
+
+/**
+ * NavLink reads the URL, so it waits for the request. Until then a plain link of the
+ * same size holds its place; only the highlight arrives later.
+ */
+function SidebarLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <Link href={href} className={navLinkClassName(false)}>
+          {children}
+        </Link>
+      }
+    >
+      <NavLink href={href}>{children}</NavLink>
+    </Suspense>
   );
 }
 
@@ -104,6 +130,32 @@ async function UserMenu() {
           <LogOutIcon aria-hidden="true" />
         </Button>
       </form>
+    </>
+  );
+}
+
+/** Same boxes as UserMenu, so the sidebar keeps its size while the session loads. */
+function UserMenuPlaceholder() {
+  return (
+    <>
+      <span
+        aria-hidden="true"
+        className="flex min-w-0 flex-1 items-center gap-2.5 p-1.5 md:pr-3"
+      >
+        <span className="size-9 shrink-0 rounded-full bg-muted-strong" />
+        <span className="hidden flex-col items-start text-transparent md:flex">
+          <span className="w-28 rounded-full bg-muted-strong font-semibold">
+            &nbsp;
+          </span>
+          <span className="w-14 rounded-full bg-muted-strong text-xs">
+            &nbsp;
+          </span>
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        className={buttonVariants({ variant: "secondary", size: "icon" })}
+      />
     </>
   );
 }
