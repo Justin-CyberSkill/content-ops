@@ -7,6 +7,8 @@ import { requireUser } from "@/shared/auth/index.server";
 import { Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
 import { listContent } from "../api/list-content";
+import { TEAM_TIME_ZONE } from "../config/team-time-zone";
+import { todayIn } from "../model/content-groups";
 import { ContentTable } from "./content-table";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -45,5 +47,7 @@ export function ContentListPage() {
 
 async function ContentList() {
   await requireUser();
-  return <ContentTable rows={await listContent()} />;
+  return (
+    <ContentTable rows={await listContent()} today={todayIn(TEAM_TIME_ZONE)} />
+  );
 }

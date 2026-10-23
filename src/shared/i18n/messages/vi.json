@@ -118,12 +118,20 @@
     "columns": {
       "publish": "Ngày đăng",
       "idea": "Ý tưởng",
-      "platforms": "Nền tảng",
-      "type": "Loại",
       "assignee": "Người phụ trách",
       "status": "Trạng thái",
-      "assets": "Tài nguyên"
-    }
+      "assets": "Tài nguyên",
+      "format": "Định dạng"
+    },
+    "groups": {
+      "overdue": "Quá hạn",
+      "thisWeek": "Tuần này",
+      "nextWeek": "Tuần sau",
+      "later": "Sau đó",
+      "noDate": "Chưa có ngày",
+      "published": "Đã đăng"
+    },
+    "assetLinks": "{count} liên kết tài nguyên"
   },
   "contentEditor": {
     "newTitle": "Nội dung mới",

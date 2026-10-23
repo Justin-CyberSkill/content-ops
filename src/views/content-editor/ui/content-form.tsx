@@ -38,9 +38,11 @@ export function ContentForm({ id, initial: values, members, aside }: Props) {
         const formData = new FormData(event.currentTarget);
         startTransition(() => action(formData));
       }}
-      className="flex flex-wrap items-start gap-6"
+      // One column on narrow screens, in the order people fill it: brief, format, schedule,
+      // links, status and owner, then save. From xl, status and owner move to a side column.
+      className="grid items-start gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]"
     >
-      <div className="flex min-w-0 flex-[2_1_32rem] flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-span-2 xl:row-start-1">
         <Section title={t("contentEditor.brief")}>
           <Field
             label={t("contentEditor.goal")}
@@ -163,34 +165,9 @@ export function ContentForm({ id, initial: values, members, aside }: Props) {
             />
           </Field>
         </Section>
-
-        {state.error ? (
-          <p
-            role="alert"
-            className="rounded-xl bg-destructive-soft px-5 py-3.5 text-foreground"
-          >
-            {state.error}
-          </p>
-        ) : null}
-
-        <div className="flex justify-end gap-2">
-          <Link
-            href="/content"
-            className={buttonVariants({ variant: "ghost" })}
-          >
-            {t("common.cancel")}
-          </Link>
-          <Button type="submit" disabled={pending}>
-            {pending
-              ? t("common.saving")
-              : id
-                ? t("contentEditor.saveChanges")
-                : t("contentEditor.addToPlan")}
-          </Button>
-        </div>
       </div>
 
-      <div className="flex min-w-0 flex-[1_1_18rem] flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-1">
         <Section title={t("contentEditor.statusAndOwner")}>
           <Field label={t("contentEditor.status")} htmlFor="status">
             <NativeSelect
@@ -224,8 +201,40 @@ export function ContentForm({ id, initial: values, members, aside }: Props) {
             </NativeSelect>
           </Field>
         </Section>
-        {aside}
       </div>
+
+      <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-start-3">
+        {state.error ? (
+          <p
+            role="alert"
+            className="rounded-xl bg-destructive-soft px-5 py-3.5 text-foreground"
+          >
+            {state.error}
+          </p>
+        ) : null}
+
+        <div className="flex justify-end gap-2">
+          <Link
+            href="/content"
+            className={buttonVariants({ variant: "ghost" })}
+          >
+            {t("common.cancel")}
+          </Link>
+          <Button type="submit" disabled={pending}>
+            {pending
+              ? t("common.saving")
+              : id
+                ? t("contentEditor.saveChanges")
+                : t("contentEditor.addToPlan")}
+          </Button>
+        </div>
+      </div>
+
+      {aside ? (
+        <div className="flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-2">
+          {aside}
+        </div>
+      ) : null}
     </form>
   );
 }

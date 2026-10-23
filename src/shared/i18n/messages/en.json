@@ -118,12 +118,20 @@
     "columns": {
       "publish": "Publish",
       "idea": "Idea",
-      "platforms": "Platforms",
-      "type": "Type",
       "assignee": "Assignee",
       "status": "Status",
-      "assets": "Assets"
-    }
+      "assets": "Assets",
+      "format": "Format"
+    },
+    "groups": {
+      "overdue": "Overdue",
+      "thisWeek": "This week",
+      "nextWeek": "Next week",
+      "later": "Later",
+      "noDate": "No date",
+      "published": "Published"
+    },
+    "assetLinks": "{count, plural, one {# asset link} other {# asset links}}"
   },
   "contentEditor": {
     "newTitle": "New content",

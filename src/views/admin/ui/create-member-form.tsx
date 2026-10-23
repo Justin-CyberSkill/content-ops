@@ -24,7 +24,7 @@ export function CreateMemberForm() {
     <div className="flex flex-col gap-4">
       <form
         action={action}
-        className="grid gap-3 sm:grid-cols-[1fr_1fr_10rem_auto] sm:items-end"
+        className="grid gap-3 sm:grid-cols-2 sm:items-end xl:grid-cols-[1fr_1fr_10rem_auto]"
       >
         <div className="flex flex-col gap-2">
           <Label htmlFor="member-name">{t("admin.name")}</Label>
