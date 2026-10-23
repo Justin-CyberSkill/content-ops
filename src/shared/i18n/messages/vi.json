@@ -1,0 +1,184 @@
+{
+  "common": {
+    "appTitle": "CS Content Ops",
+    "appDescription": "Vận hành nội dung cho CyberSkill.",
+    "loading": "Đang tải…",
+    "saving": "Đang lưu…",
+    "cancel": "Huỷ",
+    "noDate": "Chưa có ngày",
+    "unassigned": "Chưa giao",
+    "roles": {
+      "admin": "Quản trị viên",
+      "member": "Thành viên"
+    }
+  },
+  "nav": {
+    "label": "Chính",
+    "contentPlan": "Kế hoạch nội dung",
+    "myTasks": "Việc của tôi",
+    "members": "Thành viên",
+    "account": "Tài khoản: {name}",
+    "signOut": "Đăng xuất",
+    "language": "Ngôn ngữ"
+  },
+  "content": {
+    "status": {
+      "proposed": "Đề xuất",
+      "planned": "Đã lên kế hoạch",
+      "in_progress": "Đang làm",
+      "in_review": "Đang duyệt",
+      "scheduled": "Đã lên lịch",
+      "published": "Đã đăng"
+    },
+    "type": {
+      "motion_video": "Video motion",
+      "short_video": "Video ngắn",
+      "long_video": "Video dài",
+      "live": "Livestream",
+      "image": "Hình ảnh",
+      "carousel": "Carousel",
+      "text_post": "Bài đăng chữ",
+      "quiz": "Câu đố",
+      "article": "Bài viết"
+    },
+    "platform": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "threads": "Threads",
+      "website": "Website"
+    }
+  },
+  "signIn": {
+    "title": "Đăng nhập",
+    "metaTitle": "Đăng nhập · CS Content Ops",
+    "teamBadge": "Đội ngũ CyberSkill",
+    "heroTitle": "Một kế hoạch. Cả đội cùng nắm.",
+    "heroBody": "Ý tưởng, người phụ trách và khung giờ vàng ở một nơi, luôn cập nhật.",
+    "noAccount": "Chưa có tài khoản? Hãy nhờ quản trị viên tạo cho bạn.",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "pending": "Đang đăng nhập…",
+    "errors": {
+      "missing": "Nhập email và mật khẩu của bạn.",
+      "wrong": "Sai email hoặc mật khẩu."
+    }
+  },
+  "account": {
+    "title": "Tài khoản",
+    "metaTitle": "Tài khoản · CS Content Ops",
+    "profile": "Hồ sơ",
+    "changePassword": "Đổi mật khẩu",
+    "changePasswordHint": "Nhận mật khẩu tạm từ quản trị viên? Đổi sang mật khẩu của bạn tại đây.",
+    "currentPassword": "Mật khẩu hiện tại",
+    "newPassword": "Mật khẩu mới",
+    "confirmPassword": "Nhập lại mật khẩu mới",
+    "changed": "Đã đổi mật khẩu.",
+    "errors": {
+      "currentRequired": "Nhập mật khẩu hiện tại.",
+      "tooShort": "Dùng ít nhất 8 ký tự.",
+      "mismatch": "Hai mật khẩu mới không khớp.",
+      "wrongCurrent": "Mật khẩu hiện tại không đúng."
+    }
+  },
+  "admin": {
+    "title": "Thành viên",
+    "metaTitle": "Thành viên · CS Content Ops",
+    "intro": "Thêm đồng đội tại đây. Mỗi người nhận một mật khẩu tạm để đổi sau khi đăng nhập.",
+    "addMember": "Thêm thành viên",
+    "team": "Đội ngũ",
+    "peopleCount": "{count} người",
+    "you": "(bạn)",
+    "name": "Tên",
+    "email": "Email",
+    "role": "Vai trò",
+    "add": "Thêm thành viên",
+    "adding": "Đang thêm…",
+    "resetPassword": "Đặt lại mật khẩu",
+    "resetting": "Đang đặt lại…",
+    "confirmReset": "Đặt lại mật khẩu cho {email}?",
+    "temporaryPasswordFor": "Mật khẩu tạm cho <email></email>",
+    "temporaryPasswordHint": "Gửi riêng cho họ. Mật khẩu này sẽ không hiện lại.",
+    "errors": {
+      "nameRequired": "Nhập tên.",
+      "invalidEmail": "Nhập email hợp lệ."
+    }
+  },
+  "contentList": {
+    "title": "Kế hoạch nội dung",
+    "metaTitle": "Kế hoạch nội dung · CS Content Ops",
+    "intro": "Mọi nội dung sắp đăng, gần nhất lên trước.",
+    "newContent": "Nội dung mới",
+    "emptyTitle": "Chưa có kế hoạch nào",
+    "emptyBody": "Thêm nội dung đầu tiên.",
+    "columns": {
+      "publish": "Ngày đăng",
+      "idea": "Ý tưởng",
+      "platforms": "Nền tảng",
+      "type": "Loại",
+      "assignee": "Người phụ trách",
+      "status": "Trạng thái",
+      "assets": "Tài nguyên"
+    }
+  },
+  "contentEditor": {
+    "newTitle": "Nội dung mới",
+    "editTitle": "Sửa nội dung",
+    "newMetaTitle": "Nội dung mới · CS Content Ops",
+    "editMetaTitle": "Sửa nội dung · CS Content Ops",
+    "backToPlan": "Quay lại kế hoạch nội dung",
+    "contentPlan": "Kế hoạch nội dung",
+    "deleteTitle": "Xoá nội dung",
+    "deleteHint": "Xoá khỏi kế hoạch của mọi người. Không thể hoàn tác.",
+    "delete": "Xoá",
+    "deleting": "Đang xoá…",
+    "confirmDelete": "Xoá nội dung này khỏi kế hoạch?",
+    "brief": "Tóm tắt",
+    "goal": "Mục tiêu",
+    "goalHint": "Mình muốn đạt điều gì và vì sao.",
+    "idea": "Ý tưởng nội dung",
+    "format": "Định dạng",
+    "platforms": "Nền tảng",
+    "contentType": "Loại nội dung",
+    "pickType": "Chọn loại",
+    "schedule": "Lịch đăng",
+    "publishDay": "Ngày đăng",
+    "goldenTime": "Khung giờ vàng",
+    "goldenTimeHint": "Giờ địa phương khi khán giả hoạt động nhiều nhất.",
+    "assetLinks": "Link tài nguyên",
+    "links": "Link",
+    "linksHint": "Mỗi dòng một URL.",
+    "statusAndOwner": "Trạng thái và người phụ trách",
+    "status": "Trạng thái",
+    "assignee": "Người phụ trách",
+    "saveChanges": "Lưu thay đổi",
+    "addToPlan": "Thêm vào kế hoạch",
+    "errors": {
+      "goalRequired": "Viết mục tiêu: mình muốn đạt điều gì và vì sao.",
+      "ideaRequired": "Viết ý tưởng nội dung.",
+      "platformsRequired": "Chọn ít nhất một nền tảng.",
+      "typeRequired": "Chọn loại nội dung.",
+      "invalidDate": "Chọn ngày đăng hợp lệ.",
+      "invalidTime": "Chọn khung giờ vàng hợp lệ.",
+      "invalidLinks": "Link tài nguyên phải là URL http(s), mỗi dòng một link.",
+      "assigneeGone": "Thành viên này không còn tồn tại. Hãy chọn người khác.",
+      "deleted": "Nội dung này đã bị xoá."
+    }
+  },
+  "myTasks": {
+    "title": "Việc của tôi",
+    "metaTitle": "Việc của tôi · CS Content Ops",
+    "intro": "Nội dung được giao cho bạn. Cập nhật trạng thái khi làm.",
+    "emptyTitle": "Xong hết rồi",
+    "emptyBody": "Bạn chưa được giao việc nào.",
+    "statusOf": "Trạng thái của {idea}",
+    "errors": {
+      "invalidStatus": "Chọn trạng thái hợp lệ.",
+      "notAssigned": "Việc này không còn được giao cho bạn."
+    }
+  }
+}

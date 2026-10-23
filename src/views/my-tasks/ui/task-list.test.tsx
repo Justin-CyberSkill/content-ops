@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
+import { renderWithIntl } from "@/shared/i18n/testing";
 import type { Task } from "../api/list-my-tasks";
 import { TaskList } from "./task-list";
 
@@ -18,10 +19,10 @@ const task: Task = {
 };
 
 test("shows each task with its schedule and current status", () => {
-  render(<TaskList tasks={[task]} />);
-  expect(
-    screen.getByText("Tue, 27 Oct 2026 · 19:30 · Short video · TikTok"),
-  ).toBeInTheDocument();
+  renderWithIntl(<TaskList tasks={[task]} />);
+  expect(screen.getByText("Tue, 27 Oct 2026 · 19:30")).toBeInTheDocument();
+  expect(screen.getByText("Short video")).toBeInTheDocument();
+  expect(screen.getByText("TikTok")).toBeInTheDocument();
   expect(
     screen.getByRole("link", { name: "60s reel: 3 security myths" }),
   ).toHaveAttribute("href", `/content/${task.id}`);
@@ -33,7 +34,7 @@ test("shows each task with its schedule and current status", () => {
 });
 
 test("shows an empty state", () => {
-  render(<TaskList tasks={[]} />);
+  renderWithIntl(<TaskList tasks={[]} />);
   expect(
     screen.getByText("Nothing is assigned to you yet."),
   ).toBeInTheDocument();

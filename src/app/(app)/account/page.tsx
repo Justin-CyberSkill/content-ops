@@ -1,1 +1,1 @@
-export { AccountPage as default, metadata } from "@/views/account";
+export { AccountPage as default, generateMetadata } from "@/views/account";

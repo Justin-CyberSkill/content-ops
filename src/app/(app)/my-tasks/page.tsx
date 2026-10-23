@@ -1,1 +1,1 @@
-export { MyTasksPage as default, metadata } from "@/views/my-tasks";
+export { generateMetadata, MyTasksPage as default } from "@/views/my-tasks";

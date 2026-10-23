@@ -1,5 +1,7 @@
 "use client";
 
+import { RotateCcwIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { Button } from "@/shared/ui/button";
 import { type MemberActionState, resetMemberPassword } from "../api/members";
@@ -14,24 +16,26 @@ export function ResetPasswordButton({
 }) {
   const [state, setState] = useState<MemberActionState>({ status: "idle" });
   const [pending, startTransition] = useTransition();
+  const t = useTranslations("admin");
 
   return (
-    <div className="flex flex-col items-end gap-2">
+    <div className="mt-1 flex w-full flex-col items-center gap-2">
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         disabled={pending}
         onClick={() => {
-          if (!confirm(`Reset the password for ${email}?`)) return;
+          if (!confirm(t("confirmReset", { email }))) return;
           startTransition(async () =>
             setState(await resetMemberPassword(userId, email)),
           );
         }}
       >
-        Reset password
+        <RotateCcwIcon aria-hidden="true" />
+        {pending ? t("resetting") : t("resetPassword")}
       </Button>
       {state.status === "error" ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-[13px] text-destructive">
           {state.message}
         </p>
       ) : null}

@@ -1,25 +1,44 @@
+import { PlusIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
 import { buttonVariants } from "@/shared/ui/button";
 import { listContent } from "../api/list-content";
 import { ContentTable } from "./content-table";
 
-export const metadata: Metadata = { title: "Content plan · CS Content Ops" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("contentList");
+  return { title: t("metaTitle") };
+}
 
 export function ContentListPage() {
+  const t = useTranslations();
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-10">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="font-semibold text-2xl tracking-tight">Content plan</h1>
+    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            {t("contentList.title")}
+          </h1>
+          <p className="text-muted-foreground">{t("contentList.intro")}</p>
+        </div>
         <Link href="/content/new" className={buttonVariants()}>
-          New content
+          <PlusIcon aria-hidden="true" />
+          {t("contentList.newContent")}
         </Link>
       </div>
-      <Suspense fallback={<p className="text-muted-foreground">Loading…</p>}>
-        <ContentList />
-      </Suspense>
+      <section className="rounded-2xl bg-card p-3 shadow-card md:p-4">
+        <Suspense
+          fallback={
+            <p className="p-4 text-muted-foreground">{t("common.loading")}</p>
+          }
+        >
+          <ContentList />
+        </Suspense>
+      </section>
     </main>
   );
 }

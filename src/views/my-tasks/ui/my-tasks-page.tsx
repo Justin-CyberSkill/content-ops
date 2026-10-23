@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
+import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireUser } from "@/shared/auth/index.server";
 import { listMyTasks } from "../api/list-my-tasks";
 import { TaskList } from "./task-list";
 
-export const metadata: Metadata = { title: "My tasks · CS Content Ops" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("myTasks");
+  return { title: t("metaTitle") };
+}
 
 export function MyTasksPage() {
+  const t = useTranslations();
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-10">
+    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
       <div className="flex flex-col gap-1">
-        <h1 className="font-semibold text-2xl tracking-tight">My tasks</h1>
-        <p className="text-muted-foreground text-sm">
-          Content assigned to you. Change the status as you go.
-        </p>
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+          {t("myTasks.title")}
+        </h1>
+        <p className="text-muted-foreground">{t("myTasks.intro")}</p>
       </div>
-      <Suspense fallback={<p className="text-muted-foreground">Loading…</p>}>
+      <Suspense
+        fallback={
+          <p className="text-muted-foreground">{t("common.loading")}</p>
+        }
+      >
         <MyTasks />
       </Suspense>
     </main>

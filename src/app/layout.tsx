@@ -1,29 +1,42 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { Suspense } from "react";
+import { DEFAULT_LOCALE } from "@/shared/i18n";
+import { HtmlLang } from "./_ui/html-lang";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-sans",
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin", "vietnamese"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "CS Content Ops",
-  description: "Content operations for CyberSkill.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("common");
+  return { title: t("appTitle"), description: t("appDescription") };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang={DEFAULT_LOCALE}
+      className={`${inter.variable} ${outfit.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {/* The language comes from a cookie, so every screen renders at request time. */}
+        <Suspense>
+          <NextIntlClientProvider>
+            <HtmlLang />
+            {children}
+          </NextIntlClientProvider>
+        </Suspense>
+      </body>
     </html>
   );
 }

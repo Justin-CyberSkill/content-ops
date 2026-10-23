@@ -1,4 +1,4 @@
 export {
+  generateNewMetadata as generateMetadata,
   NewContentPage as default,
-  newMetadata as metadata,
 } from "@/views/content-editor";

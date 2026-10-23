@@ -1,1 +1,1 @@
-export { AdminPage as default, metadata } from "@/views/admin";
+export { AdminPage as default, generateMetadata } from "@/views/admin";

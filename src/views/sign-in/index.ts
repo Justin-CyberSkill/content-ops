@@ -1,1 +1,1 @@
-export { metadata, SignInPage } from "./ui/sign-in-page";
+export { generateMetadata, SignInPage } from "./ui/sign-in-page";

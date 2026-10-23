@@ -1,1 +1,4 @@
-export { ContentListPage as default, metadata } from "@/views/content-list";
+export {
+  ContentListPage as default,
+  generateMetadata,
+} from "@/views/content-list";

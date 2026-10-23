@@ -1,1 +1,1 @@
-export { metadata, SignInPage as default } from "@/views/sign-in";
+export { generateMetadata, SignInPage as default } from "@/views/sign-in";

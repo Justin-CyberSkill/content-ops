@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -11,12 +12,13 @@ export function SignInForm({ next }: { next?: string }) {
     signIn,
     {},
   );
+  const t = useTranslations("signIn");
 
   return (
     <form action={action} className="flex flex-col gap-4">
       {next ? <input type="hidden" name="next" value={next} /> : null}
       <div className="flex flex-col gap-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("email")}</Label>
         <Input
           id="email"
           name="email"
@@ -27,7 +29,7 @@ export function SignInForm({ next }: { next?: string }) {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("password")}</Label>
         <Input
           id="password"
           name="password"
@@ -37,12 +39,15 @@ export function SignInForm({ next }: { next?: string }) {
         />
       </div>
       {state.error ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p
+          role="alert"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px] text-foreground"
+        >
           {state.error}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending}>
-        {pending ? "Signing in…" : "Sign in"}
+      <Button type="submit" size="lg" disabled={pending} className="mt-2">
+        {pending ? t("pending") : t("submit")}
       </Button>
     </form>
   );

@@ -1,10 +1,10 @@
-import { AppHeader } from "./_ui/app-header";
+import { AppSidebar } from "./_ui/app-sidebar";
 
 export default function AppLayout({ children }: LayoutProps<"/">) {
   return (
-    <>
-      <AppHeader />
-      {children}
-    </>
+    <div className="flex flex-1 flex-col md:flex-row">
+      <AppSidebar />
+      <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+    </div>
   );
 }

@@ -1,1 +1,1 @@
-export { AccountPage, metadata } from "./ui/account-page";
+export { AccountPage, generateMetadata } from "./ui/account-page";

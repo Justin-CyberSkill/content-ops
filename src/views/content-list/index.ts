@@ -1,1 +1,1 @@
-export { ContentListPage, metadata } from "./ui/content-list-page";
+export { ContentListPage, generateMetadata } from "./ui/content-list-page";

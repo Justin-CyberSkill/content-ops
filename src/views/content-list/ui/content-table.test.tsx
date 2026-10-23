@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { expect, test } from "vitest";
+import { renderWithIntl } from "@/shared/i18n/testing";
 import type { ContentRow } from "../api/list-content";
 import { ContentTable } from "./content-table";
 
@@ -17,9 +18,10 @@ const row: ContentRow = {
 };
 
 test("shows each item with its schedule, labels and edit link", () => {
-  render(<ContentTable rows={[row]} />);
+  renderWithIntl(<ContentTable rows={[row]} />);
   expect(screen.getByText("Tue, 27 Oct 2026 · 19:30")).toBeInTheDocument();
-  expect(screen.getByText("TikTok, Instagram")).toBeInTheDocument();
+  expect(screen.getByText("TikTok")).toBeInTheDocument();
+  expect(screen.getByText("Instagram")).toBeInTheDocument();
   expect(screen.getByText("Short video")).toBeInTheDocument();
   expect(screen.getByText("Unassigned")).toBeInTheDocument();
   expect(screen.getByText("In progress")).toBeInTheDocument();
@@ -33,6 +35,6 @@ test("shows each item with its schedule, labels and edit link", () => {
 });
 
 test("shows an empty state", () => {
-  render(<ContentTable rows={[]} />);
+  renderWithIntl(<ContentTable rows={[]} />);
   expect(screen.getByText(/Nothing planned yet/)).toBeInTheDocument();
 });

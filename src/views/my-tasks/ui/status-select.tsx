@@ -1,8 +1,10 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
-import { statusLabels } from "@/entities/content";
+import { statusColorClasses } from "@/entities/content";
 import { CONTENT_STATUSES, type ContentStatus } from "@/shared/db/schema";
+import { cn } from "@/shared/lib";
 import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select";
 import { updateTaskStatus } from "../api/update-status";
 
@@ -18,11 +20,14 @@ export function StatusSelect({
   const [value, setValue] = useState(status);
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
+  const t = useTranslations("content.status");
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col items-end gap-1">
       <NativeSelect
         size="sm"
+        className={cn("rounded-full", statusColorClasses[value])}
+        selectClassName="bg-transparent font-semibold inset-shadow-none"
         aria-label={label}
         value={value}
         disabled={pending}
@@ -41,12 +46,12 @@ export function StatusSelect({
       >
         {CONTENT_STATUSES.map((option) => (
           <NativeSelectOption key={option} value={option}>
-            {statusLabels[option]}
+            {t(option)}
           </NativeSelectOption>
         ))}
       </NativeSelect>
       {error ? (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-xs text-destructive">
           {error}
         </p>
       ) : null}

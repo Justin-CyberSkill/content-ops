@@ -1,9 +1,12 @@
 import { describe, expect, test } from "vitest";
 import {
-  contentFormSchema,
+  createContentFormSchema,
   readContentForm,
   toFormValues,
 } from "./content-form";
+
+// Error messages come back as their translation keys.
+const contentFormSchema = createContentFormSchema((key) => key);
 
 function formData(entries: [string, string][]) {
   const data = new FormData();
@@ -59,8 +62,8 @@ describe("contentFormSchema", () => {
   });
 
   test.each([
-    ["platforms", "Pick at least one platform."],
-    ["goal", "Write the goal: what we want and why."],
+    ["platforms", "platformsRequired"],
+    ["goal", "goalRequired"],
   ])("requires %s", (field, message) => {
     const result = contentFormSchema.safeParse(
       readContentForm(formData(valid.filter(([key]) => key !== field))),

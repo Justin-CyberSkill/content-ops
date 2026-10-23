@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
@@ -12,13 +13,13 @@ import {
 const fields = [
   {
     name: "currentPassword",
-    label: "Current password",
+    label: "currentPassword",
     auto: "current-password",
   },
-  { name: "newPassword", label: "New password", auto: "new-password" },
+  { name: "newPassword", label: "newPassword", auto: "new-password" },
   {
     name: "confirmPassword",
-    label: "Repeat new password",
+    label: "confirmPassword",
     auto: "new-password",
   },
 ] as const;
@@ -28,12 +29,14 @@ export function ChangePasswordForm() {
     ChangePasswordState,
     FormData
   >(changePassword, { status: "idle" });
+  const t = useTranslations("account");
+  const tCommon = useTranslations("common");
 
   return (
     <form action={action} className="flex max-w-sm flex-col gap-4">
       {fields.map((field) => (
         <div key={field.name} className="flex flex-col gap-2">
-          <Label htmlFor={field.name}>{field.label}</Label>
+          <Label htmlFor={field.name}>{t(field.label)}</Label>
           <Input
             id={field.name}
             name={field.name}
@@ -44,17 +47,23 @@ export function ChangePasswordForm() {
         </div>
       ))}
       {state.status === "error" ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p
+          role="alert"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px]"
+        >
           {state.message}
         </p>
       ) : null}
       {state.status === "done" ? (
-        <p role="status" className="text-sm">
-          Password changed.
+        <p
+          role="status"
+          className="rounded-xl bg-success-soft px-4 py-3 text-[13px] font-medium"
+        >
+          {t("changed")}
         </p>
       ) : null}
       <Button type="submit" disabled={pending} className="self-start">
-        {pending ? "Saving…" : "Change password"}
+        {pending ? tCommon("saving") : t("changePassword")}
       </Button>
     </form>
   );

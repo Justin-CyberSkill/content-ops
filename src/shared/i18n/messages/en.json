@@ -1,0 +1,184 @@
+{
+  "common": {
+    "appTitle": "CS Content Ops",
+    "appDescription": "Content operations for CyberSkill.",
+    "loading": "Loading…",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "noDate": "No date",
+    "unassigned": "Unassigned",
+    "roles": {
+      "admin": "Admin",
+      "member": "Member"
+    }
+  },
+  "nav": {
+    "label": "Main",
+    "contentPlan": "Content plan",
+    "myTasks": "My tasks",
+    "members": "Members",
+    "account": "Account: {name}",
+    "signOut": "Sign out",
+    "language": "Language"
+  },
+  "content": {
+    "status": {
+      "proposed": "Proposed",
+      "planned": "Planned",
+      "in_progress": "In progress",
+      "in_review": "In review",
+      "scheduled": "Scheduled",
+      "published": "Published"
+    },
+    "type": {
+      "motion_video": "Motion video",
+      "short_video": "Short video",
+      "long_video": "Long video",
+      "live": "Live",
+      "image": "Image",
+      "carousel": "Carousel",
+      "text_post": "Text post",
+      "quiz": "Quiz",
+      "article": "Article"
+    },
+    "platform": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "threads": "Threads",
+      "website": "Website"
+    }
+  },
+  "signIn": {
+    "title": "Sign in",
+    "metaTitle": "Sign in · CS Content Ops",
+    "teamBadge": "CyberSkill team",
+    "heroTitle": "One plan. Everyone on the same page.",
+    "heroBody": "Ideas, owners and golden times in one place, always up to date.",
+    "noAccount": "Ask an admin for an account if you don't have one.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "pending": "Signing in…",
+    "errors": {
+      "missing": "Enter your email and password.",
+      "wrong": "Wrong email or password."
+    }
+  },
+  "account": {
+    "title": "Account",
+    "metaTitle": "Account · CS Content Ops",
+    "profile": "Profile",
+    "changePassword": "Change password",
+    "changePasswordHint": "Got a temporary password from an admin? Replace it here.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Repeat new password",
+    "changed": "Password changed.",
+    "errors": {
+      "currentRequired": "Enter your current password.",
+      "tooShort": "Use at least 8 characters.",
+      "mismatch": "The new passwords don't match.",
+      "wrongCurrent": "Your current password is wrong."
+    }
+  },
+  "admin": {
+    "title": "Members",
+    "metaTitle": "Members · CS Content Ops",
+    "intro": "Add teammates here. Each gets a temporary password to change after signing in.",
+    "addMember": "Add a member",
+    "team": "Team",
+    "peopleCount": "{count, plural, one {# person} other {# people}}",
+    "you": "(you)",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "add": "Add member",
+    "adding": "Adding…",
+    "resetPassword": "Reset password",
+    "resetting": "Resetting…",
+    "confirmReset": "Reset the password for {email}?",
+    "temporaryPasswordFor": "Temporary password for <email></email>",
+    "temporaryPasswordHint": "Send it to them privately. It won't be shown again.",
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "invalidEmail": "Enter a valid email."
+    }
+  },
+  "contentList": {
+    "title": "Content plan",
+    "metaTitle": "Content plan · CS Content Ops",
+    "intro": "Everything we plan to publish, soonest first.",
+    "newContent": "New content",
+    "emptyTitle": "Nothing planned yet",
+    "emptyBody": "Add the first piece of content.",
+    "columns": {
+      "publish": "Publish",
+      "idea": "Idea",
+      "platforms": "Platforms",
+      "type": "Type",
+      "assignee": "Assignee",
+      "status": "Status",
+      "assets": "Assets"
+    }
+  },
+  "contentEditor": {
+    "newTitle": "New content",
+    "editTitle": "Edit content",
+    "newMetaTitle": "New content · CS Content Ops",
+    "editMetaTitle": "Edit content · CS Content Ops",
+    "backToPlan": "Back to content plan",
+    "contentPlan": "Content plan",
+    "deleteTitle": "Delete content",
+    "deleteHint": "Removes it from the plan for everyone. This can't be undone.",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "confirmDelete": "Delete this content from the plan?",
+    "brief": "Brief",
+    "goal": "Goal",
+    "goalHint": "What we want and why.",
+    "idea": "Content idea",
+    "format": "Format",
+    "platforms": "Platforms",
+    "contentType": "Content type",
+    "pickType": "Pick a type",
+    "schedule": "Schedule",
+    "publishDay": "Publish day",
+    "goldenTime": "Golden time",
+    "goldenTimeHint": "Local time when the audience is most active.",
+    "assetLinks": "Asset links",
+    "links": "Links",
+    "linksHint": "One URL per line.",
+    "statusAndOwner": "Status and owner",
+    "status": "Status",
+    "assignee": "Assignee",
+    "saveChanges": "Save changes",
+    "addToPlan": "Add to plan",
+    "errors": {
+      "goalRequired": "Write the goal: what we want and why.",
+      "ideaRequired": "Write the content idea.",
+      "platformsRequired": "Pick at least one platform.",
+      "typeRequired": "Pick a content type.",
+      "invalidDate": "Pick a valid publish day.",
+      "invalidTime": "Pick a valid golden time.",
+      "invalidLinks": "Asset links must be http(s) URLs, one per line.",
+      "assigneeGone": "That member no longer exists. Pick another.",
+      "deleted": "This content was deleted."
+    }
+  },
+  "myTasks": {
+    "title": "My tasks",
+    "metaTitle": "My tasks · CS Content Ops",
+    "intro": "Content assigned to you. Change the status as you go.",
+    "emptyTitle": "All clear",
+    "emptyBody": "Nothing is assigned to you yet.",
+    "statusOf": "Status of {idea}",
+    "errors": {
+      "invalidStatus": "Pick a valid status.",
+      "notAssigned": "This task is no longer assigned to you."
+    }
+  }
+}

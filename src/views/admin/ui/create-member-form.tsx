@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import type { Role } from "@/shared/auth";
 import { Button } from "@/shared/ui/button";
@@ -9,44 +10,54 @@ import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select";
 import { createMember, type MemberActionState } from "../api/members";
 import { TemporaryPasswordNotice } from "./temporary-password-notice";
 
-const roleLabels: Record<Role, string> = { member: "Member", admin: "Admin" };
+// Member first: it is the default choice.
+const roles: Role[] = ["member", "admin"];
 
 export function CreateMemberForm() {
   const [state, action, pending] = useActionState<MemberActionState, FormData>(
     createMember,
     { status: "idle" },
   );
+  const t = useTranslations();
 
   return (
     <div className="flex flex-col gap-4">
       <form
         action={action}
-        className="grid gap-4 sm:grid-cols-[1fr_1fr_auto_auto] sm:items-end"
+        className="grid gap-3 sm:grid-cols-[1fr_1fr_10rem_auto] sm:items-end"
       >
         <div className="flex flex-col gap-2">
-          <Label htmlFor="member-name">Name</Label>
+          <Label htmlFor="member-name">{t("admin.name")}</Label>
           <Input id="member-name" name="name" required />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="member-email">Email</Label>
+          <Label htmlFor="member-email">{t("admin.email")}</Label>
           <Input id="member-email" name="email" type="email" required />
         </div>
         <div className="flex flex-col gap-2">
-          <Label htmlFor="member-role">Role</Label>
-          <NativeSelect id="member-role" name="role" defaultValue="member">
-            {Object.entries(roleLabels).map(([value, label]) => (
-              <NativeSelectOption key={value} value={value}>
-                {label}
+          <Label htmlFor="member-role">{t("admin.role")}</Label>
+          <NativeSelect
+            id="member-role"
+            name="role"
+            defaultValue="member"
+            className="w-full"
+          >
+            {roles.map((role) => (
+              <NativeSelectOption key={role} value={role}>
+                {t(`common.roles.${role}`)}
               </NativeSelectOption>
             ))}
           </NativeSelect>
         </div>
         <Button type="submit" disabled={pending}>
-          {pending ? "Adding…" : "Add member"}
+          {pending ? t("admin.adding") : t("admin.add")}
         </Button>
       </form>
       {state.status === "error" ? (
-        <p role="alert" className="text-destructive text-sm">
+        <p
+          role="alert"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px]"
+        >
           {state.message}
         </p>
       ) : null}

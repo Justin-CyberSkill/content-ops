@@ -5,6 +5,9 @@ import {
   type Content,
   PLATFORMS,
 } from "@/shared/db/schema";
+import type { Messages } from "@/shared/i18n";
+
+type ErrorKey = keyof Messages["contentEditor"]["errors"];
 
 // Empty inputs become null; anything else must pass `schema`.
 const optional = (schema: z.ZodType<string, string>) =>
@@ -14,32 +17,31 @@ const optional = (schema: z.ZodType<string, string>) =>
     .pipe(z.union([z.literal(""), schema]))
     .transform((value) => value || null);
 
-const httpUrl = z.url({
-  protocol: /^https?$/,
-  error: "Asset links must be http(s) URLs, one per line.",
-});
+/** `t` turns an error key into text, such as getTranslations("contentEditor.errors"). */
+export const createContentFormSchema = (t: (key: ErrorKey) => string) =>
+  z.object({
+    goal: z.string().trim().min(1, t("goalRequired")),
+    idea: z.string().trim().min(1, t("ideaRequired")),
+    platforms: z.array(z.enum(PLATFORMS)).min(1, t("platformsRequired")),
+    type: z.enum(CONTENT_TYPES, { error: t("typeRequired") }),
+    publishDate: optional(z.iso.date({ error: t("invalidDate") })),
+    goldenTime: optional(z.iso.time({ error: t("invalidTime") })),
+    assigneeId: optional(z.string()),
+    status: z.enum(CONTENT_STATUSES),
+    assetLinks: z
+      .string()
+      .transform((value) =>
+        value
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean),
+      )
+      .pipe(z.array(z.url({ protocol: /^https?$/, error: t("invalidLinks") }))),
+  });
 
-export const contentFormSchema = z.object({
-  goal: z.string().trim().min(1, "Write the goal: what we want and why."),
-  idea: z.string().trim().min(1, "Write the content idea."),
-  platforms: z.array(z.enum(PLATFORMS)).min(1, "Pick at least one platform."),
-  type: z.enum(CONTENT_TYPES, { error: "Pick a content type." }),
-  publishDate: optional(z.iso.date({ error: "Pick a valid publish day." })),
-  goldenTime: optional(z.iso.time({ error: "Pick a valid golden time." })),
-  assigneeId: optional(z.string()),
-  status: z.enum(CONTENT_STATUSES),
-  assetLinks: z
-    .string()
-    .transform((value) =>
-      value
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean),
-    )
-    .pipe(z.array(httpUrl)),
-});
-
-export type ContentFormData = z.output<typeof contentFormSchema>;
+export type ContentFormData = z.output<
+  ReturnType<typeof createContentFormSchema>
+>;
 
 /** What the form shows: strings for every field, so a failed submit can refill it. */
 export type ContentFormValues = {

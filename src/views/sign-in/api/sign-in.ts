@@ -3,6 +3,7 @@
 import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { auth } from "@/shared/auth/index.server";
 import { safeNext } from "../lib/safe-next";
@@ -19,10 +20,10 @@ export async function signIn(
   _prev: SignInState,
   formData: FormData,
 ): Promise<SignInState> {
+  const t = await getTranslations("signIn.errors");
   const email = String(formData.get("email") ?? "");
   const parsed = schema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success)
-    return { error: "Enter your email and password.", email };
+  if (!parsed.success) return { error: t("missing"), email };
 
   try {
     await auth.api.signInEmail({
@@ -30,8 +31,7 @@ export async function signIn(
       headers: await headers(),
     });
   } catch (error) {
-    if (error instanceof APIError)
-      return { error: "Wrong email or password.", email };
+    if (error instanceof APIError) return { error: t("wrong"), email };
     throw error;
   }
   redirect(safeNext(parsed.data.next));

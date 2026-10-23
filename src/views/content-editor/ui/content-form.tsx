@@ -1,13 +1,11 @@
 "use client";
 
+import { CheckIcon } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { startTransition, useActionState } from "react";
-import {
-  contentTypeLabels,
-  platformLabels,
-  statusLabels,
-} from "@/entities/content";
 import { CONTENT_STATUSES, CONTENT_TYPES, PLATFORMS } from "@/shared/db/schema";
+import { cn } from "@/shared/lib";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
@@ -21,13 +19,16 @@ type Props = {
   id: string | null;
   initial: ContentFormValues;
   members: Member[];
+  /** Extra cards under the status card, such as the admin-only delete. */
+  aside?: React.ReactNode;
 };
 
-export function ContentForm({ id, initial: values, members }: Props) {
+export function ContentForm({ id, initial: values, members, aside }: Props) {
   const [state, action, pending] = useActionState<SaveContentState, FormData>(
     saveContent.bind(null, id),
     {},
   );
+  const t = useTranslations();
 
   return (
     <form
@@ -37,141 +38,217 @@ export function ContentForm({ id, initial: values, members }: Props) {
         const formData = new FormData(event.currentTarget);
         startTransition(() => action(formData));
       }}
-      className="flex max-w-2xl flex-col gap-6"
+      className="flex flex-wrap items-start gap-6"
     >
-      <Field label="Goal" htmlFor="goal" hint="What we want and why.">
-        <Textarea
-          id="goal"
-          name="goal"
-          rows={2}
-          defaultValue={values.goal}
-          required
-        />
-      </Field>
+      <div className="flex min-w-0 flex-[2_1_32rem] flex-col gap-6">
+        <Section title={t("contentEditor.brief")}>
+          <Field
+            label={t("contentEditor.goal")}
+            htmlFor="goal"
+            hint={t("contentEditor.goalHint")}
+          >
+            <Textarea
+              id="goal"
+              name="goal"
+              rows={2}
+              defaultValue={values.goal}
+              required
+            />
+          </Field>
+          <Field label={t("contentEditor.idea")} htmlFor="idea">
+            <Textarea
+              id="idea"
+              name="idea"
+              rows={4}
+              defaultValue={values.idea}
+              required
+            />
+          </Field>
+        </Section>
 
-      <Field label="Content idea" htmlFor="idea">
-        <Textarea
-          id="idea"
-          name="idea"
-          rows={4}
-          defaultValue={values.idea}
-          required
-        />
-      </Field>
+        <div className="flex flex-wrap gap-6">
+          <Section
+            title={t("contentEditor.format")}
+            className="flex-[3_1_20rem]"
+          >
+            <fieldset className="flex flex-col">
+              <legend className="mb-2.5 pl-1 text-[13px] font-medium">
+                {t("contentEditor.platforms")}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {PLATFORMS.map((platform) => (
+                  <label
+                    key={platform}
+                    className="group flex h-10 cursor-pointer items-center gap-2 rounded-full bg-muted pr-4 pl-2.5 text-[13px] font-medium transition-colors hover:bg-muted-strong has-checked:bg-foreground has-checked:text-background has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                  >
+                    <input
+                      type="checkbox"
+                      name="platforms"
+                      value={platform}
+                      defaultChecked={values.platforms.includes(platform)}
+                      className="peer sr-only"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="flex size-5 items-center justify-center rounded-full bg-card text-transparent ring-[1.5px] ring-muted-foreground ring-inset peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:ring-0"
+                    >
+                      <CheckIcon className="size-3" strokeWidth={4} />
+                    </span>
+                    {t(`content.platform.${platform}`)}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <Field label={t("contentEditor.contentType")} htmlFor="type">
+              <NativeSelect
+                id="type"
+                name="type"
+                defaultValue={values.type}
+                className="w-full"
+                required
+              >
+                <NativeSelectOption value="" disabled>
+                  {t("contentEditor.pickType")}
+                </NativeSelectOption>
+                {CONTENT_TYPES.map((type) => (
+                  <NativeSelectOption key={type} value={type}>
+                    {t(`content.type.${type}`)}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
+            </Field>
+          </Section>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-2 font-medium text-sm">Platforms</legend>
-        <div className="flex flex-wrap gap-x-5 gap-y-2">
-          {PLATFORMS.map((platform) => (
-            <label key={platform} className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="platforms"
-                value={platform}
-                defaultChecked={values.platforms.includes(platform)}
-                className="size-4 accent-primary"
+          <Section
+            title={t("contentEditor.schedule")}
+            className="flex-[2_1_16rem]"
+          >
+            <Field label={t("contentEditor.publishDay")} htmlFor="publishDate">
+              <Input
+                id="publishDate"
+                name="publishDate"
+                type="date"
+                defaultValue={values.publishDate}
+                className="tabular-nums"
               />
-              {platformLabels[platform]}
-            </label>
-          ))}
+            </Field>
+            <Field
+              label={t("contentEditor.goldenTime")}
+              htmlFor="goldenTime"
+              hint={t("contentEditor.goldenTimeHint")}
+            >
+              <Input
+                id="goldenTime"
+                name="goldenTime"
+                type="time"
+                defaultValue={values.goldenTime}
+                className="tabular-nums"
+              />
+            </Field>
+          </Section>
         </div>
-      </fieldset>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Content type" htmlFor="type">
-          <NativeSelect
-            id="type"
-            name="type"
-            defaultValue={values.type}
-            className="w-full"
-            required
+        <Section title={t("contentEditor.assetLinks")}>
+          <Field
+            label={t("contentEditor.links")}
+            htmlFor="assetLinks"
+            hint={t("contentEditor.linksHint")}
           >
-            <NativeSelectOption value="" disabled>
-              Pick a type
-            </NativeSelectOption>
-            {CONTENT_TYPES.map((type) => (
-              <NativeSelectOption key={type} value={type}>
-                {contentTypeLabels[type]}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
-        </Field>
+            <Textarea
+              id="assetLinks"
+              name="assetLinks"
+              rows={3}
+              defaultValue={values.assetLinks}
+              placeholder="https://drive.google.com/…"
+            />
+          </Field>
+        </Section>
 
-        <Field label="Status" htmlFor="status">
-          <NativeSelect
-            id="status"
-            name="status"
-            defaultValue={values.status}
-            className="w-full"
+        {state.error ? (
+          <p
+            role="alert"
+            className="rounded-xl bg-destructive-soft px-5 py-3.5 text-foreground"
           >
-            {CONTENT_STATUSES.map((status) => (
-              <NativeSelectOption key={status} value={status}>
-                {statusLabels[status]}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
-        </Field>
+            {state.error}
+          </p>
+        ) : null}
 
-        <Field label="Publish day" htmlFor="publishDate">
-          <Input
-            id="publishDate"
-            name="publishDate"
-            type="date"
-            defaultValue={values.publishDate}
-          />
-        </Field>
-
-        <Field label="Golden time" htmlFor="goldenTime">
-          <Input
-            id="goldenTime"
-            name="goldenTime"
-            type="time"
-            defaultValue={values.goldenTime}
-          />
-        </Field>
-
-        <Field label="Assignee" htmlFor="assigneeId">
-          <NativeSelect
-            id="assigneeId"
-            name="assigneeId"
-            defaultValue={values.assigneeId}
-            className="w-full"
+        <div className="flex justify-end gap-2">
+          <Link
+            href="/content"
+            className={buttonVariants({ variant: "ghost" })}
           >
-            <NativeSelectOption value="">Unassigned</NativeSelectOption>
-            {members.map((member) => (
-              <NativeSelectOption key={member.id} value={member.id}>
-                {member.name}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
-        </Field>
+            {t("common.cancel")}
+          </Link>
+          <Button type="submit" disabled={pending}>
+            {pending
+              ? t("common.saving")
+              : id
+                ? t("contentEditor.saveChanges")
+                : t("contentEditor.addToPlan")}
+          </Button>
+        </div>
       </div>
 
-      <Field label="Asset links" htmlFor="assetLinks" hint="One URL per line.">
-        <Textarea
-          id="assetLinks"
-          name="assetLinks"
-          rows={3}
-          defaultValue={values.assetLinks}
-          placeholder="https://drive.google.com/…"
-        />
-      </Field>
-
-      {state.error ? (
-        <p role="alert" className="text-destructive text-sm">
-          {state.error}
-        </p>
-      ) : null}
-
-      <div className="flex gap-2">
-        <Button type="submit" disabled={pending}>
-          {pending ? "Saving…" : id ? "Save changes" : "Add to plan"}
-        </Button>
-        <Link href="/content" className={buttonVariants({ variant: "ghost" })}>
-          Cancel
-        </Link>
+      <div className="flex min-w-0 flex-[1_1_18rem] flex-col gap-6">
+        <Section title={t("contentEditor.statusAndOwner")}>
+          <Field label={t("contentEditor.status")} htmlFor="status">
+            <NativeSelect
+              id="status"
+              name="status"
+              defaultValue={values.status}
+              className="w-full"
+            >
+              {CONTENT_STATUSES.map((status) => (
+                <NativeSelectOption key={status} value={status}>
+                  {t(`content.status.${status}`)}
+                </NativeSelectOption>
+              ))}
+            </NativeSelect>
+          </Field>
+          <Field label={t("contentEditor.assignee")} htmlFor="assigneeId">
+            <NativeSelect
+              id="assigneeId"
+              name="assigneeId"
+              defaultValue={values.assigneeId}
+              className="w-full"
+            >
+              <NativeSelectOption value="">
+                {t("common.unassigned")}
+              </NativeSelectOption>
+              {members.map((member) => (
+                <NativeSelectOption key={member.id} value={member.id}>
+                  {member.name}
+                </NativeSelectOption>
+              ))}
+            </NativeSelect>
+          </Field>
+        </Section>
+        {aside}
       </div>
     </form>
+  );
+}
+
+function Section({
+  title,
+  className,
+  children,
+}: {
+  title: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      className={cn(
+        "flex min-w-0 flex-col gap-5 rounded-2xl bg-card p-6 shadow-card md:p-7",
+        className,
+      )}
+    >
+      <h2 className="text-lg font-semibold">{title}</h2>
+      {children}
+    </section>
   );
 }
 
@@ -190,7 +267,9 @@ function Field({
     <div className="flex flex-col gap-2">
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
-      {hint ? <p className="text-muted-foreground text-xs">{hint}</p> : null}
+      {hint ? (
+        <p className="pl-1 text-xs text-muted-foreground">{hint}</p>
+      ) : null}
     </div>
   );
 }

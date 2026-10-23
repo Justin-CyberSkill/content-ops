@@ -3,9 +3,11 @@
 import { APIError } from "better-auth/api";
 import { refresh } from "next/cache";
 import { headers } from "next/headers";
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { ROLES } from "@/shared/auth";
 import { auth, requireAdmin } from "@/shared/auth/index.server";
+import type { Messages } from "@/shared/i18n";
 import { temporaryPassword } from "../lib/temporary-password";
 
 export type MemberActionState =
@@ -13,18 +15,28 @@ export type MemberActionState =
   | { status: "error"; message: string }
   | { status: "done"; email: string; password: string };
 
-const newMemberSchema = z.object({
-  name: z.string().trim().min(1, "Enter a name."),
-  email: z.string().trim().toLowerCase().pipe(z.email("Enter a valid email.")),
-  role: z.enum(ROLES),
-});
+type ErrorKey = keyof Messages["admin"]["errors"];
+
+const createSchema = (t: (key: ErrorKey) => string) =>
+  z.object({
+    name: z.string().trim().min(1, t("nameRequired")),
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .pipe(z.email(t("invalidEmail"))),
+    role: z.enum(ROLES),
+  });
 
 export async function createMember(
   _prev: MemberActionState,
   formData: FormData,
 ): Promise<MemberActionState> {
   await requireAdmin();
-  const parsed = newMemberSchema.safeParse(Object.fromEntries(formData));
+  const t = await getTranslations("admin.errors");
+  const parsed = createSchema((key) => t(key)).safeParse(
+    Object.fromEntries(formData),
+  );
   if (!parsed.success)
     return { status: "error", message: parsed.error.issues[0].message };
 

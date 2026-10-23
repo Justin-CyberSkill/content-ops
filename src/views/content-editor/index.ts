@@ -1,6 +1,6 @@
 export {
   EditContentPage,
-  editMetadata,
+  generateEditMetadata,
+  generateNewMetadata,
   NewContentPage,
-  newMetadata,
 } from "./ui/content-editor-page";
