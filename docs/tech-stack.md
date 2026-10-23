@@ -1,32 +1,38 @@
 # Tech stack
 
-Reference stack (verified 2026-10-14). A starting point, not a rule.
+Baseline shared across projects. Verified 2026-10-23. Versions live in `package.json`.
+Stay on it. Any change needs approval and goes in "Project deviations".
 
 ## Stack
 
 - Next.js 16 (App Router) + TypeScript strict
 - Tailwind CSS v4
-- shadcn/ui (copied into the repo)
-- Postgres on Neon (standard Postgres only)
-- Drizzle ORM + drizzle-kit
+- shadcn/ui on Base UI (copied into the repo)
+- Postgres: Neon in production, Docker locally. Standard Postgres only.
+- Drizzle ORM + drizzle-kit (postgres-js driver)
 - Better Auth (users in our Postgres)
-- Zod v4 (validate all external input)
+- Zod v4 (validate all external input and env)
 - Server Actions for mutations, Route Handlers for webhooks and public endpoints, reads in Server Components
 - Biome (lint + format)
 - Vitest + Testing Library
+- Vercel (Node.js runtime)
 - GitHub Actions
 - pnpm
-- Feature-Sliced Design v2.1 on the App Router; boundaries enforced with Biome `noRestrictedImports`
+- Feature-Sliced Design v2.1, boundaries enforced by Biome
 
-Not in the baseline: hosting, background jobs, payments, email, storage, error tracking, i18n. Choose them when a project needs them.
+Not in the baseline: e2e, background jobs, payments, email, storage, error tracking, i18n. Choose when needed.
 
 ## Choosing tech
 
-For anything not listed, or something better than what is listed, research current options (official docs and recent independent sources, not memory). Pick by:
+Research current options (official docs and recent independent sources, not memory). Pick by:
 - Free or open-source (a generous free tier is fine)
-- Actively maintained and recommended by the community today
-- Fast and lean: few dependencies, small footprint, minimal setup
-- Simple, elegant, TypeScript-first API that is well documented
-- Fits the stack and stays portable (no hard lock-in)
+- Actively maintained and recommended today
+- Lean: few dependencies, minimal setup
+- Simple, TypeScript-first, well documented
+- Portable (no hard lock-in)
 
-Suggest one pick with a short reason, the main alternative and any cost. After approval, use it and update this file.
+Suggest one pick with a short reason, the main alternative and any cost. After approval, record it below, or update the baseline if it should apply to every project.
+
+## Project deviations
+
+None.
