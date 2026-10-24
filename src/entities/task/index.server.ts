@@ -1,8 +1,6 @@
 export {
-  type Assignments,
   createTasks,
   hasTasks,
-  type IdeaTask,
   listTasks,
   moveDueDates,
   type PlannedStep,
@@ -10,6 +8,5 @@ export {
   setTaskAssignee,
   setTaskStatus,
   syncIdea,
-  type TaskChangeError,
   type WorkPlan,
 } from "./api/tasks";

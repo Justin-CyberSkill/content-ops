@@ -30,9 +30,7 @@ export async function listPosts(contentId: string) {
     .where(eq(post.contentId, contentId));
 }
 
-export type PostRow = Awaited<ReturnType<typeof listPosts>>[number];
-
-export type AssetVersionRow = {
+type AssetVersionRow = {
   id: string;
   url: string;
   note: string;
