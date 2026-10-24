@@ -24,6 +24,8 @@ type Props = {
   members: Member[];
   /** Reviewing an agent's proposal: saving approves it. */
   approving?: boolean;
+  /** The proposal's version when the form opened, so saving can tell if an agent changed it since. */
+  revision?: number;
   /** Set when the form opens inside another view: Cancel closes it instead of leaving. */
   onCancel?: () => void;
 };
@@ -34,6 +36,7 @@ export function ContentForm({
   initial: values,
   members,
   approving,
+  revision,
   onCancel,
 }: Props) {
   const [state, action, pending] = useActionState<SaveContentState, FormData>(
@@ -56,6 +59,9 @@ export function ContentForm({
       className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] xl:items-start"
     >
       <input type="hidden" name="from" value={from} />
+      {approving ? (
+        <input type="hidden" name="revision" value={revision ?? 0} />
+      ) : null}
       <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-span-2 xl:row-start-1">
         <Section title={t("contentEditor.brief")}>
           <Field

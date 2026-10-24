@@ -6,7 +6,11 @@ import { Suspense } from "react";
 import { requireAdmin } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
 import { Link } from "@/shared/i18n";
-import { listPendingProposals } from "../api/list-proposals";
+import {
+  listClosedProposals,
+  listPendingProposals,
+} from "../api/list-proposals";
+import { ClosedProposals } from "./closed-proposals";
 import { ProposalList } from "./proposal-list";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,9 +43,10 @@ async function Proposals({
   searchParams,
 }: Pick<PageProps<"/[locale]/review">, "searchParams">) {
   await requireAdmin();
-  const [{ done }, proposals, t] = await Promise.all([
+  const [{ done }, proposals, closed, t] = await Promise.all([
     searchParams,
     listPendingProposals(),
+    listClosedProposals(),
     getTranslations("review"),
   ]);
   return (
@@ -55,6 +60,7 @@ async function Proposals({
         </p>
       ) : null}
       <ProposalList proposals={proposals} timeZone={TEAM_TIME_ZONE} />
+      <ClosedProposals proposals={closed} timeZone={TEAM_TIME_ZONE} />
     </>
   );
 }
