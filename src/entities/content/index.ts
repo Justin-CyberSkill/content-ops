@@ -1,5 +1,4 @@
 export {
-  CONTENT_ORIGINS,
   type ContentOrigin,
   contentHref,
   originHref,
