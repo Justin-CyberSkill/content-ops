@@ -7,7 +7,6 @@ import { auth, requireAdmin } from "@/shared/auth/index.server";
 import { Link } from "@/shared/i18n";
 import { Avatar } from "@/shared/ui/avatar";
 import { Badge } from "@/shared/ui/badge";
-import { SectionTabs } from "@/shared/ui/section-tabs";
 import { listWorkByMember } from "../api/work-by-member";
 import { CreateMemberForm } from "./create-member-form";
 import { ResetPasswordButton } from "./reset-password-button";
@@ -17,29 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("metaTitle") };
 }
 
+/** The Members tab of Settings: the settings layout gives the page its heading and tabs. */
 export function AdminPage() {
   const t = useTranslations();
   return (
-    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            {t("admin.title")}
-          </h1>
-          <p className="text-muted-foreground">{t("admin.intro")}</p>
-        </div>
-        <SectionTabs
-          label={t("admin.sections")}
-          tabs={[
-            { href: "/admin", label: t("admin.team"), current: true },
-            {
-              href: "/admin/workflow",
-              label: t("workflow.tab"),
-              current: false,
-            },
-          ]}
-        />
-      </div>
+    <div className="flex flex-col gap-6">
+      <p className="text-muted-foreground">{t("admin.intro")}</p>
       <Suspense
         fallback={
           <p className="text-muted-foreground">{t("common.loading")}</p>
@@ -47,7 +29,7 @@ export function AdminPage() {
       >
         <Members />
       </Suspense>
-    </main>
+    </div>
   );
 }
 
@@ -73,7 +55,7 @@ async function Members() {
           id="team-heading"
           className="flex items-baseline gap-2 px-3 pt-2 text-lg font-semibold"
         >
-          {t("admin.team")}
+          {t("admin.title")}
           <span className="font-sans text-[13px] font-normal text-muted-foreground">
             {t("admin.peopleCount", { count: users.length })}
           </span>
@@ -98,16 +80,21 @@ async function Members() {
                 <p className="truncate text-[13px] text-muted-foreground">
                   {user.email}
                 </p>
-                <p className="text-[13px] break-words">
-                  {workByMember.get(user.id)?.join(", ") ?? (
-                    <Link
-                      href="/admin/workflow"
-                      className="text-muted-foreground underline-offset-4 hover:underline"
-                    >
+                {/* Who does which work is set on Workflow, so the line links there. */}
+                <Link
+                  href="/settings/workflow"
+                  className="w-fit text-[13px] break-words underline-offset-4 hover:underline"
+                >
+                  {workByMember.has(user.id) ? (
+                    t("admin.workTypes", {
+                      list: workByMember.get(user.id)?.join(", ") ?? "",
+                    })
+                  ) : (
+                    <span className="text-muted-foreground">
                       {t("admin.noWork")}
-                    </Link>
+                    </span>
                   )}
-                </p>
+                </Link>
               </div>
               <Badge
                 variant={user.role === "admin" ? "default" : "secondary"}

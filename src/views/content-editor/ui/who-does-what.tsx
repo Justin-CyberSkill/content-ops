@@ -108,7 +108,7 @@ export function WhoDoesWhat({
                 {t("task.noDoers", { work: step.name })}{" "}
                 {canSetUp ? (
                   <Link
-                    href="/admin/workflow"
+                    href="/settings/workflow"
                     className="font-medium text-accent-foreground underline-offset-4 hover:underline"
                   >
                     {t("task.setUpDoers")}

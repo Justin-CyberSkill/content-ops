@@ -20,13 +20,12 @@
     "label": "Main",
     "contentPlan": "Content plan",
     "myTasks": "My tasks",
-    "members": "Members",
+    "settings": "Settings",
     "account": "Account: {name}",
     "signOut": "Sign out",
     "language": "Language",
     "review": "Proposals",
-    "reviewWaiting": "{count} waiting",
-    "agents": "Agents"
+    "reviewWaiting": "{count} waiting"
   },
   "content": {
     "status": {
@@ -93,12 +92,15 @@
     },
     "intro": "Your profile and password."
   },
+  "settings": {
+    "title": "Settings",
+    "sections": "Settings sections"
+  },
   "admin": {
     "title": "Members",
     "metaTitle": "Members · CS Content Ops",
-    "intro": "Who's on the team, what they can do, and what work they take.",
+    "intro": "Who's on the team and what they can do. Who does which work is set on Workflow.",
     "addMember": "Add a member",
-    "team": "Team",
     "peopleCount": "{count, plural, one {# person} other {# people}}",
     "you": "(you)",
     "name": "Name",
@@ -117,7 +119,7 @@
     },
     "addMemberHint": "They get a temporary password to send them privately. They change it after signing in.",
     "roleHint": "Members plan and make content. Admins can also handle proposals, members and agent keys.",
-    "sections": "Members sections",
+    "workTypes": "Work types: {list}",
     "noWork": "No work types yet"
   },
   "contentList": {
@@ -225,7 +227,7 @@
       "notWithdrawn": "This idea isn't withdrawn any more. Reload the page to see where it stands.",
       "followsTasks": "This item's status and assignee follow its tasks. Reload the page to see them.",
       "alreadyTasks": "This item already has tasks. Reload the page to see them.",
-      "noSteps": "This content type has no steps yet. Add them under Members, then Workflow.",
+      "noSteps": "This content type has no steps yet. Add them in Settings, under Workflow.",
       "scriptTooLong": "Keep the script under 20,000 characters.",
       "captionTooLong": "Keep each caption under 10,000 characters.",
       "hashtagsTooLong": "Keep the hashtags under 1,000 characters.",
@@ -521,7 +523,7 @@
     }
   },
   "workflow": {
-    "tab": "Workflow",
+    "title": "Workflow",
     "metaTitle": "Workflow · CS Content Ops",
     "intro": "How an approved idea gets made: the kinds of work, who does each, and which steps each content type needs.",
     "workTypes": "Work types",
