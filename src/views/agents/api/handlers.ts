@@ -1,55 +1,63 @@
-import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { auth } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
-import { db } from "@/shared/db";
-import { user } from "@/shared/db/schema";
 import { planRangeSchema } from "../model/plan-range";
-import { proposalInputSchema } from "../model/proposal-input";
 import {
-  type AgentKey,
+  ideaFilterSchema,
+  proposalInputSchema,
+  proposalUpdateSchema,
+  withdrawInputSchema,
+} from "../model/proposal-input";
+import { authenticate, problem } from "./authenticate";
+import {
+  getIdea,
+  type IdeaRefusal,
+  listIdeas,
   listPlanForAgent,
-  listProposalsForKey,
   proposeContent,
-} from "./propose-content";
+  updateIdea,
+  withdrawIdea,
+} from "./ideas";
 
-const KEY_HEADER = "x-api-key";
+type IdParams = { params: Promise<{ id: string }> };
 
-function problem(status: number, error: string, init?: ResponseInit) {
-  return Response.json({ error }, { ...init, status });
+/** A 400 that lists each field that failed and why. */
+function invalid(error: string, issues: z.core.$ZodIssue[]) {
+  return Response.json(
+    {
+      error,
+      issues: issues.map((issue) => ({
+        field:
+          issue.code === "unrecognized_keys"
+            ? issue.keys.join(", ")
+            : issue.path.join("."),
+        message: issue.message,
+      })),
+    },
+    { status: 400 },
+  );
 }
 
-/** The verified key, or the response to send back. Every call counts toward the key's rate limit. */
-async function authenticate(request: Request): Promise<AgentKey | Response> {
-  const key = request.headers.get(KEY_HEADER);
-  if (!key)
-    return problem(401, `Send your agent key in the ${KEY_HEADER} header.`);
+/** The JSON body, or undefined when there's none or it isn't JSON. */
+async function readJson(request: Request) {
+  const text = await request.text();
+  if (!text.trim()) return undefined;
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return null;
+  }
+}
 
-  const result = await auth.api.verifyApiKey({ body: { key } });
-  if (result.valid && result.key) {
-    // Better Auth lets any signed-in user make a key at /api/auth/api-key/create.
-    // Only keys an admin made (in Settings > Agents) may use the agent API.
-    const [owner] = await db
-      .select({ role: user.role })
-      .from(user)
-      .where(eq(user.id, result.key.referenceId));
-    if (owner?.role !== "admin") {
-      return problem(401, "This key wasn't made by an admin.");
-    }
-    return { id: result.key.id, name: result.key.name ?? "Agent" };
-  }
-  if (result.error?.code === "RATE_LIMITED") {
-    const details = (result.error as { details?: { tryAgainIn?: number } })
-      .details;
-    const seconds = Math.max(
-      1,
-      Math.ceil((details?.tryAgainIn ?? 60_000) / 1000),
-    );
-    return problem(429, "Too many requests for this key. Slow down.", {
-      headers: { "Retry-After": String(seconds) },
-    });
-  }
-  return problem(401, "This key is missing, wrong, disabled or expired.");
+function refused(refusal: IdeaRefusal) {
+  if (refusal.reason === "not_found")
+    return problem(404, "No idea has that id.");
+  return Response.json(
+    {
+      error: `This idea is ${refusal.state}. Only pending ideas can change.`,
+      state: refusal.state,
+    },
+    { status: 409 },
+  );
 }
 
 /** GET /api/agent/plan?from=YYYY-MM-DD&to=YYYY-MM-DD */
@@ -78,36 +86,67 @@ export async function getPlan(request: Request) {
   });
 }
 
-/** GET /api/agent/proposals: this key's proposals and what happened to them. */
+/** GET /api/agent/proposals?state=pending&source=…&mine=true&limit=50 */
 export async function getProposals(request: Request) {
   const key = await authenticate(request);
   if (key instanceof Response) return key;
-  return Response.json({ proposals: await listProposalsForKey(key.id) });
+
+  const params = new URL(request.url).searchParams;
+  const filter = ideaFilterSchema.safeParse({
+    state: params.get("state") ?? undefined,
+    source: params.get("source") ?? undefined,
+    mine: params.get("mine") === "true" || undefined,
+    limit: params.has("limit") ? Number(params.get("limit")) : undefined,
+  });
+  if (!filter.success) return invalid("Invalid filter.", filter.error.issues);
+  return Response.json({ proposals: await listIdeas(key, filter.data) });
 }
 
-/** POST /api/agent/proposals: add one idea as "proposed". */
+/** POST /api/agent/proposals: add one idea as pending. */
 export async function postProposal(request: Request) {
   const key = await authenticate(request);
   if (key instanceof Response) return key;
 
-  const body = await request.json().catch(() => undefined);
-  const parsed = proposalInputSchema.safeParse(body);
-  if (!parsed.success) {
-    return Response.json(
-      {
-        error: "The proposal didn't validate.",
-        issues: parsed.error.issues.map((issue) => ({
-          field:
-            issue.code === "unrecognized_keys"
-              ? issue.keys.join(", ")
-              : issue.path.join("."),
-          message: issue.message,
-        })),
-      },
-      { status: 400 },
-    );
-  }
+  const parsed = proposalInputSchema.safeParse(await readJson(request));
+  if (!parsed.success)
+    return invalid("The proposal didn't validate.", parsed.error.issues);
   return Response.json(await proposeContent(key, parsed.data), {
     status: 201,
   });
+}
+
+/** GET /api/agent/proposals/:id: one idea with its comments and history. */
+export async function getProposal(request: Request, { params }: IdParams) {
+  const key = await authenticate(request);
+  if (key instanceof Response) return key;
+
+  const idea = await getIdea((await params).id);
+  if (!idea) return problem(404, "No idea has that id.");
+  return Response.json(idea);
+}
+
+/** PATCH /api/agent/proposals/:id: change a pending idea. Send only the fields to change. */
+export async function patchProposal(request: Request, { params }: IdParams) {
+  const key = await authenticate(request);
+  if (key instanceof Response) return key;
+
+  const parsed = proposalUpdateSchema.safeParse(await readJson(request));
+  if (!parsed.success)
+    return invalid("The change didn't validate.", parsed.error.issues);
+  const result = await updateIdea(key, (await params).id, parsed.data);
+  if (!result.ok) return refused(result);
+  return Response.json({ ...result.idea, changed: result.changed });
+}
+
+/** DELETE /api/agent/proposals/:id: withdraw a pending idea. Optional body: { "reason": "…" }. */
+export async function deleteProposal(request: Request, { params }: IdParams) {
+  const key = await authenticate(request);
+  if (key instanceof Response) return key;
+
+  const parsed = withdrawInputSchema.safeParse((await readJson(request)) ?? {});
+  if (!parsed.success)
+    return invalid("The withdrawal didn't validate.", parsed.error.issues);
+  const result = await withdrawIdea(key, (await params).id, parsed.data.reason);
+  if (!result.ok) return refused(result);
+  return Response.json(result.idea);
 }

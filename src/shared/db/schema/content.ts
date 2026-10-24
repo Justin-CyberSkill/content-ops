@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   date,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -86,6 +87,13 @@ export const content = pgTable(
     // A rejected proposal keeps status "proposed" and is hidden from the plan; agents read the reason.
     rejectedAt: timestamp(),
     rejectionReason: text(),
+    // An agent can withdraw its pending idea instead of deleting it; an admin can restore it.
+    withdrawnAt: timestamp(),
+    withdrawReason: text(),
+    /** What an agent based the idea on: meeting notes, issues, PRs. Links or short labels. */
+    sources: text().array().notNull().default(sql`'{}'`),
+    /** Goes up each time an agent changes a pending idea, so approving checks you saw the latest. */
+    revision: integer().notNull().default(0),
     reviewedById: text().references(() => user.id, { onDelete: "set null" }),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
@@ -118,3 +126,43 @@ export const contentComment = pgTable(
 );
 
 export type ContentComment = typeof contentComment.$inferSelect;
+
+export const CONTENT_EVENT_ACTIONS = [
+  "proposed",
+  "updated",
+  "withdrawn",
+  "restored",
+  "approved",
+  "rejected",
+] as const;
+
+export type ContentEventAction = (typeof CONTENT_EVENT_ACTIONS)[number];
+
+export const contentEventAction = pgEnum(
+  "content_event_action",
+  CONTENT_EVENT_ACTIONS,
+);
+
+/** What happened to an idea and who did it: an agent key or a member. */
+export const contentEvent = pgTable(
+  "content_event",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    contentId: uuid()
+      .notNull()
+      .references(() => content.id, { onDelete: "cascade" }),
+    action: contentEventAction().notNull(),
+    // One of the two is set. The name is kept so history still reads after a key or member is removed.
+    agentKeyId: text(),
+    userId: text().references(() => user.id, { onDelete: "set null" }),
+    actorName: text().notNull(),
+    /** For "updated": the fields that changed, by their API names. */
+    fields: text().array().notNull().default(sql`'{}'`),
+    /** A withdraw reason, when one was given. */
+    note: text(),
+    createdAt: timestamp().defaultNow().notNull(),
+  },
+  (table) => [index("content_event_content_id_idx").on(table.contentId)],
+);
+
+export type ContentEvent = typeof contentEvent.$inferSelect;
