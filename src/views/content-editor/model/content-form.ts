@@ -39,10 +39,6 @@ export const createContentFormSchema = (t: (key: ErrorKey) => string) =>
       .pipe(z.array(z.url({ protocol: /^https?$/, error: t("invalidLinks") }))),
   });
 
-export type ContentFormData = z.output<
-  ReturnType<typeof createContentFormSchema>
->;
-
 /** What the form shows: strings for every field, so a failed submit can refill it. */
 export type ContentFormValues = {
   goal: string;

@@ -10,10 +10,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Project
 
-- Verify before finishing: `pnpm lint && pnpm typecheck && pnpm test`.
-- Structure is Feature-Sliced Design: `src/app` > `src/views` > `features` > `entities` > `shared`. Import only from lower layers, through a slice's `index.ts`. `pnpm lint` enforces this.
-- Put new code in the view that uses it. Server-only exports go in `index.server.ts`.
-- Read `docs/architecture.md` before you add a slice, move code, or fix an import-boundary lint error.
-- Read `docs/tech-stack.md` before you add a dependency.
-- Read `docs/ux-guidelines/index.md` before you add or change a screen or its wording. It says which other guide files to read.
+- Finish every change with `pnpm format && pnpm check`.
+- Shared rules live in `docs/baseline/`; never edit it for this project. Where this project differs: `docs/decisions.md`.
+- Structure is Feature-Sliced Design. Put new code in the view that uses it; server-only exports go in `index.server.ts`.
+- Read before you:
+  - add a slice, move code, or fix a structure or import error: `docs/baseline/architecture.md`
+  - write code: `docs/baseline/conventions.md`; tests: `docs/baseline/testing.md`
+  - add a dependency: `docs/baseline/stack.md`
+  - upgrade dependencies or clean up: `docs/baseline/maintenance.md`
+  - add or change a screen or its wording: `docs/ux-guidelines/index.md`, which says what else to read
 - New env var: add it to `.env.example` and `src/shared/config/env.ts`, then run `pnpm env:sync`.

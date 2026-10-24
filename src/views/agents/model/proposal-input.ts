@@ -74,7 +74,7 @@ export function proposalState(row: {
   return row.status === "proposed" ? "pending" : "approved";
 }
 
-export const MAX_IDEAS = 100;
+const MAX_IDEAS = 100;
 
 /** Filters for listing ideas: by state, by a source the idea is based on, and only this key's. */
 export const ideaFilterSchema = z.strictObject({

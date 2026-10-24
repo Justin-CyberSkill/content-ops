@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const DAY_MS = 86_400_000;
-export const MAX_PLAN_DAYS = 92;
+const MAX_PLAN_DAYS = 92;
 
 const toDay = (iso: string) => Date.parse(`${iso}T00:00:00Z`) / DAY_MS;
 const addDays = (iso: string, days: number) =>
