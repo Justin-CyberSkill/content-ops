@@ -17,7 +17,6 @@ Evidence-based rules for designing screens, flows and wording, for people and ag
 ## Pick the files for your task
 
 Most tasks need one or two of these, plus accessibility.md before you finish.
-
 - [layout.md](layout.md): arranging a screen: grouping, hierarchy, emphasis, images, white space, long pages.
 - [navigation.md](navigation.md): menus, links, tabs, page names, search, wayfinding, changing a design people know.
 - [forms-and-input.md](forms-and-input.md): fields, input, validation, error messages, buttons and tap targets, multi-step flows.

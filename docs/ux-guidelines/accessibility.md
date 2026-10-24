@@ -12,7 +12,6 @@ Read before you finish any UI change.
 ## Standard to check against
 
 The three sources give no thresholds, so check against WCAG 2.2 AA:
-
 - Contrast: 4.5:1 for text; 3:1 for large text, icons, focus rings and the edges people need to see a control.
 - Targets: at least 24 × 24 CSS px, or enough space around smaller ones.
 - Keyboard: everything works with the keyboard, focus is always visible, and sticky bars never hide it.

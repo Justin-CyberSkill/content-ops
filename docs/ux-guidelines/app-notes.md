@@ -29,7 +29,6 @@ The same word in both languages and on every screen:
 | Links to refer to        | Reference links | Link tham khảo              |
 | Reviewer sends work back | Request changes | Yêu cầu sửa                 |
 | Where a post went live   | Live link       | Link bài đăng               |
-
 - Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words. "Copy" is only the button, so the text is "captions", and "Asset links" became "Reference links" once assets got their own card.
 - Open: "Overdue" is "Quá hạn" in the content plan and "Trễ hạn: {day}" on tasks. Pick one.
 - Add a row when you add a concept people see, and search both message files for the old word when you rename one.

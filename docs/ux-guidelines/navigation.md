@@ -1,7 +1,6 @@
 # Navigation and wayfinding
 
 Read when you add or change menus, links, tabs, page names or search, or move something people already know.
-
 - Follow common conventions for navigation, links and controls; people bring what they know from other products. Depart only when you are sure the alternative works better. `[Jakob]` `[Mental model]` `[Myth: design has to be original]`
 - Keep navigation and controls consistent across screens; familiar layouts feel easy. `[Mere exposure]`
 - Name every page, tab and link with the words people would look for. People take the first plausible option, so the right one must look right at a glance. `[Myth: users make optimal choices]`
