@@ -1,7 +1,6 @@
 # Writing for the interface
 
 Read when you write any visible text: labels, buttons, headings, hints, errors, empty states, instructions. This app's glossary and EN/VI rules are in app-notes.md.
-
 - Text is part of the interface. Design with real content, never placeholder text. `[Myth: content isn't needed to design]`
 - People scan. They read under 20% of a page, and concise, scannable, objective copy tested 124% better. Use meaningful headings, put key words first, keep paragraphs short, use lists, and cut promotion, small talk and needless instructions. `[Myth: people read on the web]`
 - Use the words people already use and look for. They take the first plausible match, so labels must match their wording. `[Mental model]` `[Myth: users make optimal choices]`
