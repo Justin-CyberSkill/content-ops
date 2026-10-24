@@ -13,6 +13,7 @@ Each screen answers three questions for a first-time user, in this order: what i
 - **Forms on demand.** "Edit details" swaps the read view for the full form at full width. Cancel goes back to the read view (`onCancel`), not away from the page.
 - **Quick change for the common edit.** Item page: status and owner save from the panel (`updateProgress`) without opening the form. Save stays disabled until something changes; show "Saved" after.
 - **Choices as whole-row buttons**, each with a title and one line saying what happens (proposal: Approve / Edit, then approve / Reject). Make the safe or most common one primary.
+- **Agents change ideas, people decide.** A proposal shows its History (who proposed, changed, withdrew or restored it). Approving checks the version on screen: if an agent changed it meanwhile, say so and show the new version instead of approving it unseen.
 - **Rare, destructive actions stay quiet.** For example, Delete is a small button with a hint under the panel, not a card of its own. Confirm before deleting. Hide actions that don't apply (no Delete on a pending proposal; Reject covers it).
 - **Lists:** one item per row or card, all the same height. Clicking anywhere on it opens the item (a link with `after:absolute after:inset-0`). Group lists by what matters next: content plan by week (Overdue, This week, Next week, Later, No date, Published folded at the bottom); My tasks into To do and Published, each with a count.
 - **Fill the width without stretching text.** Use two columns on wide screens instead of `max-w` boxes that leave half the page empty. Show facts 2 per row, or 4 per row from `2xl`.
@@ -36,17 +37,19 @@ Each screen answers three questions for a first-time user, in this order: what i
 - Write as a teammate would say it. Short sentences, active voice, sentence case.
 - Buttons are verbs that say the result: "Add content", "Approve and add to plan", "Save and approve", "Send". Not "Submit", "OK" or a noun.
 - An intro line under each h1 says what the page is for and what you can do there.
-- Hints say the consequence: "It goes into the content plan as Planned, exactly as shown above."
+- Hints say the consequence: "It goes into the content plan as Planned, exactly as shown." Don't say "above" or "on the left": the layout changes with the screen.
 - One word per concept, the same in both languages and on every screen:
 
-  | Concept            | EN          | VI                          |
-  | ------------------ | ----------- | --------------------------- |
-  | Agent ideas page   | Proposals   | Đề xuất                     |
-  | Status `in_review` | In review   | Chờ duyệt                   |
-  | Admin role         | Admin       | Quản trị viên (not "admin") |
-  | Agent credential   | API key     | Khoá API                    |
-  | Owner field        | Assignee    | Người phụ trách             |
-  | Publish date       | Publish day | Ngày đăng                   |
+  | Concept                  | EN          | VI                          |
+  | ------------------------ | ----------- | --------------------------- |
+  | Agent ideas page         | Proposals   | Đề xuất                     |
+  | Status `in_review`       | In review   | Chờ duyệt                   |
+  | Admin role               | Admin       | Quản trị viên (not "admin") |
+  | Agent credential         | API key     | Khoá API                    |
+  | Owner field              | Assignee    | Người phụ trách             |
+  | Publish date             | Publish day | Ngày đăng                   |
+  | Agent takes back an idea | Withdraw    | Rút lại                     |
+  | What an idea is based on | Based on    | Dựa trên                    |
 
 - Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words.
 - Vietnamese is written for Vietnamese readers, not translated word for word: "{name} đề xuất", not "Đề xuất bởi {name}". Keep the English product words the team actually uses (agent, link, carousel).

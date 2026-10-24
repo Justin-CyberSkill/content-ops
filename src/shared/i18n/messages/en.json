@@ -155,7 +155,11 @@
     "manageAgents": "Manage agents",
     "doneApproved": "Approved and added to the content plan.",
     "doneRejected": "Rejected. The agent can read your reason.",
-    "openPlan": "Open content plan"
+    "openPlan": "Open content plan",
+    "changedAt": "changed {time}",
+    "closedTitle": "Rejected or withdrawn in the last 30 days",
+    "closedRejected": "Rejected {time}",
+    "closedWithdrawn": "Withdrawn by {name} {time}"
   },
   "contentEditor": {
     "newTitle": "New content",
@@ -208,7 +212,11 @@
       "proposalReviewed": "Someone already approved or rejected this proposal.",
       "rejectReasonRequired": "Write why you're rejecting it.",
       "rejectReasonTooLong": "Keep the reason under 1,000 characters.",
-      "invalidProgress": "Pick a status and an owner from the lists."
+      "invalidProgress": "Pick a status and an owner from the lists.",
+      "proposalWithdrawn": "An agent withdrew this proposal, so it can't be approved. Restore it first.",
+      "proposalChanged": "An agent changed this idea while you had it open. Check what changed, then decide again.",
+      "proposalChangedWhileEditing": "An agent changed this idea while you were editing. Cancel to see the new version, or save again to keep your edits.",
+      "notWithdrawn": "This idea isn't withdrawn any more. Reload the page to see where it stands."
     },
     "comments": {
       "title": "Comments",
@@ -236,7 +244,7 @@
       "rejectConfirm": "Reject proposal",
       "approvedAs": "Becomes {status} when you approve it.",
       "decideTitle": "What do you want to do with it?",
-      "approveHint": "It goes into the content plan as Planned, exactly as shown above.",
+      "approveHint": "It goes into the content plan as Planned, exactly as shown.",
       "approving": "Approving…",
       "editOption": "Edit, then approve",
       "editOptionHint": "Change the idea, format, date or owner first.",
@@ -244,13 +252,40 @@
       "rejectTitle": "Reject this proposal",
       "editTitle": "Edit before approving",
       "editHint": "Saving approves it and adds it to the content plan.",
-      "saveAndApprove": "Save and approve"
+      "saveAndApprove": "Save and approve",
+      "withdrawnTitle": "Withdrawn by {name}",
+      "noWithdrawReason": "No reason given.",
+      "restore": "Restore to Proposals",
+      "restoring": "Restoring…",
+      "restoreHint": "It goes back to Proposals as it was. Agents can change it again until you decide.",
+      "historyTitle": "History",
+      "history": {
+        "proposed": "{name} proposed it",
+        "updated": "{name} changed {fields}",
+        "withdrawn": "{name} withdrew it",
+        "restored": "{name} restored it",
+        "approved": "{name} approved it",
+        "rejected": "{name} rejected it"
+      },
+      "historyFields": {
+        "goal": "the goal",
+        "idea": "the idea",
+        "platforms": "the platforms",
+        "type": "the content type",
+        "publishDate": "the publish day",
+        "goldenTime": "the golden time",
+        "assetLinks": "the asset links",
+        "why": "“Why this”",
+        "sources": "“Based on”"
+      },
+      "withdrawn": "Withdrawn"
     },
     "details": "Details",
     "editDetails": "Edit details",
     "editDetailsHint": "Change the brief, format, schedule or links.",
     "saveProgress": "Save",
-    "saved": "Saved"
+    "saved": "Saved",
+    "sources": "Based on"
   },
   "myTasks": {
     "title": "My tasks",
@@ -271,7 +306,7 @@
   "agents": {
     "title": "Agents",
     "metaTitle": "Agents · CS Content Ops",
-    "intro": "API keys let AI agents read the plan and suggest ideas. Their ideas wait in Proposals; agents can't edit, delete or approve anything.",
+    "intro": "API keys let AI agents such as Claude Code read the plan and suggest ideas. Agents can change or withdraw pending ideas until you decide on them in Proposals. Only people approve.",
     "keysTitle": "API keys",
     "keyName": "Key name",
     "keyNamePlaceholder": "Such as Claude planner",
@@ -301,8 +336,8 @@
     "connect": {
       "title": "Connect an agent",
       "step1": "Create a key for the agent and copy it.",
-      "step2": "Give the agent these two environment variables:",
-      "step3": "In Claude Code, the propose-content skill in this repo explains how to read the plan and propose ideas.",
+      "step2": "Run this in a terminal to add Content Ops to Claude Code. Replace csops_… with the key you copied.",
+      "step3": "Then ask Claude to plan content. The propose-content skill in this repo guides it, and documents the REST API for other agents.",
       "limits": "Each key can make 30 requests a minute."
     }
   }

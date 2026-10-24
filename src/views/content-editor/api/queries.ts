@@ -1,7 +1,12 @@
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/shared/db";
-import { content, contentComment, user } from "@/shared/db/schema";
+import {
+  content,
+  contentComment,
+  contentEvent,
+  user,
+} from "@/shared/db/schema";
 
 export async function getContent(id: string) {
   if (!z.uuid().safeParse(id).success) return undefined;
@@ -40,4 +45,29 @@ export async function listComments(contentId: string): Promise<Comment[]> {
     .leftJoin(user, eq(contentComment.authorId, user.id))
     .where(eq(contentComment.contentId, contentId))
     .orderBy(asc(contentComment.createdAt), asc(contentComment.id));
+}
+
+export type ContentEventRow = {
+  id: string;
+  action: (typeof contentEvent.$inferSelect)["action"];
+  actorName: string;
+  fields: string[];
+  createdAt: Date;
+};
+
+/** What agents and admins did to an idea, oldest first. */
+export async function listEvents(
+  contentId: string,
+): Promise<ContentEventRow[]> {
+  return db
+    .select({
+      id: contentEvent.id,
+      action: contentEvent.action,
+      actorName: contentEvent.actorName,
+      fields: contentEvent.fields,
+      createdAt: contentEvent.createdAt,
+    })
+    .from(contentEvent)
+    .where(eq(contentEvent.contentId, contentId))
+    .orderBy(asc(contentEvent.createdAt), asc(contentEvent.id));
 }

@@ -4,7 +4,6 @@ import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import type { ContentOrigin } from "@/entities/content";
-import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui/button";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
@@ -17,6 +16,7 @@ import {
 } from "../api/review-proposal";
 import type { ContentFormValues } from "../model/content-form";
 import { REJECTION_MAX_LENGTH } from "../model/rejection";
+import { Choice } from "./choice";
 import { ContentForm } from "./content-form";
 
 type Mode = "decide" | "edit" | "reject";
@@ -29,6 +29,7 @@ type Mode = "decide" | "edit" | "reject";
  */
 export function ProposalReview({
   id,
+  revision,
   from,
   initial,
   members,
@@ -36,6 +37,8 @@ export function ProposalReview({
   comments,
 }: {
   id: string;
+  /** The version on screen; approving checks no agent changed it since. */
+  revision: number;
   from: ContentOrigin;
   initial: ContentFormValues;
   members: Member[];
@@ -62,6 +65,7 @@ export function ProposalReview({
             initial={initial}
             members={members}
             approving
+            revision={revision}
             onCancel={() => setMode("decide")}
           />
         </section>
@@ -82,6 +86,7 @@ export function ProposalReview({
         {mode === "decide" ? (
           <Decision
             id={id}
+            revision={revision}
             onEdit={() => setMode("edit")}
             onReject={() => setMode("reject")}
           />
@@ -96,10 +101,12 @@ export function ProposalReview({
 
 function Decision({
   id,
+  revision,
   onEdit,
   onReject,
 }: {
   id: string;
+  revision: number;
   onEdit: () => void;
   onReject: () => void;
 }) {
@@ -124,7 +131,7 @@ function Decision({
           disabled={pending}
           onClick={() =>
             startTransition(async () => {
-              setState(await approveProposal(id));
+              setState(await approveProposal(id, revision));
             })
           }
         />
@@ -152,58 +159,6 @@ function Decision({
         </p>
       ) : null}
     </section>
-  );
-}
-
-/** A whole-row button: what happens, and a line on what it means. */
-function Choice({
-  icon: Icon,
-  title,
-  hint,
-  primary,
-  disabled,
-  onClick,
-}: {
-  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
-  title: string;
-  hint: string;
-  primary?: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className={cn(
-        "flex w-full items-start gap-3 rounded-xl p-3.5 text-left transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:opacity-60",
-        primary
-          ? "bg-primary text-primary-foreground hover:brightness-110"
-          : "bg-muted hover:bg-muted-strong",
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-full",
-          primary ? "bg-primary-foreground/15" : "bg-card",
-        )}
-      >
-        <Icon aria-hidden className="size-4" />
-      </span>
-      <span className="flex min-w-0 flex-col gap-0.5">
-        <span className="font-semibold">{title}</span>
-        <span
-          className={cn(
-            "text-[13px]",
-            primary ? "text-primary-foreground/85" : "text-muted-foreground",
-          )}
-        >
-          {hint}
-        </span>
-      </span>
-    </button>
   );
 }
 

@@ -4,8 +4,8 @@ import type { Content } from "@/shared/db/schema";
 
 /**
  * An item as people read it: the goal, the facts that decide how it gets made, and
- * its asset links. The idea itself is the page title, so it isn't repeated here.
- * `header` and `children` let a proposal add who sent it and why.
+ * its asset links and sources. The idea itself is the page title, so it isn't repeated here.
+ * `header`, `children` and `footer` let a proposal add who sent it, why, and its history.
  */
 export function ContentSummary({
   item,
@@ -13,6 +13,7 @@ export function ContentSummary({
   assigneeName,
   header,
   children,
+  footer,
 }: {
   item: Content;
   /** Publish day and golden time, formatted; null without a day. */
@@ -20,6 +21,8 @@ export function ContentSummary({
   assigneeName: string | null;
   header?: React.ReactNode;
   children?: React.ReactNode;
+  /** Shown last, after the sources, such as a proposal's history. */
+  footer?: React.ReactNode;
 }) {
   const t = useTranslations();
   const facts = [
@@ -93,6 +96,38 @@ export function ContentSummary({
       ) : null}
 
       {children}
+
+      {item.sources.length ? (
+        <div className="flex flex-col gap-1.5">
+          <h3 className="text-xs text-muted-foreground">
+            {t("contentEditor.sources")}
+          </h3>
+          <ul className="flex flex-col gap-1 text-sm">
+            {item.sources.map((source) => (
+              <li key={source} className="min-w-0 break-words">
+                {URL.canParse(source) && /^https?:/.test(source) ? (
+                  <a
+                    href={source}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex max-w-full items-center gap-1.5 font-medium text-accent-foreground underline-offset-4 hover:underline"
+                  >
+                    <LinkIcon
+                      aria-hidden="true"
+                      className="size-3.5 shrink-0"
+                    />
+                    <span className="truncate">{source}</span>
+                  </a>
+                ) : (
+                  source
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {footer}
     </section>
   );
 }

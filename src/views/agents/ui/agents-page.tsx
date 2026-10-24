@@ -3,10 +3,11 @@ import { useTranslations } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireAdmin } from "@/shared/auth/index.server";
-import { TEAM_TIME_ZONE } from "@/shared/config";
+import { env, TEAM_TIME_ZONE } from "@/shared/config";
 import { DATE_LOCALES, DEFAULT_LOCALE, isLocale } from "@/shared/i18n";
 import { Badge } from "@/shared/ui/badge";
 import { listAgentKeys } from "../api/keys";
+import { CopyCommand } from "./copy-command";
 import { CreateKeyForm } from "./create-key-form";
 import { KeyActions } from "./key-actions";
 
@@ -109,6 +110,7 @@ async function KeyList() {
 
 function ConnectCard() {
   const t = useTranslations("agents.connect");
+  const command = `claude mcp add --transport http content-ops ${new URL("/api/mcp", env.BETTER_AUTH_URL)} --header "x-api-key: csops_…"`;
   return (
     <section
       aria-labelledby="connect-heading"
@@ -119,11 +121,9 @@ function ConnectCard() {
       </h2>
       <ol className="flex list-decimal flex-col gap-3 pl-5 text-sm">
         <li>{t("step1")}</li>
-        <li>
+        <li className="min-w-0">
           {t("step2")}
-          <pre className="mt-2 overflow-x-auto rounded-lg bg-muted px-3 py-2 font-mono text-xs">
-            {"CONTENT_OPS_URL=…\nCONTENT_OPS_API_KEY=csops_…"}
-          </pre>
+          <CopyCommand command={command} />
         </li>
         <li>{t("step3")}</li>
       </ol>

@@ -13,8 +13,14 @@ import {
 import { requireUser } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
+import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
-import { getContent, listComments, listMembers } from "../api/queries";
+import {
+  getContent,
+  listComments,
+  listEvents,
+  listMembers,
+} from "../api/queries";
 import { formatCommentTime } from "../lib/format-comment-time";
 import { emptyContentForm, toFormValues } from "../model/content-form";
 import { CommentThread } from "./comment-thread";
@@ -24,6 +30,7 @@ import { ContentView } from "./content-view";
 import { DeleteContentButton } from "./delete-content-button";
 import { ProposalCard } from "./proposal-card";
 import { ProposalReview } from "./proposal-review";
+import { RestoreProposal } from "./restore-proposal";
 
 // The same item page sits under each list it opens from: /content/[id], /my-tasks/[id]
 // and /review/[id]. The path says where you are, so the sidebar and Back follow it.
@@ -185,11 +192,13 @@ async function EditContent({
   const isProposal = item.status === "proposed";
   // Proposals are for admins to review; members only see them once approved.
   if (isProposal && !isAdmin) notFound();
-  const pendingProposal = isProposal && item.rejectedAt === null;
-  const [t, locale, comments] = await Promise.all([
+  const pendingProposal =
+    isProposal && item.rejectedAt === null && item.withdrawnAt === null;
+  const [t, locale, comments, events] = await Promise.all([
     getTranslations("contentEditor"),
     getLocale(),
     listComments(item.id),
+    isProposal ? listEvents(item.id) : [],
   ]);
   const now = new Date();
   const readerLocale = isLocale(locale) ? locale : DEFAULT_LOCALE;
@@ -241,6 +250,15 @@ async function EditContent({
         )}
         schedule={schedule}
         assigneeName={assigneeName}
+        history={events.map((event) => ({
+          ...event,
+          time: formatCommentTime(
+            event.createdAt,
+            readerLocale,
+            TEAM_TIME_ZONE,
+            now,
+          ),
+        }))}
       />
     );
     return (
@@ -250,7 +268,22 @@ async function EditContent({
           title={item.idea}
           meta={
             <>
-              <StatusBadge status={item.status} />
+              {item.rejectedAt || item.withdrawnAt ? (
+                // A closed proposal isn't "Proposed" any more; say what happened instead.
+                <Badge
+                  className={
+                    item.rejectedAt
+                      ? "bg-destructive-soft text-destructive"
+                      : "bg-muted text-muted-foreground"
+                  }
+                >
+                  {item.rejectedAt
+                    ? t("proposal.rejectedTitle")
+                    : t("proposal.withdrawn")}
+                </Badge>
+              ) : (
+                <StatusBadge status={item.status} />
+              )}
               {schedule ? (
                 <span className="tabular-nums">{schedule}</span>
               ) : null}
@@ -260,12 +293,27 @@ async function EditContent({
         {pendingProposal ? (
           <ProposalReview
             id={item.id}
+            revision={item.revision}
             from={from}
             initial={toFormValues(item)}
             members={members}
             summary={summary}
             comments={commentThread}
           />
+        ) : item.withdrawnAt ? (
+          // Withdrawn by an agent: the record, and a way to bring it back. Delete stays quiet below.
+          <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
+            <div className="min-w-0 xl:col-start-1 xl:row-start-1">
+              {summary}
+            </div>
+            <div className="flex min-w-0 flex-col gap-4 xl:sticky xl:top-8 xl:col-start-2 xl:row-span-2 xl:row-start-1">
+              <RestoreProposal id={item.id} />
+              {deleteCard}
+            </div>
+            <div className="min-w-0 xl:col-start-1 xl:row-start-2">
+              {commentThread}
+            </div>
+          </div>
         ) : (
           // Already rejected: the record and its reason, with delete beside it.
           <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
