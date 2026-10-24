@@ -10,6 +10,8 @@ import {
   originHref,
   StatusBadge,
 } from "@/entities/content";
+import { todayIn } from "@/entities/task";
+import { listTasks, planWork } from "@/entities/task/index.server";
 import { requireUser } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
@@ -169,14 +171,17 @@ function EditLoading() {
 }
 
 async function NewContentForm() {
-  await requireUser();
-  const members = await listMembers();
+  const me = await requireUser();
+  const [members, plan] = await Promise.all([listMembers(), planWork()]);
   return (
     <ContentForm
       id={null}
       from="plan"
       initial={emptyContentForm}
       members={members}
+      plan={plan}
+      today={todayIn(TEAM_TIME_ZONE)}
+      canSetUp={me.role === "admin"}
     />
   );
 }
@@ -194,13 +199,20 @@ async function EditContent({
   if (isProposal && !isAdmin) notFound();
   const pendingProposal =
     isProposal && item.rejectedAt === null && item.withdrawnAt === null;
-  const [t, locale, comments, events] = await Promise.all([
+  const [t, locale, comments, events, tasks] = await Promise.all([
     getTranslations("contentEditor"),
     getLocale(),
     listComments(item.id),
     isProposal ? listEvents(item.id) : [],
+    isProposal ? [] : listTasks(item.id),
   ]);
+  // Who's suggested per step: for approving, or for splitting an item from before tasks.
+  const plan =
+    pendingProposal || (isAdmin && !isProposal && !tasks.length)
+      ? await planWork()
+      : null;
   const now = new Date();
+  const today = todayIn(TEAM_TIME_ZONE, now);
   const readerLocale = isLocale(locale) ? locale : DEFAULT_LOCALE;
   // A proposal reached through the plan's address still belongs to Review.
   const from = isProposal ? "review" : origin;
@@ -249,7 +261,6 @@ async function EditContent({
           now,
         )}
         schedule={schedule}
-        assigneeName={assigneeName}
         history={events.map((event) => ({
           ...event,
           time: formatCommentTime(
@@ -297,12 +308,14 @@ async function EditContent({
             from={from}
             initial={toFormValues(item)}
             members={members}
+            plan={plan ?? (await planWork())}
+            today={today}
             summary={summary}
             comments={commentThread}
           />
         ) : item.withdrawnAt ? (
           // Withdrawn by an agent: the record, and a way to bring it back. Delete stays quiet below.
-          <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
+          <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:grid-rows-[auto_1fr] xl:items-start">
             <div className="min-w-0 xl:col-start-1 xl:row-start-1">
               {summary}
             </div>
@@ -345,6 +358,19 @@ async function EditContent({
         from={from}
         initial={toFormValues(item)}
         members={members}
+        tasks={tasks.map((task) => ({
+          id: task.id,
+          name: task.name,
+          status: task.status,
+          assigneeId: task.assigneeId,
+          assigneeName: task.assigneeName,
+          dueDate: task.dueDate,
+          daysBefore: task.daysBefore,
+          doers: task.doers,
+        }))}
+        steps={plan?.[item.type] ?? []}
+        me={{ id: me.id, isAdmin }}
+        today={today}
         summary={
           <ContentSummary
             item={item}

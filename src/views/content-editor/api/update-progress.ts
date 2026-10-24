@@ -4,6 +4,7 @@ import { and, eq, ne } from "drizzle-orm";
 import { refresh } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
+import { hasTasks } from "@/entities/task/index.server";
 import { requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, PLAN_STATUSES, user } from "@/shared/db/schema";
@@ -18,7 +19,10 @@ const schema = z.object({
     .nullable(),
 });
 
-/** The quick change on an item page: status and owner, without opening the full form. */
+/**
+ * The quick change on an item page: status and owner, without opening the full form.
+ * Only for items without tasks; with tasks, both follow the tasks.
+ */
 export async function updateProgress(
   id: string,
   _prev: ProgressState,
@@ -32,6 +36,8 @@ export async function updateProgress(
   });
   if (!parsed.success || !z.uuid().safeParse(id).success)
     return { error: t("invalidProgress") };
+
+  if (await hasTasks(id)) return { error: t("followsTasks") };
 
   const { status, assigneeId } = parsed.data;
   if (assigneeId) {

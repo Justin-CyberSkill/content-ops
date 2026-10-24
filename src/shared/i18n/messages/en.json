@@ -92,7 +92,7 @@
   "admin": {
     "title": "Members",
     "metaTitle": "Members · CS Content Ops",
-    "intro": "Who's on the team and what they can do.",
+    "intro": "Who's on the team, what they can do, and what work they take.",
     "addMember": "Add a member",
     "team": "Team",
     "peopleCount": "{count, plural, one {# person} other {# people}}",
@@ -112,7 +112,9 @@
       "invalidEmail": "Enter a valid email."
     },
     "addMemberHint": "They get a temporary password to send them privately. They change it after signing in.",
-    "roleHint": "Members plan and make content. Admins can also handle proposals, members and agent keys."
+    "roleHint": "Members plan and make content. Admins can also handle proposals, members and agent keys.",
+    "sections": "Members sections",
+    "noWork": "No work types yet"
   },
   "contentList": {
     "title": "Content plan",
@@ -216,7 +218,10 @@
       "proposalWithdrawn": "An agent withdrew this proposal, so it can't be approved. Restore it first.",
       "proposalChanged": "An agent changed this idea while you had it open. Check what changed, then decide again.",
       "proposalChangedWhileEditing": "An agent changed this idea while you were editing. Cancel to see the new version, or save again to keep your edits.",
-      "notWithdrawn": "This idea isn't withdrawn any more. Reload the page to see where it stands."
+      "notWithdrawn": "This idea isn't withdrawn any more. Reload the page to see where it stands.",
+      "followsTasks": "This item's status and assignee follow its tasks. Reload the page to see them.",
+      "alreadyTasks": "This item already has tasks. Reload the page to see them.",
+      "noSteps": "This content type has no steps yet. Add them under Members, then Workflow."
     },
     "comments": {
       "title": "Comments",
@@ -244,10 +249,10 @@
       "rejectConfirm": "Reject proposal",
       "approvedAs": "Becomes {status} when you approve it.",
       "decideTitle": "What do you want to do with it?",
-      "approveHint": "It goes into the content plan as Planned, exactly as shown.",
+      "approveHint": "It goes into the content plan, and each person gets their task.",
       "approving": "Approving…",
       "editOption": "Edit, then approve",
-      "editOptionHint": "Change the idea, format, date or owner first.",
+      "editOptionHint": "Change the idea, format, date or who does what first.",
       "rejectOptionHint": "It leaves the queue. You tell the agent why, so its next idea is better.",
       "rejectTitle": "Reject this proposal",
       "editTitle": "Edit before approving",
@@ -278,21 +283,36 @@
         "why": "“Why this”",
         "sources": "“Based on”"
       },
-      "withdrawn": "Withdrawn"
+      "withdrawn": "Withdrawn",
+      "whoDoesWhat": "Who does what",
+      "whoDoesWhatHint": "Each step becomes a task. We suggest whoever does that work and has the fewest open tasks.",
+      "approveHintNoTasks": "It goes into the content plan as Planned, exactly as shown."
     },
     "details": "Details",
     "editDetails": "Edit details",
     "editDetailsHint": "Change the brief, format, schedule or links.",
     "saveProgress": "Save",
     "saved": "Saved",
-    "sources": "Based on"
+    "sources": "Based on",
+    "tasks": {
+      "title": "Tasks",
+      "doneCount": "{done} of {total} done",
+      "panelHint": "Tasks go one at a time. When one is done, the next person can start.",
+      "formHint": "Due days move with the publish day. Change who has each task in Tasks, outside this form.",
+      "split": "Split into tasks",
+      "splitHint": "For items added before tasks: each step of its workflow becomes a task.",
+      "splitTitle": "Split into tasks",
+      "splitFormHint": "Tasks start from the first step. Mark the steps already finished as done afterwards.",
+      "splitConfirm": "Create tasks",
+      "splitting": "Creating…"
+    }
   },
   "myTasks": {
     "title": "My tasks",
     "metaTitle": "My tasks · CS Content Ops",
-    "intro": "Everything assigned to you. Update the status as you work, so the team knows where things stand.",
-    "emptyTitle": "Nothing assigned to you",
-    "emptyBody": "When someone assigns you content, it shows up here. The content plan has everything the team is working on.",
+    "intro": "Your tasks, soonest due first. Mark each one done when you finish, so the next person can start.",
+    "emptyTitle": "Nothing for you yet",
+    "emptyBody": "When you get a task, it shows up here. The content plan has everything the team is working on.",
     "statusOf": "Status of {idea}",
     "errors": {
       "invalidStatus": "Pick a valid status.",
@@ -301,7 +321,13 @@
     "openPlan": "Open content plan",
     "upNext": "To do",
     "upNextEmpty": "You're all caught up.",
-    "published": "Published"
+    "taskStatusOf": "Status of {task} for {idea}",
+    "waiting": "Waiting",
+    "waitingHint": "These come to you once the task before them is done.",
+    "waitingFor": "After {task} by {name}",
+    "waitingForUnassigned": "After {task}",
+    "done": "Done",
+    "doneHint": "What you finished in the last 30 days."
   },
   "agents": {
     "title": "Agents",
@@ -339,6 +365,71 @@
       "step2": "Run this in a terminal to add Content Ops to Claude Code. Replace csops_… with the key you copied.",
       "step3": "Then ask Claude to plan content. The propose-content skill in this repo guides it, and documents the REST API for other agents.",
       "limits": "Each key can make 30 requests a minute."
+    }
+  },
+  "task": {
+    "status": {
+      "waiting": "Waiting",
+      "todo": "To do",
+      "in_progress": "In progress",
+      "done": "Done"
+    },
+    "due": "Due {day}",
+    "overdue": "Overdue: {day}",
+    "daysBefore": "{count, plural, one {# day} other {# days}} before the publish day",
+    "onPublishDay": "On the publish day",
+    "candidate": "{name} · {count, plural, =0 {no open tasks} one {# open task} other {# open tasks}}",
+    "others": "Others",
+    "noDoers": "No one does {work} yet.",
+    "setUpDoers": "Choose who does it",
+    "statusOf": "Status of {task}",
+    "assigneeOf": "Assignee for {task}",
+    "errors": {
+      "invalidStatus": "Pick a status from the list.",
+      "notFound": "This task was removed. Reload the page to see the current tasks.",
+      "notYours": "This task isn't yours. Ask an admin to give it to you.",
+      "waiting": "This task starts when the one before it is done.",
+      "memberGone": "That member no longer exists. Pick another."
+    }
+  },
+  "workflow": {
+    "tab": "Workflow",
+    "metaTitle": "Workflow · CS Content Ops",
+    "intro": "How an approved idea gets made: the kinds of work, who does each, and which steps each content type needs.",
+    "workTypes": "Work types",
+    "workTypesHint": "In the order they happen. Approving an idea suggests whoever does the work and has the fewest open tasks.",
+    "noWorkTypes": "No work types yet. Add one to start a workflow.",
+    "ideaShowsAs": "While it's open, the idea shows as {status}",
+    "whoDoesIt": "Who does it",
+    "noDoers": "No one yet, so these tasks start unassigned.",
+    "moveUp": "Move {work} earlier",
+    "moveDown": "Move {work} later",
+    "edit": "Edit {work}",
+    "name": "Name",
+    "namePlaceholder": "Translation",
+    "ideaStatus": "The idea shows as",
+    "ideaStatusHint": "What the content plan shows while this is the task in progress.",
+    "save": "Save",
+    "delete": "Delete work type",
+    "deleting": "Deleting…",
+    "confirmDelete": "Delete {work}? Content types stop needing it. Tasks already made keep their name.",
+    "addWorkType": "Add a work type",
+    "addWorkTypeHint": "It goes last in the order. Then tick the content types that need it.",
+    "add": "Add work type",
+    "adding": "Adding…",
+    "stepsTitle": "Steps for each content type",
+    "stepsHint": "Steps follow the work types' order. Due days count back from the publish day. Changes apply to ideas approved after you save.",
+    "stepCount": "{count, plural, =0 {No steps} one {# step} other {# steps}}",
+    "daysBefore": "days before",
+    "daysBeforeOf": "Days before the publish day for {work}",
+    "saveSteps": "Save steps",
+    "saved": "Saved",
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "nameTooLong": "Keep the name under 60 characters.",
+      "ideaStatusRequired": "Pick what the idea shows as.",
+      "invalidDays": "Days before must be a whole number from 0 to 60.",
+      "gone": "That work type was deleted. Reload the page."
     }
   }
 }

@@ -11,11 +11,13 @@ Each screen answers three questions for a first-time user, in this order: what i
 - **Read first.** A detail page opens as read-only facts (label over value), not as a form.
 - **Main action in a side panel.** From `xl`: grid `minmax(0,1fr) | minmax(20rem,24rem)`. Content and comments on the left; the action panel on the right, `xl:sticky xl:top-8`, spanning both rows. Below `xl`: one column in DOM order content → action → comments. Use one DOM order and grid placement, never duplicate markup per breakpoint.
 - **Forms on demand.** "Edit details" swaps the read view for the full form at full width. Cancel goes back to the read view (`onCancel`), not away from the page.
-- **Quick change for the common edit.** Item page: status and owner save from the panel (`updateProgress`) without opening the form. Save stays disabled until something changes; show "Saved" after.
+- **Quick change for the common edit.** Item page: the panel holds the item's Tasks, in order. The open task's assignee (or an admin) changes its status in place; admins change any task's assignee in place. Waiting tasks show a badge, not a picker. Items from before tasks keep status and owner saved from the panel (`updateProgress`), with Save disabled until something changes and "Saved" after, and an admin can split them into tasks.
+- **Status follows the tasks.** An item with tasks never has its status or owner set by hand: it's Planned until work starts, then shows the open task's work type status (In progress, In review, Scheduled), and Published when every task is done. Its assignee is whoever has the open task.
+- **Who does what before approving.** Approving, adding content and splitting an item list one row per step with the suggested person (does that work, fewest open tasks) and the due day, so approving is "exactly as shown".
 - **Choices as whole-row buttons**, each with a title and one line saying what happens (proposal: Approve / Edit, then approve / Reject). Make the safe or most common one primary.
 - **Agents change ideas, people decide.** A proposal shows its History (who proposed, changed, withdrew or restored it). Approving checks the version on screen: if an agent changed it meanwhile, say so and show the new version instead of approving it unseen.
 - **Rare, destructive actions stay quiet.** For example, Delete is a small button with a hint under the panel, not a card of its own. Confirm before deleting. Hide actions that don't apply (no Delete on a pending proposal; Reject covers it).
-- **Lists:** one item per row or card, all the same height. Clicking anywhere on it opens the item (a link with `after:absolute after:inset-0`). Group lists by what matters next: content plan by week (Overdue, This week, Next week, Later, No date, Published folded at the bottom); My tasks into To do and Published, each with a count.
+- **Lists:** one item per row or card, all the same height. Clicking anywhere on it opens the item (a link with `after:absolute after:inset-0`). Group lists by what matters next: content plan by week (Overdue, This week, Next week, Later, No date, Published folded at the bottom); My tasks into To do (soonest due first), Waiting (says whose task it waits on) and Done (last 30 days), each with a count.
 - **Fill the width without stretching text.** Use two columns on wide screens instead of `max-w` boxes that leave half the page empty. Show facts 2 per row, or 4 per row from `2xl`.
 
 ## Navigation and wayfinding
@@ -50,10 +52,16 @@ Each screen answers three questions for a first-time user, in this order: what i
   | Publish date             | Publish day | Ngày đăng                   |
   | Agent takes back an idea | Withdraw    | Rút lại                     |
   | What an idea is based on | Based on    | Dựa trên                    |
-
+  | Kind of work             | Work type   | Loại việc                   |
+  | One step of one idea     | Task        | Việc                        |
+  | Steps per content type   | Workflow    | Quy trình                   |
+  | Task not started yet     | Waiting     | Chưa tới lượt               |
+  | Task finished            | Done        | Xong                        |
+  | When a task is due       | Due {day}   | Hạn {day}                   |
 - Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words.
 - Vietnamese is written for Vietnamese readers, not translated word for word: "{name} đề xuất", not "Đề xuất bởi {name}". Keep the English product words the team actually uses (agent, link, carousel).
 - Every new string goes into both `en.json` and `vi.json` in the same change.
+- Work type names are the team's own data ("Content prep"), so they aren't translated.
 
 ## Before you finish UI work
 
