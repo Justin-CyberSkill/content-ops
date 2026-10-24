@@ -32,4 +32,5 @@ pnpm dev
 
 - [docs/baseline](docs/baseline/README.md): shared stack, structure, rules and scripts, also used to start new projects
 - [docs/decisions.md](docs/decisions.md): where this project differs from the baseline
+- [docs/deploy.md](docs/deploy.md): first production deploy to Vercel and Neon
 - [docs/ux-guidelines](docs/ux-guidelines/index.md): screens, flows and words
