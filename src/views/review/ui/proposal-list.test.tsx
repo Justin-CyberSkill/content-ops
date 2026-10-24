@@ -15,6 +15,8 @@ const proposal: Proposal = {
   proposedByName: "Claude planner",
   proposalReason: "Phishing posts got 2x saves last month.",
   createdAt: new Date("2026-10-23T09:00:00Z"),
+  updatedAt: new Date("2026-10-23T09:00:00Z"),
+  revision: 0,
 };
 
 test("shows who proposed it, its format and date, why, and a link to decide", () => {
@@ -31,6 +33,24 @@ test("shows who proposed it, its format and date, why, and a link to decide", ()
   expect(
     screen.getByRole("link", { name: "Carousel: 5 phishing signs" }),
   ).toHaveAttribute("href", `/en/review/${proposal.id}`);
+});
+
+test("says when an agent changed it after proposing", () => {
+  renderWithIntl(
+    <ProposalList
+      proposals={[
+        {
+          ...proposal,
+          revision: 2,
+          updatedAt: new Date("2026-10-23T10:30:00Z"),
+        },
+      ]}
+      timeZone="Asia/Ho_Chi_Minh"
+    />,
+  );
+  expect(
+    screen.getByText("proposed 23 Oct, 16:00 · changed 23 Oct, 17:30"),
+  ).toBeInTheDocument();
 });
 
 test("shows an empty state", () => {

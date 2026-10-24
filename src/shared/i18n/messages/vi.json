@@ -155,7 +155,11 @@
     "manageAgents": "Quản lý agent",
     "doneApproved": "Đã duyệt và thêm vào kế hoạch nội dung.",
     "doneRejected": "Đã từ chối. Agent đọc được lý do của bạn.",
-    "openPlan": "Mở kế hoạch nội dung"
+    "openPlan": "Mở kế hoạch nội dung",
+    "changedAt": "sửa lúc {time}",
+    "closedTitle": "Đã từ chối hoặc rút lại trong 30 ngày qua",
+    "closedRejected": "Từ chối lúc {time}",
+    "closedWithdrawn": "{name} rút lại lúc {time}"
   },
   "contentEditor": {
     "newTitle": "Nội dung mới",
@@ -208,7 +212,11 @@
       "proposalReviewed": "Đề xuất này đã được duyệt hoặc từ chối.",
       "rejectReasonRequired": "Hãy viết lý do từ chối.",
       "rejectReasonTooLong": "Lý do không được quá 1.000 ký tự.",
-      "invalidProgress": "Chọn trạng thái và người phụ trách trong danh sách."
+      "invalidProgress": "Chọn trạng thái và người phụ trách trong danh sách.",
+      "proposalWithdrawn": "Agent đã rút lại đề xuất này nên không duyệt được. Hãy khôi phục trước.",
+      "proposalChanged": "Agent vừa sửa ý tưởng này trong lúc bạn đang xem. Xem lại thay đổi rồi quyết định lại.",
+      "proposalChangedWhileEditing": "Agent vừa sửa ý tưởng này trong lúc bạn đang chỉnh. Bấm Huỷ để xem bản mới, hoặc lưu lần nữa để giữ phần bạn đã sửa.",
+      "notWithdrawn": "Ý tưởng này không còn bị rút lại. Tải lại trang để xem trạng thái hiện tại."
     },
     "comments": {
       "title": "Bình luận",
@@ -236,7 +244,7 @@
       "rejectConfirm": "Từ chối đề xuất",
       "approvedAs": "Sẽ là {status} khi bạn duyệt.",
       "decideTitle": "Bạn muốn làm gì với đề xuất này?",
-      "approveHint": "Đưa vào kế hoạch nội dung với trạng thái Đã lên kế hoạch, đúng như bên trên.",
+      "approveHint": "Đưa vào kế hoạch nội dung với trạng thái Đã lên kế hoạch, đúng như đang hiển thị.",
       "approving": "Đang duyệt…",
       "editOption": "Chỉnh sửa rồi duyệt",
       "editOptionHint": "Đổi ý tưởng, định dạng, ngày đăng hoặc người phụ trách trước.",
@@ -244,13 +252,40 @@
       "rejectTitle": "Từ chối đề xuất này",
       "editTitle": "Chỉnh sửa trước khi duyệt",
       "editHint": "Lưu sẽ duyệt và thêm vào kế hoạch nội dung.",
-      "saveAndApprove": "Lưu và duyệt"
+      "saveAndApprove": "Lưu và duyệt",
+      "withdrawnTitle": "{name} đã rút lại",
+      "noWithdrawReason": "Không có lý do.",
+      "restore": "Khôi phục vào Đề xuất",
+      "restoring": "Đang khôi phục…",
+      "restoreHint": "Ý tưởng quay lại mục Đề xuất như cũ. Agent có thể sửa tiếp cho đến khi bạn quyết định.",
+      "historyTitle": "Lịch sử",
+      "history": {
+        "proposed": "{name} đề xuất",
+        "updated": "{name} đã sửa {fields}",
+        "withdrawn": "{name} đã rút lại",
+        "restored": "{name} đã khôi phục",
+        "approved": "{name} đã duyệt",
+        "rejected": "{name} đã từ chối"
+      },
+      "historyFields": {
+        "goal": "mục tiêu",
+        "idea": "ý tưởng",
+        "platforms": "nền tảng",
+        "type": "loại nội dung",
+        "publishDate": "ngày đăng",
+        "goldenTime": "khung giờ vàng",
+        "assetLinks": "link tài nguyên",
+        "why": "“Vì sao đề xuất”",
+        "sources": "“Dựa trên”"
+      },
+      "withdrawn": "Đã rút lại"
     },
     "details": "Chi tiết",
     "editDetails": "Sửa chi tiết",
     "editDetailsHint": "Đổi tóm tắt, định dạng, lịch đăng hoặc link.",
     "saveProgress": "Lưu",
-    "saved": "Đã lưu"
+    "saved": "Đã lưu",
+    "sources": "Dựa trên"
   },
   "myTasks": {
     "title": "Việc của tôi",
@@ -271,7 +306,7 @@
   "agents": {
     "title": "Agent",
     "metaTitle": "Agent · CS Content Ops",
-    "intro": "Khoá API cho phép agent AI đọc kế hoạch và gợi ý ý tưởng. Ý tưởng chờ ở mục Đề xuất; agent không thể sửa, xoá hay duyệt gì cả.",
+    "intro": "Khoá API cho phép agent AI như Claude Code đọc kế hoạch và gợi ý ý tưởng. Agent có thể sửa hoặc rút lại ý tưởng đang chờ cho đến khi bạn quyết định ở mục Đề xuất. Chỉ người trong nhóm mới duyệt được.",
     "keysTitle": "Khoá API",
     "keyName": "Tên khoá",
     "keyNamePlaceholder": "Ví dụ: Claude planner",
@@ -301,8 +336,8 @@
     "connect": {
       "title": "Kết nối agent",
       "step1": "Tạo khoá cho agent và sao chép.",
-      "step2": "Cấp cho agent hai biến môi trường sau:",
-      "step3": "Trong Claude Code, skill propose-content trong repo này hướng dẫn cách đọc kế hoạch và đề xuất ý tưởng.",
+      "step2": "Chạy lệnh này trong terminal để thêm Content Ops vào Claude Code. Thay csops_… bằng khoá bạn vừa sao chép.",
+      "step3": "Sau đó nhờ Claude lên ý tưởng nội dung. Skill propose-content trong repo này hướng dẫn Claude, kèm REST API cho các agent khác.",
       "limits": "Mỗi khoá được gửi 30 yêu cầu mỗi phút."
     }
   }

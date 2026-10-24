@@ -1,16 +1,18 @@
 "use server";
 
 import { and, eq, isNull } from "drizzle-orm";
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { originHref, parseOrigin } from "@/entities/content";
 import { requireAdmin, requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
-import { content, user } from "@/shared/db/schema";
+import { content, contentEvent, user } from "@/shared/db/schema";
 import {
   createContentFormSchema,
   readContentForm,
 } from "../model/content-form";
+import { pendingProposalError } from "./pending-proposal";
 
 export type SaveContentState = { error?: string };
 
@@ -38,32 +40,50 @@ export async function saveContent(
   let approving = false;
   if (id) {
     const [current] = await db
-      .select({ status: content.status, rejectedAt: content.rejectedAt })
+      .select({ status: content.status })
       .from(content)
       .where(eq(content.id, id));
     if (!current) return { error: t("deleted") };
 
     // Saving a proposal approves it, which only admins do.
     approving = current.status === "proposed";
-    if (approving) {
-      if (me.role !== "admin") return { error: t("adminOnly") };
-      if (current.rejectedAt) return { error: t("proposalReviewed") };
-    }
+    if (approving && me.role !== "admin") return { error: t("adminOnly") };
 
-    const updated = await db
-      .update(content)
-      .set(approving ? { ...data, reviewedById: me.id } : data)
-      .where(
-        approving
-          ? and(
-              eq(content.id, id),
-              eq(content.status, "proposed"),
-              isNull(content.rejectedAt),
-            )
-          : eq(content.id, id),
-      )
-      .returning({ id: content.id });
-    if (!updated.length) return { error: t("proposalReviewed") };
+    // The version the admin started editing, so an agent's change since then isn't overwritten unseen.
+    const revision = Number(formData.get("revision"));
+    const updated = await db.transaction(async (tx) => {
+      const rows = await tx
+        .update(content)
+        .set(approving ? { ...data, reviewedById: me.id } : data)
+        .where(
+          approving
+            ? and(
+                eq(content.id, id),
+                eq(content.status, "proposed"),
+                isNull(content.rejectedAt),
+                isNull(content.withdrawnAt),
+                eq(content.revision, revision),
+              )
+            : eq(content.id, id),
+        )
+        .returning({ id: content.id });
+      if (approving && rows.length) {
+        await tx.insert(contentEvent).values({
+          contentId: id,
+          action: "approved",
+          userId: me.id,
+          actorName: me.name,
+        });
+      }
+      return rows;
+    });
+    if (!updated.length) {
+      if (!approving) return { error: t("deleted") };
+      const error = await pendingProposalError(id, revision, { editing: true });
+      // Load the agent's new version; the form keeps what was typed.
+      refresh();
+      return { error };
+    }
   } else {
     await db.insert(content).values({ ...data, createdById: me.id });
   }
