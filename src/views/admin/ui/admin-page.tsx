@@ -4,8 +4,11 @@ import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { auth, requireAdmin } from "@/shared/auth/index.server";
+import { Link } from "@/shared/i18n";
 import { Avatar } from "@/shared/ui/avatar";
 import { Badge } from "@/shared/ui/badge";
+import { SectionTabs } from "@/shared/ui/section-tabs";
+import { listWorkByMember } from "../api/work-by-member";
 import { CreateMemberForm } from "./create-member-form";
 import { ResetPasswordButton } from "./reset-password-button";
 
@@ -18,11 +21,24 @@ export function AdminPage() {
   const t = useTranslations();
   return (
     <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-          {t("admin.title")}
-        </h1>
-        <p className="text-muted-foreground">{t("admin.intro")}</p>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            {t("admin.title")}
+          </h1>
+          <p className="text-muted-foreground">{t("admin.intro")}</p>
+        </div>
+        <SectionTabs
+          label={t("admin.sections")}
+          tabs={[
+            { href: "/admin", label: t("admin.team"), current: true },
+            {
+              href: "/admin/workflow",
+              label: t("workflow.tab"),
+              current: false,
+            },
+          ]}
+        />
       </div>
       <Suspense
         fallback={
@@ -38,10 +54,13 @@ export function AdminPage() {
 async function Members() {
   const me = await requireAdmin();
   const t = await getTranslations();
-  const { users } = await auth.api.listUsers({
-    query: { limit: 500, sortBy: "createdAt", sortDirection: "asc" },
-    headers: await headers(),
-  });
+  const [{ users }, workByMember] = await Promise.all([
+    auth.api.listUsers({
+      query: { limit: 500, sortBy: "createdAt", sortDirection: "asc" },
+      headers: await headers(),
+    }),
+    listWorkByMember(),
+  ]);
 
   // The team is what you come to see, so it leads; adding someone sits beside it.
   return (
@@ -78,6 +97,16 @@ async function Members() {
                 </p>
                 <p className="truncate text-[13px] text-muted-foreground">
                   {user.email}
+                </p>
+                <p className="text-[13px] break-words">
+                  {workByMember.get(user.id)?.join(", ") ?? (
+                    <Link
+                      href="/admin/workflow"
+                      className="text-muted-foreground underline-offset-4 hover:underline"
+                    >
+                      {t("admin.noWork")}
+                    </Link>
+                  )}
                 </p>
               </div>
               <Badge

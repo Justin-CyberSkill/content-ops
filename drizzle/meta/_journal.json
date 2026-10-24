@@ -50,6 +50,13 @@
       "when": 1792829508140,
       "tag": "0006_agent_idea_changes",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792831125717,
+      "tag": "0007_work_types_tasks",
+      "breakpoints": true
     }
   ]
 }

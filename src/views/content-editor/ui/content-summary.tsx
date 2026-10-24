@@ -18,7 +18,8 @@ export function ContentSummary({
   item: Content;
   /** Publish day and golden time, formatted; null without a day. */
   schedule: string | null;
-  assigneeName: string | null;
+  /** Left out on proposals: who does what is chosen when approving. */
+  assigneeName?: string | null;
   header?: React.ReactNode;
   children?: React.ReactNode;
   /** Shown last, after the sources, such as a proposal's history. */
@@ -40,10 +41,14 @@ export function ContentSummary({
       label: t("contentEditor.publishDay"),
       value: schedule ?? t("common.noDate"),
     },
-    {
-      label: t("contentEditor.assignee"),
-      value: assigneeName ?? t("common.unassigned"),
-    },
+    ...(assigneeName === undefined
+      ? []
+      : [
+          {
+            label: t("contentEditor.assignee"),
+            value: assigneeName ?? t("common.unassigned"),
+          },
+        ]),
   ];
   return (
     <section

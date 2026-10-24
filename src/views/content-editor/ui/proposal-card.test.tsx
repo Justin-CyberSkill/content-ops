@@ -45,7 +45,6 @@ const renderCard = (overrides: Partial<Content>, history: HistoryEntry[]) =>
       item={{ ...item, ...overrides }}
       proposedAt="24 Oct, 15:18"
       schedule={null}
-      assigneeName={null}
       history={history}
     />,
   );
