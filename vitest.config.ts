@@ -6,7 +6,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   test: {
     environment: "jsdom",
-    include: ["{src,scripts}/**/*.test.{ts,tsx}"],
+    include: ["{src,scripts,docs/baseline/scripts}/**/*.test.{ts,tsx}"],
     setupFiles: ["./vitest.setup.ts"],
     // next-intl imports "next/navigation" without an extension; let Vite resolve it.
     server: { deps: { inline: ["next-intl"] } },

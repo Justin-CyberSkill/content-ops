@@ -5,19 +5,20 @@
   "type": "module",
   "packageManager": "pnpm@10.10.0",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18"
   },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check",
+    "lint": "biome check && knip && node docs/baseline/scripts/check-structure.ts && node docs/baseline/scripts/check-docs.ts",
     "format": "biome check --write",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "env:sync": "node scripts/env-sync.ts",
-    "env:check": "node scripts/env-sync.ts --check",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "env:sync": "node docs/baseline/scripts/env-sync.ts",
+    "env:check": "node docs/baseline/scripts/env-sync.ts --check",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
@@ -57,6 +58,7 @@
     "auth": "^1.7.12",
     "drizzle-kit": "^0.31.11",
     "jsdom": "^30.1.3",
+    "knip": "^6.43.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^8.3.5",

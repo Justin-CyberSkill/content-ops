@@ -2,7 +2,7 @@
  * The list an item was opened from. The item page goes back there, and the sidebar
  * keeps that list highlighted, so opening an item never feels like changing section.
  */
-export const CONTENT_ORIGINS = {
+const CONTENT_ORIGINS = {
   plan: "/content",
   tasks: "/my-tasks",
   review: "/review",

@@ -17,7 +17,7 @@ import {
 import { ASSET_LABEL_MAX_LENGTH, ASSET_NOTE_MAX_LENGTH } from "../model/asset";
 import { SinceReviewBadge } from "./since-review-badge";
 
-export type AssetVersionView = {
+type AssetVersionView = {
   id: string;
   url: string;
   note: string;

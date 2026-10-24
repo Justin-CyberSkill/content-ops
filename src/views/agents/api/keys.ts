@@ -18,5 +18,3 @@ export async function listAgentKeys() {
     .leftJoin(user, eq(apikey.referenceId, user.id))
     .orderBy(desc(apikey.createdAt));
 }
-
-export type AgentKeyRow = Awaited<ReturnType<typeof listAgentKeys>>[number];
