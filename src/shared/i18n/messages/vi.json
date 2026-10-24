@@ -12,7 +12,8 @@
       "member": "Thành viên"
     },
     "copy": "Sao chép",
-    "copied": "Đã chép",
+    "copied": "Đã sao chép",
+    "optional": "(không bắt buộc)",
     "copyFailed": "Không sao chép được. Hãy chọn đoạn chữ rồi tự sao chép."
   },
   "nav": {
@@ -122,7 +123,7 @@
   "contentList": {
     "title": "Kế hoạch nội dung",
     "metaTitle": "Kế hoạch nội dung · CS Content Ops",
-    "intro": "Mọi nội dung sắp đăng, gần nhất lên trước. Mở một mục để xem, cập nhật trạng thái hoặc chỉnh sửa.",
+    "intro": "Mọi nội dung sắp đăng, gần nhất lên trước.",
     "newContent": "Thêm nội dung",
     "emptyTitle": "Chưa có kế hoạch nào",
     "emptyBody": "Thêm ý tưởng đầu tiên để cả nhóm cùng lên kế hoạch.",
@@ -147,7 +148,7 @@
   "review": {
     "title": "Đề xuất",
     "metaTitle": "Đề xuất · CS Content Ops",
-    "intro": "Ý tưởng nội dung do agent gợi ý. Mở từng ý tưởng để xem, rồi thêm vào kế hoạch hoặc từ chối kèm lý do.",
+    "intro": "Ý tưởng nội dung do agent gợi ý, chờ người trong nhóm duyệt hoặc từ chối.",
     "emptyTitle": "Chưa có đề xuất nào",
     "emptyBody": "Khi agent gợi ý một ý tưởng nội dung, ý tưởng sẽ hiện ở đây để bạn duyệt hoặc từ chối.",
     "unknownAgent": "Một agent",
@@ -316,6 +317,8 @@
     "editDetailsHint": "Đổi tóm tắt, định dạng, lịch đăng hoặc link.",
     "saveProgress": "Lưu",
     "saved": "Đã lưu",
+    "fromAgent": "{agent} đề xuất",
+    "fromAgentApproved": "{agent} đề xuất, {name} duyệt",
     "sources": "Dựa trên",
     "tasks": {
       "title": "Các việc",
@@ -372,7 +375,7 @@
       "link": "Link",
       "linkHint": "Nơi để tệp, như Google Drive hoặc Canva. Cả nhóm phải mở được.",
       "note": "Ghi chú",
-      "noteHint": "Không bắt buộc: trong đó có gì hoặc đã đổi gì.",
+      "noteHint": "Trong đó có gì hoặc đã đổi gì.",
       "open": "Mở {version}",
       "version": "v{number}",
       "addedBy": "{name}, {time}",
@@ -430,7 +433,7 @@
   "myTasks": {
     "title": "Việc của tôi",
     "metaTitle": "Việc của tôi · CS Content Ops",
-    "intro": "Việc của bạn, việc nào tới hạn trước nằm trước. Làm xong thì chọn Xong để người tiếp theo bắt đầu.",
+    "intro": "Việc của bạn, việc nào tới hạn trước nằm trước. Chọn Xong là chuyển nội dung cho người tiếp theo.",
     "emptyTitle": "Bạn chưa có việc nào",
     "emptyBody": "Khi bạn được giao việc, việc sẽ hiện ở đây. Kế hoạch nội dung có mọi việc cả nhóm đang làm.",
     "statusOf": "Trạng thái của {idea}",
@@ -456,7 +459,7 @@
   "agents": {
     "title": "Agent",
     "metaTitle": "Agent · CS Content Ops",
-    "intro": "Khoá API cho phép agent AI như Claude Code đọc kế hoạch và gợi ý ý tưởng. Agent có thể sửa hoặc rút lại ý tưởng đang chờ cho đến khi bạn quyết định ở mục Đề xuất. Chỉ người trong nhóm mới duyệt được.",
+    "intro": "Khoá API cho phép agent như Claude Code đọc kế hoạch và gợi ý ý tưởng. Chỉ người trong nhóm mới duyệt, ở mục Đề xuất.",
     "keysTitle": "Khoá API",
     "keyName": "Tên khoá",
     "keyNamePlaceholder": "Ví dụ: Claude planner",
@@ -499,7 +502,7 @@
       "done": "Xong"
     },
     "due": "Hạn {day}",
-    "overdue": "Trễ hạn: {day}",
+    "overdue": "Quá hạn: {day}",
     "daysBefore": "Trước ngày đăng {count} ngày",
     "onPublishDay": "Đúng ngày đăng",
     "candidate": "{name} · {count, plural, =0 {chưa có việc} other {# việc đang mở}}",

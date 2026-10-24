@@ -2,7 +2,13 @@
 
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition, useActionState, useState } from "react";
+import {
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { type ContentOrigin, originHref } from "@/entities/content";
 import { DueDay, dueDate } from "@/entities/task";
 import type { WorkPlan } from "@/entities/task/index.server";
@@ -92,6 +98,24 @@ export function ContentForm({
     ((stepId: string, assigneeId: string) =>
       setOwnPicks((current) => ({ ...current, [stepId]: assigneeId })));
   const steps = plan?.[type as ContentType] ?? [];
+  // A failed save names the field it's about: say so there, and move focus to it.
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!state.field) return;
+    formRef.current
+      ?.querySelector<HTMLElement>(`[name="${state.field}"]`)
+      ?.focus({ preventScroll: true });
+    // Platforms are visually hidden checkboxes, so scroll to the message, not the input.
+    document
+      .getElementById(`${state.field}-error`)
+      ?.scrollIntoView({ block: "center" });
+  }, [state]);
+  const errorFor = (field: keyof ContentFormValues) =>
+    state.field === field ? state.error : undefined;
+  const invalid = (field: keyof ContentFormValues) =>
+    state.field === field
+      ? { "aria-invalid": true, "aria-describedby": `${field}-error` }
+      : {};
   const side = tasks?.length
     ? "tasks"
     : (id === null || approving) && steps.length
@@ -100,6 +124,7 @@ export function ContentForm({
 
   return (
     <form
+      ref={formRef}
       // Submit by hand so React doesn't reset the form: a failed save keeps what was typed.
       onSubmit={(event) => {
         event.preventDefault();
@@ -121,6 +146,7 @@ export function ContentForm({
             label={t("contentEditor.goal")}
             htmlFor="goal"
             hint={t("contentEditor.goalHint")}
+            error={errorFor("goal")}
           >
             <Textarea
               id="goal"
@@ -128,15 +154,21 @@ export function ContentForm({
               rows={2}
               defaultValue={values.goal}
               required
+              {...invalid("goal")}
             />
           </Field>
-          <Field label={t("contentEditor.idea")} htmlFor="idea">
+          <Field
+            label={t("contentEditor.idea")}
+            htmlFor="idea"
+            error={errorFor("idea")}
+          >
             <Textarea
               id="idea"
               name="idea"
               rows={4}
               defaultValue={values.idea}
               required
+              {...invalid("idea")}
             />
           </Field>
         </Section>
@@ -146,7 +178,7 @@ export function ContentForm({
             title={t("contentEditor.format")}
             className="flex-[3_1_20rem]"
           >
-            <fieldset className="flex flex-col">
+            <fieldset className="flex flex-col" {...invalid("platforms")}>
               <legend className="mb-2.5 pl-1 text-[13px] font-medium">
                 {t("contentEditor.platforms")}
               </legend>
@@ -173,8 +205,13 @@ export function ContentForm({
                   </label>
                 ))}
               </div>
+              <FieldError id="platforms-error" error={errorFor("platforms")} />
             </fieldset>
-            <Field label={t("contentEditor.contentType")} htmlFor="type">
+            <Field
+              label={t("contentEditor.contentType")}
+              htmlFor="type"
+              error={errorFor("type")}
+            >
               <NativeSelect
                 id="type"
                 name="type"
@@ -182,6 +219,7 @@ export function ContentForm({
                 onChange={(event) => setType(event.target.value)}
                 className="w-full"
                 required
+                {...invalid("type")}
               >
                 <NativeSelectOption value="" disabled>
                   {t("contentEditor.pickType")}
@@ -199,7 +237,12 @@ export function ContentForm({
             title={t("contentEditor.schedule")}
             className="flex-[2_1_16rem]"
           >
-            <Field label={t("contentEditor.publishDay")} htmlFor="publishDate">
+            <Field
+              label={t("contentEditor.publishDay")}
+              htmlFor="publishDate"
+              optional
+              error={errorFor("publishDate")}
+            >
               <Input
                 id="publishDate"
                 name="publishDate"
@@ -207,12 +250,15 @@ export function ContentForm({
                 defaultValue={values.publishDate}
                 onChange={(event) => setPublishDate(event.target.value)}
                 className="tabular-nums"
+                {...invalid("publishDate")}
               />
             </Field>
             <Field
               label={t("contentEditor.goldenTime")}
               htmlFor="goldenTime"
               hint={t("contentEditor.goldenTimeHint")}
+              optional
+              error={errorFor("goldenTime")}
             >
               <Input
                 id="goldenTime"
@@ -220,6 +266,7 @@ export function ContentForm({
                 type="time"
                 defaultValue={values.goldenTime}
                 className="tabular-nums"
+                {...invalid("goldenTime")}
               />
             </Field>
           </Section>
@@ -230,6 +277,8 @@ export function ContentForm({
             label={t("contentEditor.links")}
             htmlFor="assetLinks"
             hint={t("contentEditor.linksHint")}
+            optional
+            error={errorFor("assetLinks")}
           >
             <Textarea
               id="assetLinks"
@@ -237,6 +286,7 @@ export function ContentForm({
               rows={3}
               defaultValue={values.assetLinks}
               placeholder="https://drive.google.com/…"
+              {...invalid("assetLinks")}
             />
           </Field>
         </Section>
@@ -325,12 +375,17 @@ export function ContentForm({
                 </NativeSelect>
               </Field>
             )}
-            <Field label={t("contentEditor.assignee")} htmlFor="assigneeId">
+            <Field
+              label={t("contentEditor.assignee")}
+              htmlFor="assigneeId"
+              error={errorFor("assigneeId")}
+            >
               <NativeSelect
                 id="assigneeId"
                 name="assigneeId"
                 defaultValue={values.assigneeId}
                 className="w-full"
+                {...invalid("assigneeId")}
               >
                 <NativeSelectOption value="">
                   {t("common.unassigned")}
@@ -348,7 +403,7 @@ export function ContentForm({
 
       {/* On phones the error and buttons stay above the bottom navigation while the form scrolls. */}
       <div className="sticky bottom-(--bottom-nav,0px) z-10 -mx-4 flex min-w-0 flex-col gap-3 bg-background/95 px-4 py-3 backdrop-blur-sm md:static md:mx-0 md:gap-6 md:bg-transparent md:p-0 md:backdrop-blur-none xl:col-start-1 xl:row-start-3">
-        {state.error ? (
+        {state.error && !state.field ? (
           <p
             role="alert"
             className="rounded-xl bg-destructive-soft px-5 py-3.5 text-foreground"
@@ -411,20 +466,48 @@ function Field({
   label,
   htmlFor,
   hint,
+  optional = false,
+  error,
   children,
 }: {
   label: string;
   htmlFor: string;
   hint?: string;
+  /** Says so on the label, so people know what they can skip. */
+  optional?: boolean;
+  /** Why the last save failed, when it was this field. */
+  error?: string;
   children: React.ReactNode;
 }) {
+  const t = useTranslations("common");
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={htmlFor}>{label}</Label>
+      <Label htmlFor={htmlFor}>
+        {label}
+        {optional ? (
+          <span className="font-normal text-muted-foreground">
+            {t("optional")}
+          </span>
+        ) : null}
+      </Label>
       {children}
       {hint ? (
         <p className="pl-1 text-xs text-muted-foreground">{hint}</p>
       ) : null}
+      <FieldError id={`${htmlFor}-error`} error={error} />
     </div>
+  );
+}
+
+function FieldError({ id, error }: { id: string; error?: string }) {
+  if (!error) return null;
+  return (
+    <p
+      id={id}
+      role="alert"
+      className="pl-1 text-xs font-medium text-destructive"
+    >
+      {error}
+    </p>
   );
 }

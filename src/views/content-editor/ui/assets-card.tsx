@@ -413,6 +413,7 @@ function AddVersionForm({
 
 function VersionFields({ id, autoFocus }: { id: string; autoFocus?: boolean }) {
   const t = useTranslations("contentEditor.assets");
+  const tc = useTranslations("common");
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <div className="flex flex-col gap-2">
@@ -433,7 +434,12 @@ function VersionFields({ id, autoFocus }: { id: string; autoFocus?: boolean }) {
         </p>
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor={`${id}-note`}>{t("note")}</Label>
+        <Label htmlFor={`${id}-note`}>
+          {t("note")}
+          <span className="font-normal text-muted-foreground">
+            {tc("optional")}
+          </span>
+        </Label>
         <Input
           id={`${id}-note`}
           name="note"

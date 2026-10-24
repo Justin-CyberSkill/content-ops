@@ -2,13 +2,13 @@
 
 import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { refresh } from "next/cache";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { z } from "zod";
 import { createTasks } from "@/entities/task/index.server";
 import { requireAdmin } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, contentEvent } from "@/shared/db/schema";
+import { redirect } from "@/shared/i18n";
 import { type AssignmentValues, parseAssignments } from "../model/assignments";
 import { createRejectionSchema } from "../model/rejection";
 import { pendingProposalError } from "./pending-proposal";
@@ -58,7 +58,7 @@ export async function rejectProposal(
     return rows;
   });
   if (!updated.length) return { error: await pendingProposalError(id, null) };
-  redirect("/review?done=rejected");
+  return redirect({ href: "/review?done=rejected", locale: await getLocale() });
 }
 
 export type ApproveState = { error?: string };
@@ -112,7 +112,7 @@ export async function approveProposal(
     refresh();
     return { error };
   }
-  redirect("/review?done=approved");
+  return redirect({ href: "/review?done=approved", locale: await getLocale() });
 }
 
 export type RestoreState = { error?: string };
