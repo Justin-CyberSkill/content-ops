@@ -19,13 +19,16 @@
   "nav": {
     "label": "Chính",
     "contentPlan": "Kế hoạch nội dung",
+    "contentPlanShort": "Kế hoạch",
     "myTasks": "Việc của tôi",
     "settings": "Cài đặt",
-    "account": "Tài khoản: {name}",
+    "accountMenu": "Menu tài khoản của {name}",
+    "accountLink": "Tài khoản",
     "signOut": "Đăng xuất",
     "language": "Ngôn ngữ",
     "review": "Đề xuất",
-    "reviewWaiting": "{count} đang chờ"
+    "reviewWaiting": "{count} đang chờ",
+    "tasksToDo": "{count} việc cần làm"
   },
   "content": {
     "status": {
