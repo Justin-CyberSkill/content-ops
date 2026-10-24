@@ -1,16 +1,18 @@
-import { LinkIcon } from "lucide-react";
+import { LinkIcon, SparklesIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Content } from "@/shared/db/schema";
 
 /**
  * An item as people read it: the goal, the facts that decide how it gets made, and
- * its asset links and sources. The idea itself is the page title, so it isn't repeated here.
+ * its reference links and sources. The idea itself is the page title, so it isn't repeated here.
  * `header`, `children` and `footer` let a proposal add who sent it, why, and its history.
+ * Once approved, `origin` keeps saying an agent proposed it and who approved it.
  */
 export function ContentSummary({
   item,
   schedule,
   assigneeName,
+  origin,
   header,
   children,
   footer,
@@ -20,6 +22,8 @@ export function ContentSummary({
   schedule: string | null;
   /** Left out on proposals: who does what is chosen when approving. */
   assigneeName?: string | null;
+  /** Set on an approved agent idea: the agent's name and who approved it, if still a member. */
+  origin?: { agent: string; approvedBy: string | null };
   header?: React.ReactNode;
   children?: React.ReactNode;
   /** Shown last, after the sources, such as a proposal's history. */
@@ -76,6 +80,21 @@ export function ContentSummary({
           </div>
         ))}
       </dl>
+
+      {origin ? (
+        <p className="flex items-start gap-2 text-[13px] text-muted-foreground">
+          <SparklesIcon
+            aria-hidden="true"
+            className="mt-0.5 size-4 shrink-0 text-status-proposed"
+          />
+          {origin.approvedBy
+            ? t("contentEditor.fromAgentApproved", {
+                agent: origin.agent,
+                name: origin.approvedBy,
+              })
+            : t("contentEditor.fromAgent", { agent: origin.agent })}
+        </p>
+      ) : null}
 
       {item.assetLinks.length ? (
         <div className="flex flex-col gap-1.5">

@@ -144,7 +144,9 @@ export function ProposalList({
 
             <span
               aria-hidden="true"
+              // Every card has one, so none is filled: a column of coral buttons would compete.
               className={buttonVariants({
+                variant: "outline",
                 size: "sm",
                 className: "self-start",
               })}

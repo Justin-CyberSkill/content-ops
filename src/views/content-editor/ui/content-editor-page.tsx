@@ -129,32 +129,40 @@ function PageHeader({
 }) {
   const t = useTranslations();
   return (
-    <div className="sticky top-0 z-20 -mx-4 flex items-center gap-3.5 bg-background/95 px-4 py-3 backdrop-blur-sm md:static md:mx-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
-      <Link
-        href={originHref(from)}
-        aria-label={t(`contentEditor.backTo.${from}`)}
-        className={buttonVariants({
-          variant: "outline",
-          size: "icon-lg",
-          className: "shrink-0",
-        })}
-      >
-        <ArrowLeftIcon aria-hidden="true" />
-      </Link>
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="text-[13px] text-muted-foreground">
-          {t(sectionLabel[from])}
-        </span>
-        <h1 className="line-clamp-1 text-xl font-semibold tracking-tight break-words md:line-clamp-2 md:text-3xl">
-          {title}
-        </h1>
-        {meta ? (
-          <div className="mt-1 hidden flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:flex">
-            {meta}
-          </div>
-        ) : null}
+    <>
+      <div className="sticky top-0 z-20 -mx-4 flex items-center gap-3.5 bg-background/95 px-4 py-3 backdrop-blur-sm md:static md:mx-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+        <Link
+          href={originHref(from)}
+          aria-label={t(`contentEditor.backTo.${from}`)}
+          className={buttonVariants({
+            variant: "outline",
+            size: "icon-lg",
+            className: "shrink-0",
+          })}
+        >
+          <ArrowLeftIcon aria-hidden="true" />
+        </Link>
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="text-[13px] text-muted-foreground">
+            {t(sectionLabel[from])}
+          </span>
+          <h1 className="line-clamp-3 text-xl font-semibold tracking-tight break-words md:line-clamp-2 md:text-3xl">
+            {title}
+          </h1>
+          {meta ? (
+            <div className="mt-1 hidden flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:flex">
+              {meta}
+            </div>
+          ) : null}
+        </div>
       </div>
-    </div>
+      {/* Phones keep the sticky bar short, so where the item stands shows just under it. */}
+      {meta ? (
+        <div className="-mt-3 flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:hidden">
+          {meta}
+        </div>
+      ) : null}
+    </>
   );
 }
 
@@ -506,6 +514,16 @@ async function EditContent({
             item={item}
             schedule={schedule}
             assigneeName={assigneeName}
+            origin={
+              item.proposedByName
+                ? {
+                    agent: item.proposedByName,
+                    approvedBy:
+                      members.find((member) => member.id === item.reviewedById)
+                        ?.name ?? null,
+                  }
+                : undefined
+            }
           />
         }
         work={work}

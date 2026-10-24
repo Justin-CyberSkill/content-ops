@@ -2,8 +2,7 @@
 
 import { and, eq, isNull } from "drizzle-orm";
 import { refresh } from "next/cache";
-import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { originHref, parseOrigin } from "@/entities/content";
 import {
   createTasks,
@@ -13,14 +12,20 @@ import {
 import { requireAdmin, requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, contentEvent, user } from "@/shared/db/schema";
+import { redirect } from "@/shared/i18n";
 import { parseAssignments, readAssignments } from "../model/assignments";
 import {
+  type ContentFormValues,
   createContentFormSchema,
   readContentForm,
 } from "../model/content-form";
 import { pendingProposalError } from "./pending-proposal";
 
-export type SaveContentState = { error?: string };
+/** `field` names the input an error is about, so the form shows it there. */
+export type SaveContentState = {
+  error?: string;
+  field?: keyof ContentFormValues;
+};
 
 export async function saveContent(
   id: string | null,
@@ -32,7 +37,13 @@ export async function saveContent(
   const parsed = createContentFormSchema((key) => t(key)).safeParse(
     readContentForm(formData),
   );
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  if (!parsed.success) {
+    const [issue] = parsed.error.issues;
+    return {
+      error: issue.message,
+      field: issue.path[0] as keyof ContentFormValues,
+    };
+  }
 
   const data = parsed.data;
   const assignments = parseAssignments(readAssignments(formData));
@@ -41,7 +52,7 @@ export async function saveContent(
       .select({ id: user.id })
       .from(user)
       .where(eq(user.id, data.assigneeId));
-    if (!assignee) return { error: t("assigneeGone") };
+    if (!assignee) return { error: t("assigneeGone"), field: "assigneeId" };
   }
 
   let approving = false;
@@ -123,15 +134,17 @@ export async function saveContent(
   }
   // Back to the list the item was opened from. Review says what just happened.
   const from = parseOrigin(formData.get("from"));
-  redirect(
-    approving && from === "review"
-      ? `${originHref(from)}?done=approved`
-      : originHref(from),
-  );
+  return redirect({
+    href:
+      approving && from === "review"
+        ? `${originHref(from)}?done=approved`
+        : originHref(from),
+    locale: await getLocale(),
+  });
 }
 
 export async function deleteContent(id: string, from: unknown) {
   await requireAdmin();
   await db.delete(content).where(eq(content.id, id));
-  redirect(originHref(parseOrigin(from)));
+  redirect({ href: originHref(parseOrigin(from)), locale: await getLocale() });
 }

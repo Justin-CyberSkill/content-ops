@@ -43,9 +43,9 @@ export type PanelTask = {
 
 /**
  * An item opens to read, not to edit: the details and what the tasks made on the left,
- * and on the right the thing people change most: its tasks, then the open review or
- * the live links. For an item from before tasks, its status and owner. The full form
- * opens on request and takes the whole width, one thing at a time.
+ * and on the right what people act on: the open review or the live links first, then
+ * the tasks. For an item from before tasks, its status and assignee. The full form
+ * opens from the details card and takes the whole width, one thing at a time.
  */
 export function ContentView({
   id,
@@ -77,7 +77,7 @@ export function ContentView({
   summary: React.ReactNode;
   /** What the tasks make: script and captions, assets, reviews. Under the details. */
   work?: React.ReactNode;
-  /** The open review's decision or the live links, under the tasks. */
+  /** The open review's decision or the live links, above the tasks: the page's main action. */
   actions?: React.ReactNode;
   comments: React.ReactNode;
   /** Admin-only delete, under the panel. */
@@ -124,21 +124,29 @@ export function ContentView({
   }
 
   // One DOM order for every size (details, panel, work, comments), so on a phone the
-  // tasks and the next action come right after the details, not after a long script.
+  // next action and the tasks come right after the details, not after a long script.
   // From xl the panel moves to a right column that spans every row and stays in view;
   // the last row takes any spare height, so nothing leaves a gap under a tall panel.
   return (
     <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:grid-rows-[auto_auto_1fr] xl:items-start">
-      <div className="min-w-0 xl:col-start-1 xl:row-start-1">{summary}</div>
+      {/* Edit sits on the card it changes, not on the tasks beside it. */}
+      <div className="relative min-w-0 xl:col-start-1 xl:row-start-1">
+        {summary}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => setEditing(true)}
+          className="absolute top-5 right-5 md:top-6 md:right-6"
+        >
+          <PencilIcon aria-hidden="true" />
+          {t("editDetails")}
+        </Button>
+      </div>
       <div className="flex min-w-0 flex-col gap-6 xl:sticky xl:top-8 xl:col-start-2 xl:row-span-3 xl:row-start-1">
+        {actions}
         {tasks.length ? (
-          <TasksPanel
-            tasks={tasks}
-            members={members}
-            me={me}
-            today={today}
-            onEdit={() => setEditing(true)}
-          />
+          <TasksPanel tasks={tasks} members={members} me={me} today={today} />
         ) : (
           <ProgressPanel
             id={id}
@@ -146,10 +154,8 @@ export function ContentView({
             members={members}
             steps={me.isAdmin ? steps : []}
             today={today}
-            onEdit={() => setEditing(true)}
           />
         )}
-        {actions}
         {danger}
       </div>
       <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-start-2">
@@ -170,13 +176,11 @@ function TasksPanel({
   members,
   me,
   today,
-  onEdit,
 }: {
   tasks: PanelTask[];
   members: Member[];
   me: { id: string; isAdmin: boolean };
   today: string;
-  onEdit: () => void;
 }) {
   const t = useTranslations();
   const done = tasks.filter((task) => task.status === "done").length;
@@ -259,7 +263,6 @@ function TasksPanel({
       <p className="text-[13px] text-muted-foreground">
         {t("contentEditor.tasks.panelHint")}
       </p>
-      <EditDetails onEdit={onEdit} />
     </section>
   );
 }
@@ -312,28 +315,12 @@ function StepMarker({
   );
 }
 
-function EditDetails({ onEdit }: { onEdit: () => void }) {
-  const t = useTranslations("contentEditor");
-  return (
-    <div className="flex flex-col gap-2 border-t border-border pt-5">
-      <Button type="button" variant="outline" onClick={onEdit}>
-        <PencilIcon aria-hidden="true" />
-        {t("editDetails")}
-      </Button>
-      <p className="text-center text-[13px] text-muted-foreground">
-        {t("editDetailsHint")}
-      </p>
-    </div>
-  );
-}
-
 function ProgressPanel({
   id,
   initial,
   members,
   steps,
   today,
-  onEdit,
 }: {
   id: string;
   initial: ContentFormValues;
@@ -341,7 +328,6 @@ function ProgressPanel({
   /** Its content type's steps, when an admin can split it into tasks. */
   steps: PlannedStep[];
   today: string;
-  onEdit: () => void;
 }) {
   const t = useTranslations();
   const [state, action, pending] = useActionState<ProgressState, FormData>(
@@ -436,7 +422,6 @@ function ProgressPanel({
           ) : null}
         </div>
       </form>
-      <EditDetails onEdit={onEdit} />
       {steps.length ? (
         // Items from before tasks: an admin can move them onto the workflow.
         <div className="flex flex-col gap-2">
