@@ -6,6 +6,7 @@ import {
   type FlowTask,
   ideaProgress,
   suggestAssignees,
+  taskKind,
 } from "./task-flow";
 
 const flow = (...statuses: FlowTask["status"][]): FlowTask[] =>
@@ -67,12 +68,27 @@ describe("ideaProgress", () => {
     });
   });
 
+  test("stays in progress when a review sends the first task back", () => {
+    const tasks = flow("todo", "waiting", "waiting", "waiting");
+    tasks[0].reopened = true;
+    expect(ideaProgress(tasks)).toEqual({
+      status: "in_progress",
+      assigneeId: "u0",
+    });
+  });
+
   test("is published when every task is done", () => {
     expect(ideaProgress(flow("done", "done", "done", "done"))).toEqual({
       status: "published",
       assigneeId: "u3",
     });
   });
+});
+
+test("taskKind follows what the idea shows while the task is open", () => {
+  expect(taskKind("in_progress")).toBe("make");
+  expect(taskKind("in_review")).toBe("review");
+  expect(taskKind("scheduled")).toBe("publish");
 });
 
 test("dueDate counts back from the publish day", () => {

@@ -20,7 +20,16 @@ const row = (
   dueDate: string | null,
 ): MyTask => ({
   key,
-  task: { id: key, name: key, status, dueDate, waitingFor: null },
+  task: {
+    id: key,
+    name: key,
+    status,
+    dueDate,
+    waitingFor: null,
+    kind: "make",
+    changesRequested: null,
+    live: [],
+  },
   item,
 });
 

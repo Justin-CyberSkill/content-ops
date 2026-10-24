@@ -10,7 +10,10 @@
     "roles": {
       "admin": "Admin",
       "member": "Member"
-    }
+    },
+    "copy": "Copy",
+    "copied": "Copied",
+    "copyFailed": "Couldn't copy. Select the text and copy it yourself."
   },
   "nav": {
     "label": "Main",
@@ -128,7 +131,7 @@
       "idea": "Idea",
       "assignee": "Assignee",
       "status": "Status",
-      "assets": "Assets",
+      "assets": "Links",
       "format": "Format"
     },
     "groups": {
@@ -139,7 +142,7 @@
       "noDate": "No date",
       "published": "Published"
     },
-    "assetLinks": "{count, plural, one {# asset link} other {# asset links}}"
+    "assetLinks": "{count, plural, one {# reference link} other {# reference links}}"
   },
   "review": {
     "title": "Proposals",
@@ -190,9 +193,9 @@
     "publishDay": "Publish day",
     "goldenTime": "Golden time",
     "goldenTimeHint": "Local time when the audience is most active.",
-    "assetLinks": "Asset links",
+    "referenceLinks": "Reference links",
     "links": "Links",
-    "linksHint": "One URL per line.",
+    "linksHint": "One URL per line, such as a brief or inspiration. Finished files go under Assets.",
     "statusAndOwner": "Status and owner",
     "status": "Status",
     "assignee": "Assignee",
@@ -205,7 +208,7 @@
       "typeRequired": "Pick a content type.",
       "invalidDate": "Pick a valid publish day.",
       "invalidTime": "Pick a valid golden time.",
-      "invalidLinks": "Asset links must be http(s) URLs, one per line.",
+      "invalidLinks": "Reference links must be http(s) URLs, one per line.",
       "assigneeGone": "That member no longer exists. Pick another.",
       "deleted": "This content was deleted.",
       "commentRequired": "Write something before you send.",
@@ -221,7 +224,27 @@
       "notWithdrawn": "This idea isn't withdrawn any more. Reload the page to see where it stands.",
       "followsTasks": "This item's status and assignee follow its tasks. Reload the page to see them.",
       "alreadyTasks": "This item already has tasks. Reload the page to see them.",
-      "noSteps": "This content type has no steps yet. Add them under Members, then Workflow."
+      "noSteps": "This content type has no steps yet. Add them under Members, then Workflow.",
+      "scriptTooLong": "Keep the script under 20,000 characters.",
+      "captionTooLong": "Keep each caption under 10,000 characters.",
+      "hashtagsTooLong": "Keep the hashtags under 1,000 characters.",
+      "pinnedCommentTooLong": "Keep the pinned comment under 2,000 characters.",
+      "assetLabelRequired": "Name the asset, such as Thumbnail.",
+      "assetLabelTooLong": "Keep the label under 60 characters.",
+      "assetLinkInvalid": "Paste a link that starts with http:// or https://.",
+      "assetNoteTooLong": "Keep the note under 500 characters.",
+      "assetPlatformGone": "This idea isn't for that platform any more. Pick another.",
+      "assetGone": "This asset was deleted. Reload the page.",
+      "notYourAsset": "Only the person who added it, or an admin, can delete it.",
+      "reviewNotOpen": "This review isn't open any more. Reload the page to see where it stands.",
+      "notYourReview": "This review isn't yours. Ask an admin to give it to you.",
+      "changesNoteRequired": "Say what needs changing.",
+      "changesNoteTooLong": "Keep the note under 2,000 characters.",
+      "pickTasksToReopen": "Pick at least one task to send back.",
+      "liveLinkInvalid": "Paste the post's link, starting with https://.",
+      "notYourPublishing": "Only whoever has the publishing task, or an admin, can add live links.",
+      "publishingNotOpen": "Live links go in once publishing starts.",
+      "platformGone": "This idea isn't for that platform any more. Reload the page."
     },
     "comments": {
       "title": "Comments",
@@ -279,7 +302,7 @@
         "type": "the content type",
         "publishDate": "the publish day",
         "goldenTime": "the golden time",
-        "assetLinks": "the asset links",
+        "assetLinks": "the reference links",
         "why": "“Why this”",
         "sources": "“Based on”"
       },
@@ -304,7 +327,104 @@
       "splitTitle": "Split into tasks",
       "splitFormHint": "Tasks start from the first step. Mark the steps already finished as done afterwards.",
       "splitConfirm": "Create tasks",
-      "splitting": "Creating…"
+      "splitting": "Creating…",
+      "changesRequestedBy": "{name} asked for changes",
+      "changesRequested": "Changes requested"
+    },
+    "sinceReview": "Changed since last review",
+    "captions": {
+      "title": "Script and captions",
+      "intro": "What's said or shown, and what's posted with it on each platform.",
+      "empty": "Nothing written yet. The script and each platform's caption go here, ready to copy when posting.",
+      "write": "Write script and captions",
+      "edit": "Edit script and captions",
+      "editHint": "Anyone on the team can change these. The next review shows what changed.",
+      "script": "Script",
+      "scriptHint": "What's said or shown: the voice-over, scenes or slides.",
+      "noScript": "No script yet.",
+      "caption": "Caption",
+      "hashtags": "Hashtags",
+      "hashtagsHint": "Separate them with spaces. The # is added for you.",
+      "pinnedComment": "Pinned comment",
+      "pinnedCommentHint": "Post it as the first comment, then pin it.",
+      "noCaption": "No caption yet.",
+      "count": "{count, plural, one {# character} other {# characters}} with hashtags",
+      "countOfLimit": "{count, number} of {limit, number} characters with hashtags",
+      "overLimit": "{count, number} of {limit, number} characters with hashtags: {over, number} too many for {platform}",
+      "save": "Save script and captions",
+      "copyScript": "Copy script",
+      "copyCaption": "Copy caption for {platform}",
+      "copyHashtags": "Copy hashtags for {platform}",
+      "copyPinned": "Copy pinned comment for {platform}"
+    },
+    "assets": {
+      "title": "Assets",
+      "count": "{count, plural, one {# asset} other {# assets}}",
+      "empty": "No assets yet. Add a link to each file, such as the video or the thumbnail, so everyone uses the latest.",
+      "add": "Add asset",
+      "adding": "Adding…",
+      "addTitle": "Add an asset",
+      "label": "Label",
+      "labelHint": "What it is, such as Thumbnail.",
+      "labelSuggestions": "Video, Thumbnail, Cover image, Subtitles, Slides, Images",
+      "platform": "For",
+      "allPlatforms": "All platforms",
+      "link": "Link",
+      "linkHint": "Where the file is, such as Google Drive or Canva. Everyone on the team must be able to open it.",
+      "note": "Note",
+      "noteHint": "Optional: what's in it or what changed.",
+      "open": "Open {version}",
+      "version": "v{number}",
+      "addedBy": "{name}, {time}",
+      "addVersion": "Add version",
+      "addVersionTitle": "New version of {label}",
+      "addVersionHint": "The newest version is the one everyone uses. Older ones stay in the list.",
+      "allVersions": "{count, plural, one {# version} other {All # versions}}",
+      "delete": "Delete {label}",
+      "confirmDelete": "Delete {label} and all its versions? The files themselves stay where they are.",
+      "removedMember": "A removed member"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "approved": "{name} approved it",
+      "changesRequested": "{name} asked for changes",
+      "sentBack": "Sent back: {tasks}",
+      "removedMember": "A removed member"
+    },
+    "verdict": {
+      "title": "Approve or request changes",
+      "intro": "Check the script, captions and assets, then decide.",
+      "introAgain": "Check the script, captions and assets, then decide. A badge marks what changed since the last review.",
+      "approve": "Approve",
+      "approving": "Approving…",
+      "approveNext": "{task} opens for {name}.",
+      "approveNextUnassigned": "{task} opens. No one has it yet.",
+      "approveLast": "The idea is marked Published.",
+      "requestChanges": "Request changes",
+      "requestChangesHint": "Say what to change and which tasks need another go.",
+      "requestHint": "The tasks you pick go back to To do with your note. You review again once they're done.",
+      "note": "What needs changing",
+      "sendBackTo": "Send back to",
+      "send": "Send back",
+      "sending": "Sending…"
+    },
+    "publish": {
+      "title": "Live links",
+      "hint": "Post on each platform, then paste the link here. When every platform has one, {task} is done and the idea shows as Published.",
+      "liveCount": "{live} of {total} live",
+      "live": "Live",
+      "notLive": "Not live yet",
+      "copyPost": "Copy post",
+      "copyPostFor": "Copy caption and hashtags for {platform}",
+      "copyPinned": "Copy pinned comment",
+      "copyPinnedFor": "Copy pinned comment for {platform}",
+      "linkLabel": "Live link for {platform}",
+      "save": "Save",
+      "saving": "Saving…",
+      "change": "Change",
+      "changeLabel": "Change the live link for {platform}",
+      "publishedBy": "{name}, {time}",
+      "noCaption": "No caption yet."
     }
   },
   "myTasks": {
@@ -327,7 +447,11 @@
     "waitingFor": "After {task} by {name}",
     "waitingForUnassigned": "After {task}",
     "done": "Done",
-    "doneHint": "What you finished in the last 30 days."
+    "doneHint": "What you finished in the last 30 days.",
+    "changesRequestedBy": "{name} asked for changes",
+    "changesRequested": "Changes requested",
+    "openToReview": "Open to review",
+    "liveCount": "{live} of {total} live"
   },
   "agents": {
     "title": "Agents",
@@ -389,7 +513,8 @@
       "notFound": "This task was removed. Reload the page to see the current tasks.",
       "notYours": "This task isn't yours. Ask an admin to give it to you.",
       "waiting": "This task starts when the one before it is done.",
-      "memberGone": "That member no longer exists. Pick another."
+      "memberGone": "That member no longer exists. Pick another.",
+      "needsVerdict": "Approve it or request changes on the item's page, so the review is kept."
     }
   },
   "workflow": {
@@ -408,7 +533,7 @@
     "name": "Name",
     "namePlaceholder": "Translation",
     "ideaStatus": "The idea shows as",
-    "ideaStatusHint": "What the content plan shows while this is the task in progress.",
+    "ideaStatusHint": "What the content plan shows while this is the task in progress. In review gives the task Approve and Request changes. Scheduled gives it a live link for each platform.",
     "save": "Save",
     "delete": "Delete work type",
     "deleting": "Deleting…",
