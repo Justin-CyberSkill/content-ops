@@ -77,7 +77,11 @@ export const content = pgTable(
     goldenTime: time(),
     assigneeId: text().references(() => user.id, { onDelete: "set null" }),
     status: contentStatus().notNull().default("planned"),
+    /** Links people refer to while making it, such as a brief or inspiration. Not the assets themselves. */
     assetLinks: text().array().notNull().default(sql`'{}'`),
+    /** What's said or shown, written in Content prep. Each platform's caption is in `post`. */
+    script: text().notNull().default(""),
+    scriptUpdatedAt: timestamp(),
     createdById: text().references(() => user.id, { onDelete: "set null" }),
     // Set when an agent proposed it. The agent's key name is kept even if the key is deleted.
     proposedByKeyId: text(),

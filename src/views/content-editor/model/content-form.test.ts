@@ -96,6 +96,8 @@ const item: Content = {
   assigneeId: null,
   status: "planned",
   assetLinks: ["https://a.example", "https://b.example"],
+  script: "",
+  scriptUpdatedAt: null,
   createdById: null,
   proposedByKeyId: null,
   proposedByName: null,

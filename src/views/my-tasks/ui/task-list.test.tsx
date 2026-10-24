@@ -30,6 +30,9 @@ const prep: MyTask = {
     status: "in_progress",
     dueDate: "2026-10-22",
     waitingFor: null,
+    kind: "make",
+    changesRequested: null,
+    live: [],
   },
   item,
 };
@@ -69,6 +72,9 @@ test("groups to do, waiting and done, and says who a waiting task waits on", () 
             status: "waiting",
             dueDate: "2026-10-27",
             waitingFor: { name: "Asset prep", assigneeName: "Jay" },
+            kind: "publish",
+            changesRequested: null,
+            live: [],
           },
           item,
         },
@@ -97,4 +103,71 @@ test("groups to do, waiting and done, and says who a waiting task waits on", () 
   expect(
     screen.getByRole("combobox", { name: "Status of Old carousel" }),
   ).toHaveValue("published");
+});
+
+test("says what a review asked for on the task it sent back", () => {
+  renderWithIntl(
+    <TaskList
+      tasks={[
+        {
+          ...prep,
+          task: {
+            ...(prep.task as NonNullable<MyTask["task"]>),
+            status: "todo",
+            changesRequested: { note: "Shorter hook, please", by: "Justin" },
+          },
+        },
+      ]}
+      today={today}
+    />,
+  );
+  expect(screen.getByText("Justin asked for changes")).toBeInTheDocument();
+  expect(screen.getByText("Shorter hook, please")).toBeInTheDocument();
+});
+
+test("opens a review on the item's page instead of marking it done here", () => {
+  renderWithIntl(
+    <TaskList
+      tasks={[
+        {
+          ...prep,
+          task: {
+            ...(prep.task as NonNullable<MyTask["task"]>),
+            name: "Review",
+            status: "todo",
+            kind: "review",
+          },
+        },
+      ]}
+      today={today}
+    />,
+  );
+  expect(screen.getByRole("link", { name: "Open to review" })).toHaveAttribute(
+    "href",
+    `/en/my-tasks/${item.id}`,
+  );
+  expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+});
+
+test("ticks off each platform that's live while publishing", () => {
+  renderWithIntl(
+    <TaskList
+      tasks={[
+        {
+          ...prep,
+          item: { ...item, platforms: ["tiktok", "facebook"] },
+          task: {
+            ...(prep.task as NonNullable<MyTask["task"]>),
+            name: "Publishing",
+            status: "in_progress",
+            kind: "publish",
+            live: ["tiktok"],
+          },
+        },
+      ]}
+      today={today}
+    />,
+  );
+  expect(screen.getByText("1 of 2 live")).toBeInTheDocument();
+  expect(screen.getByText("(Live)", { exact: false })).toBeInTheDocument();
 });

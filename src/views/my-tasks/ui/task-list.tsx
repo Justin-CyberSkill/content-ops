@@ -1,9 +1,16 @@
-import { ClockIcon, LinkIcon, SquareCheckBigIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ClockIcon,
+  LinkIcon,
+  MessageSquareWarningIcon,
+  SquareCheckBigIcon,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { contentHref, formatSchedule } from "@/entities/content";
 import { DueDay, TaskStatusBadge } from "@/entities/task";
 import { TaskStatusSelect } from "@/features/task-progress";
 import { DATE_LOCALES, Link, type Locale } from "@/shared/i18n";
+import { cn } from "@/shared/lib";
 import { buttonVariants } from "@/shared/ui/button";
 import type { MyTask } from "../api/list-my-tasks";
 import { groupTasks } from "../model/task-groups";
@@ -112,6 +119,10 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
   const t = useTranslations();
   const locale = useLocale();
   const { task, item } = row;
+  const publishing = task?.kind === "publish";
+  const reviewOpen =
+    task?.kind === "review" &&
+    (task.status === "todo" || task.status === "in_progress");
   return (
     <li className="flex flex-col gap-4 rounded-2xl bg-card p-5 shadow-card">
       {task ? (
@@ -125,6 +136,26 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
             className="text-muted-foreground"
           />
         </p>
+      ) : null}
+      {task?.changesRequested ? (
+        <div className="-mt-1 flex gap-2.5 rounded-xl bg-status-in-review-bg px-3.5 py-3 text-sm">
+          <MessageSquareWarningIcon
+            aria-hidden="true"
+            className="mt-0.5 size-4 shrink-0 text-status-in-review"
+          />
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="font-semibold text-status-in-review">
+              {task.changesRequested.by
+                ? t("myTasks.changesRequestedBy", {
+                    name: task.changesRequested.by,
+                  })
+                : t("myTasks.changesRequested")}
+            </span>
+            <p className="line-clamp-3 break-words whitespace-pre-wrap">
+              {task.changesRequested.note}
+            </p>
+          </div>
+        </div>
       ) : null}
       <div className="flex items-start gap-3.5">
         <DateTile
@@ -153,18 +184,46 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
         <li className="inline-flex h-7 items-center rounded-full bg-muted px-3">
           {t(`content.type.${item.type}`)}
         </li>
-        {item.platforms.map((p) => (
-          <li
-            key={p}
-            className="inline-flex h-7 items-center rounded-full bg-muted px-3"
-          >
-            {t(`content.platform.${p}`)}
-          </li>
-        ))}
+        {item.platforms.map((p) => {
+          // Publishing ticks off each platform as its live link goes in.
+          const live = publishing && task?.live.includes(p);
+          return (
+            <li
+              key={p}
+              className={cn(
+                "inline-flex h-7 items-center gap-1 rounded-full px-3",
+                live
+                  ? "bg-status-published-bg text-status-published"
+                  : "bg-muted",
+              )}
+            >
+              {live ? (
+                <CheckIcon
+                  aria-hidden="true"
+                  className="size-3.5"
+                  strokeWidth={3}
+                />
+              ) : null}
+              {t(`content.platform.${p}`)}
+              {live ? (
+                <span className="sr-only">
+                  {` (${t("contentEditor.publish.live")})`}
+                </span>
+              ) : null}
+            </li>
+          );
+        })}
       </ul>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t pt-4">
         <div className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-[13px]">
-          {task?.waitingFor ? (
+          {publishing && task.status !== "waiting" ? (
+            <span className="text-muted-foreground tabular-nums">
+              {t("myTasks.liveCount", {
+                live: task.live.length,
+                total: item.platforms.length,
+              })}
+            </span>
+          ) : task?.waitingFor ? (
             <span className="text-muted-foreground">
               {task.waitingFor.assigneeName
                 ? t("myTasks.waitingFor", {
@@ -198,6 +257,17 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
           />
         ) : task.status === "waiting" ? (
           <TaskStatusBadge status="waiting" />
+        ) : reviewOpen ? (
+          // A review is decided on the item's page, beside the work.
+          <Link
+            href={contentHref(item.id, "tasks")}
+            className={buttonVariants({
+              size: "sm",
+              className: "relative z-10",
+            })}
+          >
+            {t("myTasks.openToReview")}
+          </Link>
         ) : (
           <TaskStatusSelect
             key={task.status}
