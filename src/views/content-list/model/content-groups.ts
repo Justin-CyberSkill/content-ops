@@ -39,6 +39,30 @@ export function groupOf(item: Groupable, today: string): ContentGroup {
   return "later";
 }
 
+const toIso = (day: number) =>
+  new Date(day * DAY_MS).toISOString().slice(0, 10);
+
+/**
+ * The days a week section covers, so its heading can say them: Monday to Sunday for
+ * this week and next week, and the first day of later. Other sections have none.
+ */
+export function daysOf(
+  group: ContentGroup,
+  today: string,
+): { from: string; to?: string } | null {
+  const now = toDay(today);
+  const weekStart = now - ((now + 3) % 7);
+  if (group === "thisWeek")
+    return { from: toIso(weekStart), to: toIso(weekStart + 6) };
+  if (group === "nextWeek")
+    return { from: toIso(weekStart + 7), to: toIso(weekStart + 13) };
+  if (group === "later") return { from: toIso(weekStart + 14) };
+  return null;
+}
+
+/** The day after a date column's day ("2026-10-24" gives "2026-10-25"). */
+export const nextDay = (iso: string) => toIso(toDay(iso) + 1);
+
 /** Non-empty sections in display order. Keeps each section's rows in the order given. */
 export function groupContent<T extends Groupable>(
   rows: T[],

@@ -1,5 +1,11 @@
 import { expect, test } from "vitest";
-import { groupContent, groupOf, todayIn } from "./content-groups";
+import {
+  daysOf,
+  groupContent,
+  groupOf,
+  nextDay,
+  todayIn,
+} from "./content-groups";
 
 // Friday 23 Oct 2026: this week runs Mon 19 – Sun 25, next week Mon 26 – Sun 1 Nov.
 const today = "2026-10-23";
@@ -54,4 +60,19 @@ test("reads today in the given time zone", () => {
   const now = new Date("2026-10-23T18:00:00Z");
   expect(todayIn("Asia/Ho_Chi_Minh", now)).toBe("2026-10-24");
   expect(todayIn("UTC", now)).toBe("2026-10-23");
+});
+
+test("week sections cover Monday to Sunday, later starts the Monday after", () => {
+  // Saturday 24 Oct 2026.
+  expect(daysOf("thisWeek", "2026-10-24")).toEqual({
+    from: "2026-10-19",
+    to: "2026-10-25",
+  });
+  expect(daysOf("nextWeek", "2026-10-24")).toEqual({
+    from: "2026-10-26",
+    to: "2026-11-01",
+  });
+  expect(daysOf("later", "2026-10-24")).toEqual({ from: "2026-11-02" });
+  expect(daysOf("overdue", "2026-10-24")).toBeNull();
+  expect(nextDay("2026-10-31")).toBe("2026-11-01");
 });
