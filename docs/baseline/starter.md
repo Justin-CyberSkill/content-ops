@@ -11,7 +11,7 @@ Files [setup.md](setup.md) creates once. After setup they belong to the project.
   "dev": "next dev",
   "build": "next build",
   "start": "next start",
-  "lint": "biome check && node docs/baseline/scripts/check-structure.ts && node docs/baseline/scripts/check-docs.ts",
+  "lint": "biome check && knip && node docs/baseline/scripts/check-structure.ts && node docs/baseline/scripts/check-docs.ts",
   "format": "biome check --write",
   "typecheck": "next typegen && tsc --noEmit",
   "test": "vitest run",
@@ -182,11 +182,25 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
   plugins: [nextCookies()], // must stay last
 });
-
-export type Session = typeof auth.$Infer.Session;
 ```
 
-`src/shared/auth/session.ts`
+`src/shared/auth/index.server.ts`
+
+```ts
+// Server-only entry: keeps the DB and secrets out of the client graph.
+export { auth } from "./auth-server";
+```
+
+`src/app/api/auth/[...all]/route.ts`
+
+```ts
+import { toNextJsHandler } from "better-auth/next-js";
+import { auth } from "@/shared/auth/index.server";
+
+export const { GET, POST } = toNextJsHandler(auth);
+```
+
+When the first view needs the signed-in user, add `session.ts` and export `getSession` and `requireUser` from `index.server.ts`:
 
 ```ts
 import { headers } from "next/headers";
@@ -204,23 +218,6 @@ export async function requireUser() {
   if (!session) redirect("/sign-in");
   return session.user;
 }
-```
-
-`src/shared/auth/index.server.ts`
-
-```ts
-// Server-only entry: keeps the DB and secrets out of the client graph.
-export { auth, type Session } from "./auth-server";
-export { getSession, requireUser } from "./session";
-```
-
-`src/app/api/auth/[...all]/route.ts`
-
-```ts
-import { toNextJsHandler } from "better-auth/next-js";
-import { auth } from "@/shared/auth/index.server";
-
-export const { GET, POST } = toNextJsHandler(auth);
 ```
 
 Add a client (`createAuthClient()` from `better-auth/react`) only when a client component needs it.

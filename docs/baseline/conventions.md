@@ -69,7 +69,7 @@ For webhooks and machine clients only. Authenticate, validate with Zod, answer J
 
 ## UI
 
-- Components come from `src/shared/ui`; change them there.
+- Components come from `src/shared/ui`; change them there. Add each with `pnpm dlx shadcn@latest add <name>` when a view first needs it. Before the first: `pnpm dlx shadcn@latest init -d` (base-nova on Base UI), set the `components.json` aliases ([starter.md](starter.md#componentsjson-aliases)), and move anything it puts in `src/components` or `src/lib` to `src/shared/`.
 - Colors, radii and shadows are tokens in `globals.css`. No hard-coded colors.
 - Icon-only buttons get `aria-label`; decorative icons `aria-hidden="true"`.
 - Each project keeps its own UX rules in its docs.

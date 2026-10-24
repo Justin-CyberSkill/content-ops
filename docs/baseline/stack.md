@@ -13,6 +13,7 @@ Verified 2026-10-24. Exact versions live in each project's `package.json`. A pro
 | Validation      | Zod v4                                       | All external input and env.                                                           |
 | Lint and format | Biome                                        | Formats Markdown too. Shared config: [biome-base.jsonc](biome-base.jsonc).            |
 | Tests           | Vitest + Testing Library, jsdom              | See [testing.md](testing.md).                                                         |
+| Unused code     | Knip                                         | Finds unused files, exports and dependencies. No config.                              |
 | Runtime         | Node 22.18+, pnpm 10                         | Node runs the `.ts` scripts directly.                                                 |
 | Hosting and CI  | Vercel (Node.js runtime), GitHub Actions     |                                                                                       |
 | Structure       | Feature-Sliced Design v2.1                   | See [architecture.md](architecture.md).                                               |
