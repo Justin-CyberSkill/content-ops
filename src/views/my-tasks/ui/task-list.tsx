@@ -12,6 +12,7 @@ import { TaskStatusSelect } from "@/features/task-progress";
 import { DATE_LOCALES, Link, type Locale } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { buttonVariants } from "@/shared/ui/button";
+import { MarkdownPreview } from "@/shared/ui/markdown";
 import type { MyTask } from "../api/list-my-tasks";
 import { groupTasks } from "../model/task-groups";
 import { StatusSelect } from "./status-select";
@@ -151,8 +152,8 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
                   })
                 : t("myTasks.changesRequested")}
             </span>
-            <p className="line-clamp-3 break-words whitespace-pre-wrap">
-              {task.changesRequested.note}
+            <p className="line-clamp-3 break-words">
+              <MarkdownPreview>{task.changesRequested.note}</MarkdownPreview>
             </p>
           </div>
         </div>
@@ -170,8 +171,8 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
           >
             {item.idea}
           </Link>
-          <p className="text-[13px] break-words text-muted-foreground">
-            {item.goal}
+          <p className="line-clamp-2 text-[13px] break-words text-muted-foreground">
+            <MarkdownPreview>{item.goal}</MarkdownPreview>
           </p>
         </div>
       </div>

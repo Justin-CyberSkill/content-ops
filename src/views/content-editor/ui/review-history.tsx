@@ -2,6 +2,7 @@ import { CheckIcon, Undo2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReviewVerdict } from "@/shared/db/schema";
 import { cn } from "@/shared/lib";
+import { Markdown } from "@/shared/ui/markdown";
 
 export type ReviewEntry = {
   id: string;
@@ -64,9 +65,9 @@ export function ReviewHistory({ reviews }: { reviews: ReviewEntry[] }) {
                   </time>
                 </div>
                 {entry.note ? (
-                  <p className="max-w-prose text-sm break-words whitespace-pre-wrap">
+                  <Markdown className="max-w-prose text-sm" headingLevel={3}>
                     {entry.note}
-                  </p>
+                  </Markdown>
                 ) : null}
                 {entry.reopenedTasks.length ? (
                   <p className="text-[13px] text-muted-foreground">

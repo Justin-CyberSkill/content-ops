@@ -1,10 +1,28 @@
 import { z } from "zod";
 import { CONTENT_TYPES, PLATFORMS } from "@/shared/db/schema";
 
+/** How the app shows what agents write, for the MCP server's instructions. */
+export const MARKDOWN_GUIDE =
+  "goal, why, withdraw reasons and comments are Markdown, shown the way GitHub shows a comment: short paragraphs, `-` or `1.` lists, **bold** labels and [text](https://…) links, and a single line break stays a line break. HTML isn't rendered; it shows as plain text. idea is a plain-text title.";
+
 // Messages are English: agents read them, not the team.
 const fields = {
-  goal: z.string().trim().min(1).max(1000),
-  idea: z.string().trim().min(1).max(2000),
+  goal: z
+    .string()
+    .trim()
+    .min(1)
+    .max(3000)
+    .describe(
+      "The brief, in Markdown: what we want and why, what's in it, the call to action, links, and how we'll measure it. Use **bold** labels and lists rather than one long paragraph.",
+    ),
+  idea: z
+    .string()
+    .trim()
+    .min(1)
+    .max(2000)
+    .describe(
+      "A short title in plain text, not Markdown. It's the page title and the row on the content plan, so keep it under about 100 characters.",
+    ),
   platforms: z.array(z.enum(PLATFORMS)).min(1).max(PLATFORMS.length),
   type: z.enum(CONTENT_TYPES),
   publishDate: z.iso.date().nullish(),
@@ -13,7 +31,14 @@ const fields = {
     .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use HH:MM, 24-hour.")
     .nullish(),
   assetLinks: z.array(z.url({ protocol: /^https?$/ })).max(20),
-  why: z.string().trim().min(1).max(2000),
+  why: z
+    .string()
+    .trim()
+    .min(1)
+    .max(2000)
+    .describe(
+      "Why this idea, why now, and what it's based on, in Markdown. The admin decides from this.",
+    ),
   sources: z.array(z.string().trim().min(1).max(300)).max(10),
 };
 
@@ -51,7 +76,13 @@ export const proposalUpdateSchema = proposalUpdateFields.refine(
 export type ProposalUpdate = z.output<typeof proposalUpdateSchema>;
 
 export const withdrawInputSchema = z.strictObject({
-  reason: z.string().trim().min(1).max(1000).optional(),
+  reason: z
+    .string()
+    .trim()
+    .min(1)
+    .max(1000)
+    .optional()
+    .describe("A short reason, in Markdown."),
 });
 
 export const PROPOSAL_STATES = [

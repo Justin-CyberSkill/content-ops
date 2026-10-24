@@ -48,17 +48,33 @@ Idea fields:
 
 | Field         | Required | Value                                                                                                            |
 | ------------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
-| `goal`        | yes      | What we want and why, up to 1,000 characters.                                                                    |
-| `idea`        | yes      | The content idea, up to 2,000 characters.                                                                        |
+| `goal`        | yes      | The brief in Markdown: what we want and why, what's in it, the call to action, links, how we'll measure it. Up to 3,000 characters. |
+| `idea`        | yes      | A short plain-text title, under about 100 characters. It's the page title and the row on the plan.               |
 | `platforms`   | yes      | One or more of `facebook`, `instagram`, `tiktok`, `youtube`, `linkedin`, `x`, `threads`, `website`.              |
 | `type`        | yes      | One of `motion_video`, `short_video`, `long_video`, `live`, `image`, `carousel`, `text_post`, `quiz`, `article`. |
-| `why`         | yes      | Why this idea, why now, and what it's based on, up to 2,000 characters. The admin decides from this.             |
+| `why`         | yes      | Why this idea, why now, and what it's based on, in Markdown, up to 2,000 characters. The admin decides from this. |
 | `sources`     | no       | Up to 10 links or short labels the idea is based on, 300 characters each.                                        |
 | `publishDate` | no       | Suggested day, `YYYY-MM-DD`.                                                                                     |
 | `goldenTime`  | no       | Suggested local time, `HH:MM` 24-hour.                                                                           |
 | `assetLinks`  | no       | Up to 20 `https` links to drafts or references.                                                                  |
 
 Days and times are the team's local time in Vietnam (Asia/Ho_Chi_Minh).
+
+## Formatting
+
+`goal`, `why`, withdraw reasons and the team's comments are Markdown, shown the way GitHub shows a comment. Give the brief structure instead of one long paragraph: **bold** labels, `-` or `1.` lists, `[text](https://…)` links. A single line break stays a line break. HTML isn't rendered; it shows as plain text. Keep `idea` plain.
+
+```markdown
+**Goal:** help people who plan to sit CCAR-F understand the exam before they pay.
+
+**In it:**
+1. Where to sit it
+2. What it costs
+
+**CTA:** Try the sample questions.
+**Link:** https://practice.cyberskill.world/vi/practice/ccaf/sample-questions
+**Measure:** saves, shares, link clicks.
+```
 
 ## REST API
 

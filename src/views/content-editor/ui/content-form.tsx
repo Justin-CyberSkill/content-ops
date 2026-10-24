@@ -145,7 +145,7 @@ export function ContentForm({
           <Field
             label={t("contentEditor.goal")}
             htmlFor="goal"
-            hint={t("contentEditor.goalHint")}
+            hint={`${t("contentEditor.goalHint")} ${t("contentEditor.markdownHint")}`}
             error={errorFor("goal")}
           >
             <Textarea

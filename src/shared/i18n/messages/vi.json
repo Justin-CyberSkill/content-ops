@@ -14,7 +14,11 @@
     "copy": "Sao chép",
     "copied": "Đã sao chép",
     "optional": "(không bắt buộc)",
-    "copyFailed": "Không sao chép được. Hãy chọn đoạn chữ rồi tự sao chép."
+    "copyFailed": "Không sao chép được. Hãy chọn đoạn chữ rồi tự sao chép.",
+    "markdown": {
+      "footnotes": "Chú thích",
+      "backToReference": "Quay lại chỗ dẫn {number}"
+    }
   },
   "nav": {
     "label": "Chính",
@@ -195,6 +199,7 @@
     "brief": "Tóm tắt",
     "goal": "Mục tiêu",
     "goalHint": "Mình muốn đạt điều gì và vì sao.",
+    "markdownHint": "Dùng được Markdown: **in đậm**, - danh sách, [chữ](https://…).",
     "idea": "Ý tưởng nội dung",
     "format": "Định dạng",
     "platforms": "Nền tảng",

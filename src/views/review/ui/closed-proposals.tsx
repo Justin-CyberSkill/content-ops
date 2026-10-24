@@ -2,6 +2,7 @@ import { ChevronRightIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { contentHref } from "@/entities/content";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
+import { MarkdownPreview } from "@/shared/ui/markdown";
 import type { ClosedProposal } from "../api/list-proposals";
 import { formatProposedAt } from "../lib/format-proposed-at";
 
@@ -64,7 +65,12 @@ export function ClosedProposals({
                         time,
                       })}
                 </span>
-                {proposal.closed.reason ? ` · ${proposal.closed.reason}` : null}
+                {proposal.closed.reason ? (
+                  <>
+                    {" · "}
+                    <MarkdownPreview>{proposal.closed.reason}</MarkdownPreview>
+                  </>
+                ) : null}
               </p>
             </li>
           );

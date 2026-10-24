@@ -6,6 +6,7 @@ import { TEAM_TIME_ZONE } from "@/shared/config";
 import { planRangeSchema } from "../model/plan-range";
 import {
   ideaFilterSchema,
+  MARKDOWN_GUIDE,
   PROPOSAL_STATES,
   proposalInputSchema,
   proposalUpdateFields,
@@ -46,7 +47,12 @@ const idField = { id: z.string().describe("The idea's id.") };
  * stateless, which suits serverless functions: every call carries its own key.
  */
 function createServer(key: AgentKey) {
-  const server = new McpServer({ name: "content-ops", version: "1.0.0" });
+  const server = new McpServer(
+    { name: "content-ops", version: "1.0.0" },
+    {
+      instructions: `CyberSkill's content plan. You propose ideas; an admin approves or rejects them. ${MARKDOWN_GUIDE}`,
+    },
+  );
 
   server.registerTool(
     "read_plan",
@@ -99,7 +105,7 @@ function createServer(key: AgentKey) {
     {
       title: "Get an idea",
       description:
-        "One idea with the team's comments on it and its history (proposed, updated, withdrawn, restored, approved, rejected).",
+        "One idea with the team's comments on it (Markdown) and its history (proposed, updated, withdrawn, restored, approved, rejected).",
       inputSchema: idField,
       annotations: { readOnlyHint: true },
     },
@@ -114,7 +120,7 @@ function createServer(key: AgentKey) {
     {
       title: "Propose an idea",
       description:
-        "Add a content idea as pending. An admin approves or rejects it in Content Ops. Only propose ideas the person you work with agreed to. Explain in why what it's based on and why now, and list those meetings, issues or PRs in sources.",
+        "Add a content idea as pending. An admin approves or rejects it in Content Ops. Only propose ideas the person you work with agreed to. Write goal and why in Markdown, and keep idea a short plain-text title. Explain in why what it's based on and why now, and list those meetings, issues or PRs in sources.",
       inputSchema: proposalInputSchema,
     },
     async (input) => reply(await proposeContent(key, input)),

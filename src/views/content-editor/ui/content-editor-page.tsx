@@ -17,6 +17,7 @@ import { TEAM_TIME_ZONE } from "@/shared/config";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
+import { Markdown } from "@/shared/ui/markdown";
 import { listAssets, listPosts, listReviews } from "../api/production";
 import {
   getContent,
@@ -434,6 +435,11 @@ async function EditContent({
       <ScriptAndCaptions
         contentId={item.id}
         script={item.script}
+        scriptView={
+          <Markdown className="max-w-prose text-sm" headingLevel={5}>
+            {item.script}
+          </Markdown>
+        }
         scriptChanged={changedSinceReview(item.scriptUpdatedAt)}
         posts={item.platforms.map((platform) => {
           const row = postOf(platform);
@@ -504,7 +510,10 @@ async function EditContent({
           daysBefore: task.daysBefore,
           doers: task.doers,
           kind: taskKind(task.ideaStatus),
-          changesRequested: task.changesRequested,
+          changesRequested: task.changesRequested && {
+            by: task.changesRequested.by,
+            note: <Markdown>{task.changesRequested.note}</Markdown>,
+          },
         }))}
         steps={plan?.[item.type] ?? []}
         me={{ id: me.id, isAdmin }}

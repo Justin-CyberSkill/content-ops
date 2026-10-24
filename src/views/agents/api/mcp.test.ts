@@ -93,3 +93,24 @@ test("says when an idea is no longer pending", async () => {
     "This idea is approved. Only pending ideas can change.",
   );
 });
+
+test("tells agents to write the brief in Markdown and the title in plain text", async () => {
+  const { result: init } = await call("initialize", {
+    protocolVersion: "2025-06-18",
+    capabilities: {},
+    clientInfo: { name: "test", version: "1.0.0" },
+  });
+  expect(init.instructions).toContain("Markdown");
+
+  const { result } = await call("tools/list");
+  const propose = (
+    result.tools as {
+      name: string;
+      inputSchema: { properties: Record<string, { description?: string }> };
+    }[]
+  ).find((tool) => tool.name === "propose_idea");
+  const fields = propose?.inputSchema.properties;
+  expect(fields?.goal.description).toContain("Markdown");
+  expect(fields?.why.description).toContain("Markdown");
+  expect(fields?.idea.description).toContain("plain text");
+});

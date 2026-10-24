@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/shared/lib";
 import { Avatar } from "@/shared/ui/avatar";
+import { Markdown } from "@/shared/ui/markdown";
 import { CommentComposer } from "./comment-composer";
 import { DeleteCommentButton } from "./delete-comment-button";
 
@@ -61,9 +62,9 @@ export function CommentThread({
                       {comment.time}
                     </time>
                   </div>
-                  <p className="text-sm break-words whitespace-pre-wrap">
+                  <Markdown className="text-sm" headingLevel={3}>
                     {comment.body}
-                  </p>
+                  </Markdown>
                 </div>
                 {comment.canDelete ? (
                   <DeleteCommentButton id={comment.id} authorName={name} />

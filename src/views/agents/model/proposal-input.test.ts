@@ -105,3 +105,11 @@ test("lists 50 ideas by default and at most 100", () => {
   expect(ideaFilterSchema.safeParse({ limit: 101 }).success).toBe(false);
   expect(ideaFilterSchema.safeParse({ state: "archived" }).success).toBe(false);
 });
+
+test("takes a Markdown brief of up to 3,000 characters", () => {
+  const goal = `**Goal:** grow sign-ups\n\n- one\n- two\n\n${"x".repeat(2960)}`;
+  expect(proposalInputSchema.parse({ ...valid, goal }).goal).toBe(goal);
+  expect(
+    proposalInputSchema.safeParse({ ...valid, goal: "x".repeat(3001) }).success,
+  ).toBe(false);
+});

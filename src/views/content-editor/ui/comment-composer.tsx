@@ -12,7 +12,7 @@ export function CommentComposer({ contentId }: { contentId: string }) {
   const [body, setBody] = useState("");
   const [error, setError] = useState<string>();
   const [pending, startTransition] = useTransition();
-  const t = useTranslations("contentEditor.comments");
+  const t = useTranslations("contentEditor");
 
   function send() {
     if (pending || !body.trim()) return;
@@ -33,13 +33,13 @@ export function CommentComposer({ contentId }: { contentId: string }) {
       className="flex flex-col gap-2"
     >
       <label htmlFor="comment-body" className="sr-only">
-        {t("label")}
+        {t("comments.label")}
       </label>
       <Textarea
         id="comment-body"
         rows={2}
         value={body}
-        placeholder={t("placeholder")}
+        placeholder={t("comments.placeholder")}
         maxLength={COMMENT_MAX_LENGTH}
         aria-describedby="comment-hint"
         aria-invalid={error ? true : undefined}
@@ -58,7 +58,7 @@ export function CommentComposer({ contentId }: { contentId: string }) {
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p id="comment-hint" className="pl-1 text-xs text-muted-foreground">
-          {t("hint")}
+          {t("markdownHint")} {t("comments.hint")}
         </p>
         <Button
           type="submit"
@@ -67,7 +67,7 @@ export function CommentComposer({ contentId }: { contentId: string }) {
           className="ml-auto"
         >
           <SendHorizontalIcon aria-hidden="true" />
-          {pending ? t("sending") : t("send")}
+          {pending ? t("comments.sending") : t("comments.send")}
         </Button>
       </div>
     </form>

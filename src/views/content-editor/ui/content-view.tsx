@@ -37,8 +37,8 @@ export type PanelTask = {
   /** Members who do this kind of work, offered first when reassigning. */
   doers: { id: string; name: string }[];
   kind: TaskKind;
-  /** What a review asked for when it sent this task back, until it's done again. */
-  changesRequested: { note: string; by: string | null } | null;
+  /** What a review asked for when it sent this task back, until it's done again. The note is rendered on the server. */
+  changesRequested: { note: React.ReactNode; by: string | null } | null;
 };
 
 /**
@@ -268,7 +268,13 @@ function TasksPanel({
 }
 
 /** What the reviewer asked for, on the task they sent back. */
-function ChangesRequested({ note, by }: { note: string; by: string | null }) {
+function ChangesRequested({
+  note,
+  by,
+}: {
+  note: React.ReactNode;
+  by: string | null;
+}) {
   const t = useTranslations("contentEditor.tasks");
   return (
     <div className="flex gap-2.5 rounded-xl bg-status-in-review-bg px-3.5 py-3 text-sm">
@@ -280,7 +286,7 @@ function ChangesRequested({ note, by }: { note: string; by: string | null }) {
         <span className="font-semibold text-status-in-review">
           {by ? t("changesRequestedBy", { name: by }) : t("changesRequested")}
         </span>
-        <p className="break-words whitespace-pre-wrap">{note}</p>
+        {note}
       </div>
     </div>
   );

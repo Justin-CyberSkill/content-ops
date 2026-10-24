@@ -1,6 +1,7 @@
 import { LinkIcon, SparklesIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Content } from "@/shared/db/schema";
+import { Markdown } from "@/shared/ui/markdown";
 
 /**
  * An item as people read it: the goal, the facts that decide how it gets made, and
@@ -69,7 +70,7 @@ export function ContentSummary({
         <h3 className="text-xs text-muted-foreground">
           {t("contentEditor.goal")}
         </h3>
-        <p className="break-words">{item.goal}</p>
+        <Markdown className="max-w-prose">{item.goal}</Markdown>
       </div>
 
       <dl className="grid grid-cols-2 gap-x-6 gap-y-4 2xl:grid-cols-4">

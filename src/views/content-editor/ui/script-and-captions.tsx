@@ -38,11 +38,15 @@ export type CaptionsPost = {
 export function ScriptAndCaptions({
   contentId,
   script,
+  scriptView,
   scriptChanged,
   posts,
 }: {
   contentId: string;
+  /** The Markdown as written, for the form and the Copy button. */
   script: string;
+  /** The same script rendered on the server, for reading. */
+  scriptView: React.ReactNode;
   /** The script changed after the last review. */
   scriptChanged: boolean;
   /** One per platform the idea is for, in its order. */
@@ -118,7 +122,8 @@ export function ScriptAndCaptions({
               autoFocus
             />
             <p id="script-hint" className="pl-1 text-xs text-muted-foreground">
-              {t("contentEditor.captions.scriptHint")}
+              {t("contentEditor.captions.scriptHint")}{" "}
+              {t("contentEditor.markdownHint")}
             </p>
           </div>
           <div className="grid gap-6 2xl:grid-cols-2">
@@ -164,6 +169,7 @@ export function ScriptAndCaptions({
           <CopyField
             label={t("contentEditor.captions.script")}
             text={script}
+            view={scriptView}
             empty={t("contentEditor.captions.noScript")}
             copyLabel={t("contentEditor.captions.copyScript")}
             badge={scriptChanged ? <SinceReviewBadge /> : null}
@@ -232,6 +238,7 @@ function PlatformCopy({ post }: { post: CaptionsPost }) {
 function CopyField({
   label,
   text,
+  view,
   empty,
   copyLabel,
   badge,
@@ -239,6 +246,8 @@ function CopyField({
 }: {
   label: string;
   text: string;
+  /** How the text reads, when it's more than plain text. */
+  view?: React.ReactNode;
   /** Shown instead of the text when there's none. */
   empty?: string;
   copyLabel: string;
@@ -255,9 +264,11 @@ function CopyField({
         {text ? <CopyButton text={text} label={copyLabel} /> : null}
       </div>
       {text ? (
-        <p className="max-w-prose text-sm break-words whitespace-pre-wrap">
-          {text}
-        </p>
+        (view ?? (
+          <p className="max-w-prose text-sm break-words whitespace-pre-wrap">
+            {text}
+          </p>
+        ))
       ) : (
         <p className="text-[13px] text-muted-foreground">{empty}</p>
       )}

@@ -1,6 +1,7 @@
 import { SparklesIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Content, ContentEventAction } from "@/shared/db/schema";
+import { Markdown } from "@/shared/ui/markdown";
 import { ContentSummary } from "./content-summary";
 
 export type HistoryEntry = {
@@ -107,9 +108,9 @@ export function ProposalCard({
           <h3 className="text-[13px] font-semibold text-status-proposed">
             {t("whyThis")}
           </h3>
-          <p className="max-w-prose text-sm break-words whitespace-pre-wrap">
+          <Markdown className="max-w-prose text-sm">
             {item.proposalReason}
-          </p>
+          </Markdown>
         </div>
       ) : null}
       {item.withdrawnAt ? (
@@ -123,9 +124,13 @@ export function ProposalCard({
                 t("unknownAgent"),
             })}
           </h3>
-          <p className="text-sm break-words whitespace-pre-wrap">
-            {item.withdrawReason ?? t("noWithdrawReason")}
-          </p>
+          {item.withdrawReason ? (
+            <Markdown className="max-w-prose text-sm">
+              {item.withdrawReason}
+            </Markdown>
+          ) : (
+            <p className="text-sm">{t("noWithdrawReason")}</p>
+          )}
         </div>
       ) : null}
       {item.rejectedAt ? (
@@ -133,9 +138,9 @@ export function ProposalCard({
           <h3 className="text-[13px] font-semibold text-destructive">
             {t("rejectedTitle")}
           </h3>
-          <p className="text-sm break-words whitespace-pre-wrap">
-            {item.rejectionReason}
-          </p>
+          <Markdown className="max-w-prose text-sm">
+            {item.rejectionReason ?? ""}
+          </Markdown>
         </div>
       ) : null}
     </ContentSummary>

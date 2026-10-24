@@ -3,6 +3,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { contentHref, formatSchedule } from "@/entities/content";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
 import { buttonVariants } from "@/shared/ui/button";
+import { MarkdownPreview } from "@/shared/ui/markdown";
 import type { Proposal } from "../api/list-proposals";
 import { formatProposedAt } from "../lib/format-proposed-at";
 
@@ -109,8 +110,8 @@ export function ProposalList({
                   {proposal.idea}
                 </Link>
               </h2>
-              <p className="text-sm text-muted-foreground break-words">
-                {proposal.goal}
+              <p className="line-clamp-3 text-sm text-muted-foreground break-words">
+                <MarkdownPreview>{proposal.goal}</MarkdownPreview>
               </p>
             </div>
 
@@ -136,8 +137,8 @@ export function ProposalList({
                 <h3 className="text-[13px] font-semibold text-status-proposed">
                   {t("review.whyThis")}
                 </h3>
-                <p className="line-clamp-3 text-sm break-words whitespace-pre-wrap">
-                  {proposal.proposalReason}
+                <p className="line-clamp-3 text-sm break-words">
+                  <MarkdownPreview>{proposal.proposalReason}</MarkdownPreview>
                 </p>
               </div>
             ) : null}

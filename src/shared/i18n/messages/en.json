@@ -14,7 +14,11 @@
     "copy": "Copy",
     "copied": "Copied",
     "optional": "(optional)",
-    "copyFailed": "Couldn't copy. Select the text and copy it yourself."
+    "copyFailed": "Couldn't copy. Select the text and copy it yourself.",
+    "markdown": {
+      "footnotes": "Footnotes",
+      "backToReference": "Back to reference {number}"
+    }
   },
   "nav": {
     "label": "Main",
@@ -195,6 +199,7 @@
     "brief": "Brief",
     "goal": "Goal",
     "goalHint": "What we want and why.",
+    "markdownHint": "Markdown works: **bold**, - lists, [text](https://…).",
     "idea": "Content idea",
     "format": "Format",
     "platforms": "Platforms",

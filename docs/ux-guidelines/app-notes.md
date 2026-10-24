@@ -50,6 +50,12 @@ The same word in both languages and on every screen:
 - Dates use the team's time zone: `TEAM_TIME_ZONE` from `@/shared/config`.
 - Components live in `src/shared/ui`; colour tokens in `src/app/globals.css`.
 
+## Rich text
+
+- Long text people or agents write is Markdown: an item's goal, an agent's why, the script, comments, review notes, and rejection and withdraw reasons. Its textarea says so, and the read view shows it formatted.
+- Show it with `Markdown` from `@/shared/ui/markdown`, and in list rows and cards with `MarkdownPreview`, which flattens it to one clamped run of words. Render both on the server; client components take the result as a prop.
+- These stay plain text: the idea, because it's the title everywhere; captions, hashtags and pinned comments, because they're posted as they are; asset notes and other one-line fields.
+
 ## Product decisions
 
 - No calendar view (dropped 2026-10-24). The content plan grouped by week covers dates.

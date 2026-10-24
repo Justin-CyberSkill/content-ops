@@ -6,6 +6,7 @@ import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { Avatar } from "@/shared/ui/avatar";
 import { buttonVariants } from "@/shared/ui/button";
+import { MarkdownPreview } from "@/shared/ui/markdown";
 import type { ContentRow } from "../api/list-content";
 import { formatDay, formatDays } from "../lib/format-day";
 import {
@@ -197,7 +198,7 @@ function ContentItem({ row, today }: { row: ContentRow; today: string }) {
           {row.idea}
         </Link>
         <p className="mt-0.5 truncate text-[13px] text-muted-foreground">
-          {row.goal}
+          <MarkdownPreview>{row.goal}</MarkdownPreview>
         </p>
         {/* Phones show it under the idea; the status corner is too narrow for it. */}
         <Progress
