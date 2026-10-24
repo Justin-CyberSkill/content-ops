@@ -4,6 +4,8 @@ import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import type { ContentOrigin } from "@/entities/content";
+import type { PlannedStep, WorkPlan } from "@/entities/task/index.server";
+import type { ContentType } from "@/shared/db/schema";
 import { Button } from "@/shared/ui/button";
 import { Label } from "@/shared/ui/label";
 import { Textarea } from "@/shared/ui/textarea";
@@ -14,10 +16,12 @@ import {
   type RejectState,
   rejectProposal,
 } from "../api/review-proposal";
+import type { AssignmentValues } from "../model/assignments";
 import type { ContentFormValues } from "../model/content-form";
 import { REJECTION_MAX_LENGTH } from "../model/rejection";
 import { Choice } from "./choice";
 import { ContentForm } from "./content-form";
+import { effectiveAssignments, WhoDoesWhat } from "./who-does-what";
 
 type Mode = "decide" | "edit" | "reject";
 
@@ -33,6 +37,8 @@ export function ProposalReview({
   from,
   initial,
   members,
+  plan,
+  today,
   summary,
   comments,
 }: {
@@ -42,11 +48,19 @@ export function ProposalReview({
   from: ContentOrigin;
   initial: ContentFormValues;
   members: Member[];
+  /** Each content type's steps, with who's suggested for each. */
+  plan: WorkPlan;
+  /** Today in the team's zone. */
+  today: string;
   /** The read-only proposal, rendered on the server. */
   summary: React.ReactNode;
   comments: React.ReactNode;
 }) {
   const [mode, setMode] = useState<Mode>("decide");
+  // Who the admin picked per step; the same picks carry into the edit form.
+  const [picked, setPicked] = useState<AssignmentValues>({});
+  const pick = (stepId: string, assigneeId: string) =>
+    setPicked((current) => ({ ...current, [stepId]: assigneeId }));
   const t = useTranslations("contentEditor.proposal");
 
   if (mode === "edit") {
@@ -64,6 +78,10 @@ export function ProposalReview({
             from={from}
             initial={initial}
             members={members}
+            plan={plan}
+            today={today}
+            picked={picked}
+            onPick={pick}
             approving
             revision={revision}
             onCancel={() => setMode("decide")}
@@ -79,14 +97,21 @@ export function ProposalReview({
 
   // One DOM order for every size (proposal, decision, comments); from xl the decision
   // moves to a right column that spans both rows and stays in view.
+  // The first row fits the details, so comments follow them however tall the panel is.
   return (
-    <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
+    <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:grid-rows-[auto_1fr] xl:items-start">
       <div className="min-w-0 xl:col-start-1 xl:row-start-1">{summary}</div>
       <div className="min-w-0 xl:sticky xl:top-8 xl:col-start-2 xl:row-span-2 xl:row-start-1">
         {mode === "decide" ? (
           <Decision
             id={id}
             revision={revision}
+            members={members}
+            steps={plan[initial.type as ContentType] ?? []}
+            publishDate={initial.publishDate}
+            today={today}
+            picked={picked}
+            onPick={pick}
             onEdit={() => setMode("edit")}
             onReject={() => setMode("reject")}
           />
@@ -102,11 +127,24 @@ export function ProposalReview({
 function Decision({
   id,
   revision,
+  members,
+  steps,
+  publishDate,
+  today,
+  picked,
+  onPick,
   onEdit,
   onReject,
 }: {
   id: string;
   revision: number;
+  members: Member[];
+  /** The steps this content type gets; none means no tasks. */
+  steps: PlannedStep[];
+  publishDate: string;
+  today: string;
+  picked: AssignmentValues;
+  onPick: (stepId: string, assigneeId: string) => void;
   onEdit: () => void;
   onReject: () => void;
 }) {
@@ -122,16 +160,42 @@ function Decision({
       <h2 id="decide-heading" className="text-lg font-semibold">
         {t("decideTitle")}
       </h2>
+      {steps.length ? (
+        // Who gets each task sits right before Approve, so approving is "exactly as shown".
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-0.5 pl-1">
+            <h3 className="text-sm font-semibold">{t("whoDoesWhat")}</h3>
+            <p className="text-[13px] text-muted-foreground">
+              {t("whoDoesWhatHint")}
+            </p>
+          </div>
+          <WhoDoesWhat
+            steps={steps}
+            members={members}
+            publishDate={publishDate}
+            today={today}
+            picked={picked}
+            onPick={onPick}
+            canSetUp
+          />
+        </div>
+      ) : null}
       <div className="flex flex-col gap-2">
         <Choice
           icon={CheckIcon}
           title={pending ? t("approving") : t("approve")}
-          hint={t("approveHint")}
+          hint={steps.length ? t("approveHint") : t("approveHintNoTasks")}
           primary
           disabled={pending}
           onClick={() =>
             startTransition(async () => {
-              setState(await approveProposal(id, revision));
+              setState(
+                await approveProposal(
+                  id,
+                  revision,
+                  effectiveAssignments(steps, picked),
+                ),
+              );
             })
           }
         />

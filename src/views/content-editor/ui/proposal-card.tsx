@@ -33,7 +33,6 @@ export function ProposalCard({
   item,
   proposedAt,
   schedule,
-  assigneeName,
   history,
 }: {
   item: Content;
@@ -41,7 +40,6 @@ export function ProposalCard({
   proposedAt: string;
   /** Publish day and golden time, formatted; null without a day. */
   schedule: string | null;
-  assigneeName: string | null;
   history: HistoryEntry[];
 }) {
   const t = useTranslations("contentEditor.proposal");
@@ -62,7 +60,6 @@ export function ProposalCard({
     <ContentSummary
       item={item}
       schedule={schedule}
-      assigneeName={assigneeName}
       footer={
         // "Proposed" alone repeats the header, so history shows once something else happened.
         history.length > 1 ? (

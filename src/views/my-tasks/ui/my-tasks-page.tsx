@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { todayIn } from "@/entities/task";
 import { requireUser } from "@/shared/auth/index.server";
+import { TEAM_TIME_ZONE } from "@/shared/config";
 import { listMyTasks } from "../api/list-my-tasks";
 import { TaskList } from "./task-list";
 
@@ -34,5 +36,10 @@ export function MyTasksPage() {
 
 async function MyTasks() {
   const me = await requireUser();
-  return <TaskList tasks={await listMyTasks(me.id)} />;
+  return (
+    <TaskList
+      tasks={await listMyTasks(me.id)}
+      today={todayIn(TEAM_TIME_ZONE)}
+    />
+  );
 }

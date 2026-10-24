@@ -5,9 +5,15 @@ import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { originHref, parseOrigin } from "@/entities/content";
+import {
+  createTasks,
+  hasTasks,
+  moveDueDates,
+} from "@/entities/task/index.server";
 import { requireAdmin, requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, contentEvent, user } from "@/shared/db/schema";
+import { parseAssignments, readAssignments } from "../model/assignments";
 import {
   createContentFormSchema,
   readContentForm,
@@ -29,6 +35,7 @@ export async function saveContent(
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
   const data = parsed.data;
+  const assignments = parseAssignments(readAssignments(formData));
   if (data.assigneeId) {
     const [assignee] = await db
       .select({ id: user.id })
@@ -40,7 +47,7 @@ export async function saveContent(
   let approving = false;
   if (id) {
     const [current] = await db
-      .select({ status: content.status })
+      .select({ status: content.status, publishDate: content.publishDate })
       .from(content)
       .where(eq(content.id, id));
     if (!current) return { error: t("deleted") };
@@ -48,13 +55,22 @@ export async function saveContent(
     // Saving a proposal approves it, which only admins do.
     approving = current.status === "proposed";
     if (approving && me.role !== "admin") return { error: t("adminOnly") };
+    // An item with tasks gets its status and owner from them, so the form's are ignored.
+    const followsTasks = !approving && (await hasTasks(id));
+    const { status, assigneeId, ...details } = data;
 
     // The version the admin started editing, so an agent's change since then isn't overwritten unseen.
     const revision = Number(formData.get("revision"));
     const updated = await db.transaction(async (tx) => {
       const rows = await tx
         .update(content)
-        .set(approving ? { ...data, reviewedById: me.id } : data)
+        .set(
+          approving
+            ? { ...data, reviewedById: me.id }
+            : followsTasks
+              ? details
+              : data,
+        )
         .where(
           approving
             ? and(
@@ -67,13 +83,21 @@ export async function saveContent(
             : eq(content.id, id),
         )
         .returning({ id: content.id });
-      if (approving && rows.length) {
+      if (!rows.length) return rows;
+      if (approving) {
         await tx.insert(contentEvent).values({
           contentId: id,
           action: "approved",
           userId: me.id,
           actorName: me.name,
         });
+        await createTasks(
+          tx,
+          { id, type: data.type, publishDate: data.publishDate },
+          assignments,
+        );
+      } else if (followsTasks && details.publishDate !== current.publishDate) {
+        await moveDueDates(tx, id, details.publishDate);
       }
       return rows;
     });
@@ -85,7 +109,17 @@ export async function saveContent(
       return { error };
     }
   } else {
-    await db.insert(content).values({ ...data, createdById: me.id });
+    await db.transaction(async (tx) => {
+      const [row] = await tx
+        .insert(content)
+        .values({ ...data, createdById: me.id })
+        .returning({ id: content.id });
+      await createTasks(
+        tx,
+        { id: row.id, type: data.type, publishDate: data.publishDate },
+        assignments,
+      );
+    });
   }
   // Back to the list the item was opened from. Review says what just happened.
   const from = parseOrigin(formData.get("from"));
