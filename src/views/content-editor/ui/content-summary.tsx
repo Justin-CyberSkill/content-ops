@@ -80,7 +80,7 @@ export function ContentSummary({
       {item.assetLinks.length ? (
         <div className="flex flex-col gap-1.5">
           <h3 className="text-xs text-muted-foreground">
-            {t("contentEditor.assetLinks")}
+            {t("contentEditor.referenceLinks")}
           </h3>
           <ul className="flex flex-col gap-1">
             {item.assetLinks.map((link) => (

@@ -9,10 +9,13 @@ Each screen answers three questions for a first-time user, in this order: what i
 ## Page pattern
 
 - **Read first.** A detail page opens as read-only facts (label over value), not as a form.
-- **Main action in a side panel.** From `xl`: grid `minmax(0,1fr) | minmax(20rem,24rem)`. Content and comments on the left; the action panel on the right, `xl:sticky xl:top-8`, spanning both rows. Below `xl`: one column in DOM order content → action → comments. Use one DOM order and grid placement, never duplicate markup per breakpoint.
+- **Main action in a side panel.** From `xl`: grid `minmax(0,1fr) | minmax(20rem,24rem)`. Content and comments on the left; the action panel on the right, `xl:sticky xl:top-8`, spanning every row, and the last row `1fr` so a tall panel leaves no gap. Below `xl`: one column in DOM order details → action → long content → comments, so the next step is never under a long script. Use one DOM order and grid placement, never duplicate markup per breakpoint.
 - **Forms on demand.** "Edit details" swaps the read view for the full form at full width. Cancel goes back to the read view (`onCancel`), not away from the page.
 - **Quick change for the common edit.** Item page: the panel holds the item's Tasks, in order. The open task's assignee (or an admin) changes its status in place; admins change any task's assignee in place. Waiting tasks show a badge, not a picker. Items from before tasks keep status and owner saved from the panel (`updateProgress`), with Save disabled until something changes and "Saved" after, and an admin can split them into tasks.
 - **Status follows the tasks.** An item with tasks never has its status or owner set by hand: it's Planned until work starts, then shows the open task's work type status (In progress, In review, Scheduled), and Published when every task is done. Its assignee is whoever has the open task.
+- **What the tasks make sits on the item.** Under the details: Script and captions (a Copy button on each part, a character count against the platform's limit), Assets (a label, which platform, the newest version to open and the older ones folded), and Reviews once there is one. Each reads first and opens as a form in place. Anyone on the team can change them. Assets are links, not uploads.
+- **The panel's next card follows the open task.** A review task gets "Approve or request changes" instead of a status picker: approving opens the next task; requesting changes needs a note and the tasks to send back, which go back to To do with the note shown on them (item page and My tasks). A publishing task gets Live links: per platform, copy the post, then paste where it went live. The first link starts the task, the last finishes it, and the idea shows as Published. A work type's "The idea shows as" picks which: In review or Scheduled.
+- **Changed since last review.** After a review, anything changed later (script, a platform's caption, a new asset version) carries a badge, so the next review checks only that.
 - **Who does what before approving.** Approving, adding content and splitting an item list one row per step with the suggested person (does that work, fewest open tasks) and the due day, so approving is "exactly as shown".
 - **Choices as whole-row buttons**, each with a title and one line saying what happens (proposal: Approve / Edit, then approve / Reject). Make the safe or most common one primary.
 - **Agents change ideas, people decide.** A proposal shows its History (who proposed, changed, withdrew or restored it). Approving checks the version on screen: if an agent changed it meanwhile, say so and show the new version instead of approving it unseen.
@@ -42,23 +45,29 @@ Each screen answers three questions for a first-time user, in this order: what i
 - Hints say the consequence: "It goes into the content plan as Planned, exactly as shown." Don't say "above" or "on the left": the layout changes with the screen.
 - One word per concept, the same in both languages and on every screen:
 
-  | Concept                  | EN          | VI                          |
-  | ------------------------ | ----------- | --------------------------- |
-  | Agent ideas page         | Proposals   | Đề xuất                     |
-  | Status `in_review`       | In review   | Chờ duyệt                   |
-  | Admin role               | Admin       | Quản trị viên (not "admin") |
-  | Agent credential         | API key     | Khoá API                    |
-  | Owner field              | Assignee    | Người phụ trách             |
-  | Publish date             | Publish day | Ngày đăng                   |
-  | Agent takes back an idea | Withdraw    | Rút lại                     |
-  | What an idea is based on | Based on    | Dựa trên                    |
-  | Kind of work             | Work type   | Loại việc                   |
-  | One step of one idea     | Task        | Việc                        |
-  | Steps per content type   | Workflow    | Quy trình                   |
-  | Task not started yet     | Waiting     | Chưa tới lượt               |
-  | Task finished            | Done        | Xong                        |
-  | When a task is due       | Due {day}   | Hạn {day}                   |
-- Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words.
+  | Concept                  | EN              | VI                          |
+  | ------------------------ | --------------- | --------------------------- |
+  | Agent ideas page         | Proposals       | Đề xuất                     |
+  | Status `in_review`       | In review       | Chờ duyệt                   |
+  | Admin role               | Admin           | Quản trị viên (not "admin") |
+  | Agent credential         | API key         | Khoá API                    |
+  | Owner field              | Assignee        | Người phụ trách             |
+  | Publish date             | Publish day     | Ngày đăng                   |
+  | Agent takes back an idea | Withdraw        | Rút lại                     |
+  | What an idea is based on | Based on        | Dựa trên                    |
+  | Kind of work             | Work type       | Loại việc                   |
+  | One step of one idea     | Task            | Việc                        |
+  | Steps per content type   | Workflow        | Quy trình                   |
+  | Task not started yet     | Waiting         | Chưa tới lượt               |
+  | Task finished            | Done            | Xong                        |
+  | When a task is due       | Due {day}       | Hạn {day}                   |
+  | What's said or shown     | Script          | Kịch bản                    |
+  | Text posted with it      | Caption         | Caption                     |
+  | A file made for an idea  | Asset           | Asset                       |
+  | Links to refer to        | Reference links | Link tham khảo              |
+  | Reviewer sends work back | Request changes | Yêu cầu sửa                 |
+  | Where a post went live   | Live link       | Link bài đăng               |
+- Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words. "Copy" is only the button, so the text is "captions", and the old "Asset links" became "Reference links" once assets got their own card.
 - Vietnamese is written for Vietnamese readers, not translated word for word: "{name} đề xuất", not "Đề xuất bởi {name}". Keep the English product words the team actually uses (agent, link, carousel).
 - Every new string goes into both `en.json` and `vi.json` in the same change.
 - Work type names are the team's own data ("Content prep"), so they aren't translated.

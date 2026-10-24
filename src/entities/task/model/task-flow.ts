@@ -8,7 +8,22 @@ export type FlowTask = {
   /** What the idea shows as while this task is the open one. */
   ideaStatus: ContentStatus;
   assigneeId: string | null;
+  /** Sent back by a review. Work has started even if nothing is done now. */
+  reopened?: boolean;
 };
+
+/**
+ * What a task asks of its assignee, from what the idea shows while it's open:
+ * a review step approves or asks for changes, a publish step records each live link,
+ * and any other step makes something and is marked done.
+ */
+export type TaskKind = "make" | "review" | "publish";
+
+export function taskKind(ideaStatus: ContentStatus): TaskKind {
+  if (ideaStatus === "in_review") return "review";
+  if (ideaStatus === "scheduled") return "publish";
+  return "make";
+}
 
 const byPosition = <T extends { position: number }>(tasks: T[]) =>
   [...tasks].sort((a, b) => a.position - b.position);
@@ -52,7 +67,8 @@ export function ideaProgress(tasks: FlowTask[]): {
       assigneeId: ordered.at(-1)?.assigneeId ?? null,
     };
   const started = ordered.some(
-    (task) => task.status === "done" || task.status === "in_progress",
+    (task) =>
+      task.status === "done" || task.status === "in_progress" || task.reopened,
   );
   return {
     status: started ? open.ideaStatus : "planned",

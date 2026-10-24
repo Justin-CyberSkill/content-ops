@@ -225,7 +225,7 @@ export function ContentForm({
           </Section>
         </div>
 
-        <Section title={t("contentEditor.assetLinks")}>
+        <Section title={t("contentEditor.referenceLinks")}>
           <Field
             label={t("contentEditor.links")}
             htmlFor="assetLinks"

@@ -63,9 +63,9 @@ test("groups items by week and tucks published ones away", () => {
   expect(screen.getByText("Done post")).not.toBeVisible();
 });
 
-test("opens the asset links from one button", async () => {
+test("opens the reference links from one button", async () => {
   renderWithIntl(<ContentTable rows={[row]} today={today} />);
-  fireEvent.click(screen.getByRole("button", { name: "2 asset links" }));
+  fireEvent.click(screen.getByRole("button", { name: "2 reference links" }));
   const menu = await screen.findByRole("menu");
   expect(
     within(menu).getByRole("menuitem", { name: "drive.example/a" }),

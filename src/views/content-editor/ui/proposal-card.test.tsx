@@ -15,6 +15,8 @@ const item: Content = {
   assigneeId: null,
   status: "proposed",
   assetLinks: [],
+  script: "",
+  scriptUpdatedAt: null,
   createdById: null,
   proposedByKeyId: "key-1",
   proposedByName: "Claude planner",
