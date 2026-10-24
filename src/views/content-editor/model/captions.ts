@@ -65,8 +65,6 @@ export const createCaptionsSchema = (t: (key: ErrorKey) => string) =>
     ),
   });
 
-export type CaptionsData = z.output<ReturnType<typeof createCaptionsSchema>>;
-
 /** The script and each platform's fields, as the form sends them. */
 export function readCaptionsForm(formData: FormData, platforms: Platform[]) {
   const get = (key: string) => String(formData.get(key) ?? "");
