@@ -4,7 +4,7 @@ Next.js 16 App Router app.
 
 ## Setup
 
-Requires Node 22+ and pnpm 10.
+Requires Node 22.18+ and pnpm 10.
 
 ```bash
 pnpm install
@@ -19,9 +19,10 @@ pnpm dev
 | Script                                          | What it does                                                                |
 | ----------------------------------------------- | --------------------------------------------------------------------------- |
 | `pnpm dev` / `build` / `start`                  | Next.js                                                                     |
-| `pnpm lint` / `format`                          | Biome check / check with fixes                                              |
+| `pnpm check`                                    | Lint, typecheck and tests: run before finishing any change                  |
+| `pnpm lint` / `format`                          | Biome plus the baseline's structure and docs checks / Biome with fixes      |
 | `pnpm typecheck`                                | Route types + `tsc --noEmit`                                                |
-| `pnpm test` / `test:watch`                      | Vitest unit tests (`src/**/*.test.tsx`)                                     |
+| `pnpm test` / `test:watch`                      | Vitest unit tests                                                           |
 | `pnpm env:sync` / `env:check`                   | Align `.env*` files with `.env.example` (order, missing keys) / report only |
 | `pnpm db:generate` / `db:migrate` / `db:studio` | drizzle-kit                                                                 |
 | `pnpm db:seed-admin`                            | Create the first admin from `ADMIN_EMAIL`, or promote that user to admin    |
@@ -29,5 +30,6 @@ pnpm dev
 
 ## Docs
 
-- [docs/architecture.md](docs/architecture.md): folder layout, import rules, where code goes
-- [docs/tech-stack.md](docs/tech-stack.md): the stack and how to choose new tech
+- [docs/baseline](docs/baseline/README.md): shared stack, structure, rules and scripts, also used to start new projects
+- [docs/decisions.md](docs/decisions.md): where this project differs from the baseline
+- [docs/ux-guidelines](docs/ux-guidelines/index.md): screens, flows and words
