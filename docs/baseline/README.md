@@ -29,11 +29,11 @@ Copy this folder into the new repo as `docs/baseline/`, then ask an agent:
 
 ## Scripts
 
-| Command                       | Runs                                                         | Fails when                                                                                                               |
-| ----------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm lint`                   | Biome, `scripts/check-structure.ts`, `scripts/check-docs.ts` | bad format or imports; a folder, name or slice breaks [architecture.md](architecture.md); a doc points at a missing file |
-| `pnpm env:sync` / `env:check` | `scripts/env-sync.ts`                                        | a `.env*` file differs from `.env.example` (`env:sync` fixes it)                                                         |
-| `pnpm check`                  | lint, typecheck, tests                                       | anything above, a type error or a test. Run `pnpm format` first.                                                         |
+| Command                       | Runs                                                               | Fails when                                                                                                                                                          |
+| ----------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`                   | Biome, Knip, `scripts/check-structure.ts`, `scripts/check-docs.ts` | bad format or imports; a file, export or dependency nothing uses; a folder, name or slice breaks [architecture.md](architecture.md); a doc points at a missing file |
+| `pnpm env:sync` / `env:check` | `scripts/env-sync.ts`                                              | a `.env*` file differs from `.env.example` (`env:sync` fixes it)                                                                                                    |
+| `pnpm check`                  | lint, typecheck, tests                                             | anything above, a type error or a test. Run `pnpm format` first.                                                                                                    |
 
 ## Principles
 

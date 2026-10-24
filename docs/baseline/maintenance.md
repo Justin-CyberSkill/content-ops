@@ -5,7 +5,7 @@ How we keep projects healthy and this folder current.
 ## A healthy project
 
 - `pnpm check` and CI pass on `main`.
-- Nothing unused: when a change makes code, a dependency, an env var, a message or a doc unused, the same change removes it.
+- Nothing unused: when a change makes code, a dependency, an env var, a message or a doc unused, the same change removes it. Knip catches files, exports and dependencies. If it flags something used in a way it can't see, make a type-only file `.d.ts`, or add the narrowest `ignore` to `knip.json`.
 - One source for each fact: env keys in `.env.example`, fixed lists in one `as const` array, words in the message files, rules in `docs/`.
 - `docs/decisions.md` lists every difference from this baseline, with its date and reason. Remove an entry when it stops being true.
 - `AGENTS.md` holds only commands and pointers. Anything an agent needs for one kind of task lives in the doc for that task.
