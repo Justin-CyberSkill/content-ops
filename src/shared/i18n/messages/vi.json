@@ -20,13 +20,12 @@
     "label": "Chính",
     "contentPlan": "Kế hoạch nội dung",
     "myTasks": "Việc của tôi",
-    "members": "Thành viên",
+    "settings": "Cài đặt",
     "account": "Tài khoản: {name}",
     "signOut": "Đăng xuất",
     "language": "Ngôn ngữ",
     "review": "Đề xuất",
-    "reviewWaiting": "{count} đang chờ",
-    "agents": "Agent"
+    "reviewWaiting": "{count} đang chờ"
   },
   "content": {
     "status": {
@@ -93,12 +92,15 @@
     },
     "intro": "Hồ sơ và mật khẩu của bạn."
   },
+  "settings": {
+    "title": "Cài đặt",
+    "sections": "Các mục cài đặt"
+  },
   "admin": {
     "title": "Thành viên",
     "metaTitle": "Thành viên · CS Content Ops",
-    "intro": "Ai trong nhóm, mỗi người được làm gì và nhận loại việc nào.",
+    "intro": "Ai trong nhóm và mỗi người được làm gì. Ai làm loại việc nào thì chọn ở Quy trình.",
     "addMember": "Thêm thành viên",
-    "team": "Nhóm",
     "peopleCount": "{count} người",
     "you": "(bạn)",
     "name": "Tên",
@@ -117,7 +119,7 @@
     },
     "addMemberHint": "Người mới nhận một mật khẩu tạm, bạn gửi riêng cho họ. Họ đổi mật khẩu sau khi đăng nhập.",
     "roleHint": "Thành viên lên kế hoạch và làm nội dung. Quản trị viên còn duyệt đề xuất, quản lý thành viên và khoá API.",
-    "sections": "Các mục Thành viên",
+    "workTypes": "Loại việc: {list}",
     "noWork": "Chưa nhận loại việc nào"
   },
   "contentList": {
@@ -225,7 +227,7 @@
       "notWithdrawn": "Ý tưởng này không còn bị rút lại. Tải lại trang để xem trạng thái hiện tại.",
       "followsTasks": "Trạng thái và người phụ trách của nội dung này đi theo các việc. Tải lại trang để xem.",
       "alreadyTasks": "Nội dung này đã có các việc. Tải lại trang để xem.",
-      "noSteps": "Loại nội dung này chưa có bước nào. Thêm ở Thành viên, mục Quy trình.",
+      "noSteps": "Loại nội dung này chưa có bước nào. Thêm ở Cài đặt, mục Quy trình.",
       "scriptTooLong": "Kịch bản không được quá 20.000 ký tự.",
       "captionTooLong": "Mỗi caption không được quá 10.000 ký tự.",
       "hashtagsTooLong": "Hashtag không được quá 1.000 ký tự.",
@@ -521,7 +523,7 @@
     }
   },
   "workflow": {
-    "tab": "Quy trình",
+    "title": "Quy trình",
     "metaTitle": "Quy trình · CS Content Ops",
     "intro": "Một ý tưởng đã duyệt được làm ra sao: các loại việc, ai làm từng loại, và mỗi loại nội dung cần những bước nào.",
     "workTypes": "Loại việc",

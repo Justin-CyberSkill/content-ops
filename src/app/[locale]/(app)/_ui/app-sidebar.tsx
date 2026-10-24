@@ -1,10 +1,9 @@
 import {
-  BotIcon,
   InboxIcon,
   LayoutDashboardIcon,
   LogOutIcon,
+  SettingsIcon,
   SquareCheckBigIcon,
-  UsersIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
@@ -113,13 +112,10 @@ async function AdminLink() {
           </span>
         ) : null}
       </NavLink>
-      <NavLink href="/admin">
-        <UsersIcon aria-hidden="true" />
-        {t("members")}
-      </NavLink>
-      <NavLink href="/agents">
-        <BotIcon aria-hidden="true" />
-        {t("agents")}
+      {/* Members, workflow and agent keys: set up now and then, so one item, last. */}
+      <NavLink href="/settings">
+        <SettingsIcon aria-hidden="true" />
+        {t("settings")}
       </NavLink>
     </>
   );

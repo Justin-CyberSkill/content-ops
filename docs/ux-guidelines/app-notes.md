@@ -9,6 +9,8 @@ The same word in both languages and on every screen:
 | Concept                  | EN              | VI                          |
 | ------------------------ | --------------- | --------------------------- |
 | Agent ideas page         | Proposals       | Đề xuất                     |
+| Admin setup section      | Settings        | Cài đặt                     |
+| People on the team       | Members         | Thành viên (not "Nhóm")     |
 | Status `in_review`       | In review       | Chờ duyệt                   |
 | Admin role               | Admin           | Quản trị viên (not "admin") |
 | Agent credential         | API key         | Khoá API                    |
@@ -30,6 +32,7 @@ The same word in both languages and on every screen:
 | Links to refer to        | Reference links | Link tham khảo              |
 | Reviewer sends work back | Request changes | Yêu cầu sửa                 |
 | Where a post went live   | Live link       | Link bài đăng               |
+- Settings holds what admins set up now and then: Members, Workflow and Agents, as tabs at `/settings/…`. Workflow used to sit under Members, which hid it and gave its page the wrong title.
 - Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words. "Copy" is only the button, so the text is "captions", and "Asset links" became "Reference links" once assets got their own card.
 - Add a row when you add a concept people see, and search both message files for the old word when you rename one.
 

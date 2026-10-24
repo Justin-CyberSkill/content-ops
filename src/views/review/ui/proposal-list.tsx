@@ -39,7 +39,7 @@ export function ProposalList({
           </p>
         </div>
         <Link
-          href="/agents"
+          href="/settings/agents"
           className={buttonVariants({ variant: "outline", size: "sm" })}
         >
           <BotIcon aria-hidden="true" />

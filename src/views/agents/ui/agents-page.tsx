@@ -16,16 +16,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("metaTitle") };
 }
 
+/** The Agents tab of Settings: the settings layout gives the page its heading and tabs. */
 export function AgentsPage() {
   const t = useTranslations();
   return (
-    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-          {t("agents.title")}
-        </h1>
-        <p className="text-muted-foreground">{t("agents.intro")}</p>
-      </div>
+    <div className="flex flex-col gap-6">
+      <p className="text-muted-foreground">{t("agents.intro")}</p>
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
         <section
           aria-labelledby="keys-heading"
@@ -45,7 +41,7 @@ export function AgentsPage() {
         </section>
         <ConnectCard />
       </div>
-    </main>
+    </div>
   );
 }
 

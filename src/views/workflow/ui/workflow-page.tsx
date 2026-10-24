@@ -4,7 +4,6 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { requireAdmin } from "@/shared/auth/index.server";
 import { CONTENT_TYPES } from "@/shared/db/schema";
-import { SectionTabs } from "@/shared/ui/section-tabs";
 import { getWorkflow } from "../api/queries";
 import { AddWorkTypeForm } from "./add-work-type-form";
 import { StepsCard } from "./steps-card";
@@ -15,29 +14,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("metaTitle") };
 }
 
+/** The Workflow tab of Settings: the settings layout gives the page its heading and tabs. */
 export function WorkflowPage() {
   const t = useTranslations();
   return (
-    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
-            {t("admin.title")}
-          </h1>
-          <p className="text-muted-foreground">{t("workflow.intro")}</p>
-        </div>
-        <SectionTabs
-          label={t("admin.sections")}
-          tabs={[
-            { href: "/admin", label: t("admin.team"), current: false },
-            {
-              href: "/admin/workflow",
-              label: t("workflow.tab"),
-              current: true,
-            },
-          ]}
-        />
-      </div>
+    <div className="flex flex-col gap-6">
+      <p className="text-muted-foreground">{t("workflow.intro")}</p>
       <Suspense
         fallback={
           <p className="text-muted-foreground">{t("common.loading")}</p>
@@ -45,7 +27,7 @@ export function WorkflowPage() {
       >
         <Workflow />
       </Suspense>
-    </main>
+    </div>
   );
 }
 
@@ -57,7 +39,7 @@ async function Workflow() {
   ]);
   return (
     <div className="flex flex-col gap-10">
-      {/* Who does what leads; adding a kind of work sits beside it, as on Team. */}
+      {/* Who does what leads; adding a kind of work sits beside it, as on Members. */}
       <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
         <section
           aria-labelledby="work-types-heading"

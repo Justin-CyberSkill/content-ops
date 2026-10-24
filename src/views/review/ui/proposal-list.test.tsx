@@ -58,6 +58,6 @@ test("shows an empty state", () => {
   expect(screen.getByText("No proposals right now")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Manage agents" })).toHaveAttribute(
     "href",
-    "/en/agents",
+    "/en/settings/agents",
   );
 });
