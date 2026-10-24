@@ -134,7 +134,6 @@
       "idea": "Ý tưởng",
       "assignee": "Người phụ trách",
       "status": "Trạng thái",
-      "assets": "Link",
       "format": "Định dạng"
     },
     "groups": {
@@ -143,8 +142,14 @@
       "nextWeek": "Tuần sau",
       "later": "Sau nữa",
       "noDate": "Chưa có ngày",
-      "published": "Đã đăng"
+      "published": "Đã đăng",
+      "laterFrom": "từ {day}"
     },
+    "overdueHint": "Đã qua ngày đăng. Đăng bài hoặc dời ngày.",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "step": "Bước {step}/{total}: {task}",
+    "allDone": "Xong cả {total} việc",
     "assetLinks": "{count} link tham khảo"
   },
   "review": {

@@ -18,11 +18,17 @@ const row: ContentRow = {
   status: "in_progress",
   assetLinks: ["https://drive.example/a", "https://drive.example/b"],
   assigneeName: null,
+  progress: null,
 };
 
 test("shows each item with its day, labels and edit link", () => {
-  renderWithIntl(<ContentTable rows={[row]} today={today} />);
-  expect(screen.getByText("Sat 24 Oct")).toBeInTheDocument();
+  renderWithIntl(
+    <ContentTable
+      rows={[{ ...row, publishDate: "2026-10-25" }]}
+      today={today}
+    />,
+  );
+  expect(screen.getByText("Sun 25 Oct")).toBeInTheDocument();
   expect(screen.getByText("19:30")).toBeInTheDocument();
   expect(screen.getByText("TikTok · Instagram")).toBeInTheDocument();
   expect(screen.getByText("Short video")).toBeInTheDocument();
@@ -56,7 +62,7 @@ test("groups items by week and tucks published ones away", () => {
     .map((h) => h.textContent);
   expect(headings).toEqual([
     "Overdue1",
-    "This week1",
+    expect.stringMatching(/^This week1 ?19\s*–\s*25 Oct$/),
     "No date1",
     "Published1",
   ]);
@@ -85,4 +91,39 @@ test("shows the year only for another year", () => {
 test("shows an empty state", () => {
   renderWithIntl(<ContentTable rows={[]} today={today} />);
   expect(screen.getByText(/Nothing planned yet/)).toBeInTheDocument();
+});
+
+test("says today and tomorrow instead of the date", () => {
+  renderWithIntl(
+    <ContentTable
+      rows={[
+        { ...row, id: "a", publishDate: today },
+        { ...row, id: "b", publishDate: "2026-10-24" },
+      ]}
+      today={today}
+    />,
+  );
+  expect(screen.getByText("Today")).toBeInTheDocument();
+  expect(screen.getByText("Tomorrow")).toBeInTheDocument();
+});
+
+test("shows the task in hand and flags it once it's overdue", () => {
+  renderWithIntl(
+    <ContentTable
+      rows={[
+        {
+          ...row,
+          progress: {
+            step: 2,
+            total: 4,
+            open: { name: "Asset prep", dueDate: "2026-10-22" },
+          },
+        },
+      ]}
+      today={today}
+    />,
+  );
+  // Once for phones and once for wider screens; CSS shows one of them.
+  expect(screen.getAllByText("Step 2 of 4: Asset prep")).toHaveLength(2);
+  expect(screen.getAllByText("Overdue: Thu 22 Oct")).toHaveLength(2);
 });

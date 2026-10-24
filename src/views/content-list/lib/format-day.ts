@@ -19,6 +19,25 @@ export function formatDay(
   }).format(new Date(`${publishDate}T00:00:00Z`));
 }
 
+/**
+ * A week section's days: "19 – 25 Oct", "26 Oct – 1 Nov" (en) / "26 thg 10 – 1 thg 11" (vi),
+ * or "from 2 Nov" style when only the start is known (the caller words that part).
+ */
+export function formatDays(
+  days: { from: string; to?: string },
+  locale: Locale,
+): string {
+  const format = new Intl.DateTimeFormat(DATE_LOCALES[locale], {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  });
+  const from = new Date(`${days.from}T00:00:00Z`);
+  return days.to
+    ? format.formatRange(from, new Date(`${days.to}T00:00:00Z`))
+    : format.format(from);
+}
+
 /** "drive.google.com/drive/folders/abc" — enough to tell two links on one site apart. */
 export function shortLink(link: string): string {
   const url = new URL(link);

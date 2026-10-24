@@ -134,7 +134,6 @@
       "idea": "Idea",
       "assignee": "Assignee",
       "status": "Status",
-      "assets": "Links",
       "format": "Format"
     },
     "groups": {
@@ -143,8 +142,14 @@
       "nextWeek": "Next week",
       "later": "Later",
       "noDate": "No date",
-      "published": "Published"
+      "published": "Published",
+      "laterFrom": "from {day}"
     },
+    "overdueHint": "The publish day has passed. Post it, or move the day.",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "step": "Step {step} of {total}: {task}",
+    "allDone": "All {total} tasks done",
     "assetLinks": "{count, plural, one {# reference link} other {# reference links}}"
   },
   "review": {
