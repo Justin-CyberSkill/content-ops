@@ -21,7 +21,7 @@ import {
 
 export type WorkflowState = { error?: string; saved?: boolean };
 
-/** Adds a kind of work at the end of the order. No content type needs it until ticked. */
+/** Adds a kind of work at the end of the order, with who does it. No content type needs it until ticked. */
 export async function addWorkType(
   _prev: WorkflowState,
   formData: FormData,
@@ -33,19 +33,25 @@ export async function addWorkType(
     ideaStatus: formData.get("ideaStatus"),
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const doerIds = await existingMembers(formData.getAll("doer"));
   await db.transaction(async (tx) => {
     const [last] = await tx
       .select({ position: max(workType.position) })
       .from(workType);
-    await tx
+    const [added] = await tx
       .insert(workType)
-      .values({ ...parsed.data, position: (last?.position ?? -1) + 1 });
+      .values({ ...parsed.data, position: (last?.position ?? -1) + 1 })
+      .returning({ id: workType.id });
+    if (doerIds.length)
+      await tx
+        .insert(memberWorkType)
+        .values(doerIds.map((userId) => ({ workTypeId: added.id, userId })));
   });
   refresh();
   return { saved: true };
 }
 
-/** Renames a kind of work or changes what the idea shows as during it. Tasks already made keep theirs. */
+/** Renames a kind of work, changes what the idea shows as during it, or who does it. Tasks already made keep theirs. */
 export async function updateWorkType(
   id: string,
   _prev: WorkflowState,
@@ -59,12 +65,33 @@ export async function updateWorkType(
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   if (!z.uuid().safeParse(id).success) return { error: t("gone") };
-  const rows = await db
-    .update(workType)
-    .set(parsed.data)
-    .where(eq(workType.id, id))
-    .returning({ id: workType.id });
-  if (!rows.length) return { error: t("gone") };
+  const doerIds = await existingMembers(formData.getAll("doer"));
+  const updated = await db.transaction(async (tx) => {
+    const rows = await tx
+      .update(workType)
+      .set(parsed.data)
+      .where(eq(workType.id, id))
+      .returning({ id: workType.id });
+    if (!rows.length) return false;
+    // Who does it is saved with the rest of the form: the ticked members, and no one else.
+    await tx
+      .delete(memberWorkType)
+      .where(
+        doerIds.length
+          ? and(
+              eq(memberWorkType.workTypeId, id),
+              notInArray(memberWorkType.userId, doerIds),
+            )
+          : eq(memberWorkType.workTypeId, id),
+      );
+    if (doerIds.length)
+      await tx
+        .insert(memberWorkType)
+        .values(doerIds.map((userId) => ({ workTypeId: id, userId })))
+        .onConflictDoNothing();
+    return true;
+  });
+  if (!updated) return { error: t("gone") };
   refresh();
   return { saved: true };
 }
@@ -109,40 +136,15 @@ export async function deleteWorkType(id: string): Promise<WorkflowState> {
   return {};
 }
 
-/** Says whether a member does a kind of work, so they're suggested for it. */
-export async function setDoer(
-  workTypeId: string,
-  userId: string,
-  does: boolean,
-): Promise<WorkflowState> {
-  await requireAdmin();
-  const t = await getTranslations("workflow.errors");
-  if (!z.uuid().safeParse(workTypeId).success) return { error: t("gone") };
-  if (does) {
-    const [[type], [member]] = await Promise.all([
-      db
-        .select({ id: workType.id })
-        .from(workType)
-        .where(eq(workType.id, workTypeId)),
-      db.select({ id: user.id }).from(user).where(eq(user.id, userId)),
-    ]);
-    if (!type || !member) return { error: t("gone") };
-    await db
-      .insert(memberWorkType)
-      .values({ workTypeId, userId })
-      .onConflictDoNothing();
-  } else {
-    await db
-      .delete(memberWorkType)
-      .where(
-        and(
-          eq(memberWorkType.workTypeId, workTypeId),
-          eq(memberWorkType.userId, userId),
-        ),
-      );
-  }
-  refresh();
-  return {};
+/** The form's `doer` values that are still members; anyone removed since is dropped. */
+async function existingMembers(values: FormDataEntryValue[]) {
+  const ids = [...new Set(values.map(String))];
+  if (!ids.length) return [];
+  const rows = await db
+    .select({ id: user.id })
+    .from(user)
+    .where(inArray(user.id, ids));
+  return rows.map((row) => row.id);
 }
 
 /** Sets which kinds of work a content type needs, and how many days before publishing each is due. */

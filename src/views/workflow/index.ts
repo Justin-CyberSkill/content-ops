@@ -1,1 +1,6 @@
-export { generateMetadata, WorkflowPage } from "./ui/workflow-page";
+export {
+  generateMetadata,
+  generateWorkTypesMetadata,
+  WorkflowPage,
+  WorkTypesPage,
+} from "./ui/workflow-page";
