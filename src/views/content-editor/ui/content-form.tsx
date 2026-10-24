@@ -2,9 +2,16 @@
 
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { type ContentOrigin, originHref } from "@/entities/content";
-import { CONTENT_TYPES, PLAN_STATUSES, PLATFORMS } from "@/shared/db/schema";
+import { DueDay, dueDate } from "@/entities/task";
+import type { WorkPlan } from "@/entities/task/index.server";
+import {
+  CONTENT_TYPES,
+  type ContentType,
+  PLAN_STATUSES,
+  PLATFORMS,
+} from "@/shared/db/schema";
 import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { Button, buttonVariants } from "@/shared/ui/button";
@@ -14,7 +21,18 @@ import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select";
 import { Textarea } from "@/shared/ui/textarea";
 import type { Member } from "../api/queries";
 import { type SaveContentState, saveContent } from "../api/save-content";
+import type { AssignmentValues } from "../model/assignments";
 import type { ContentFormValues } from "../model/content-form";
+import { WhoDoesWhat } from "./who-does-what";
+
+/** A task as the edit form lists it: its due day moves with the publish day. */
+export type FormTask = {
+  id: string;
+  name: string;
+  daysBefore: number;
+  assigneeName: string | null;
+  done: boolean;
+};
 
 type Props = {
   id: string | null;
@@ -28,6 +46,20 @@ type Props = {
   revision?: number;
   /** Set when the form opens inside another view: Cancel closes it instead of leaving. */
   onCancel?: () => void;
+  /**
+   * Each content type's steps. A new or approved item of a type with steps gets tasks,
+   * so the form asks who does what instead of a status and owner.
+   */
+  plan?: WorkPlan;
+  /** The item's tasks, when it has them: its status and owner follow them. */
+  tasks?: FormTask[];
+  /** Today in the team's zone, for due days. */
+  today?: string;
+  /** Who's picked per step, when the picks live outside the form. */
+  picked?: AssignmentValues;
+  onPick?: (stepId: string, assigneeId: string) => void;
+  /** Admins get a link to set up who does each kind of work. */
+  canSetUp?: boolean;
 };
 
 export function ContentForm({
@@ -38,12 +70,33 @@ export function ContentForm({
   approving,
   revision,
   onCancel,
+  plan,
+  tasks,
+  today = "",
+  picked: outsidePicks,
+  onPick: onOutsidePick,
+  canSetUp = false,
 }: Props) {
   const [state, action, pending] = useActionState<SaveContentState, FormData>(
     saveContent.bind(null, id),
     {},
   );
   const t = useTranslations();
+  // The type decides the steps and the publish day decides due days, so both are watched.
+  const [type, setType] = useState(values.type);
+  const [publishDate, setPublishDate] = useState(values.publishDate);
+  const [ownPicks, setOwnPicks] = useState<AssignmentValues>({});
+  const picked = outsidePicks ?? ownPicks;
+  const pick =
+    onOutsidePick ??
+    ((stepId: string, assigneeId: string) =>
+      setOwnPicks((current) => ({ ...current, [stepId]: assigneeId })));
+  const steps = plan?.[type as ContentType] ?? [];
+  const side = tasks?.length
+    ? "tasks"
+    : (id === null || approving) && steps.length
+      ? "plan"
+      : "status";
 
   return (
     <form
@@ -126,6 +179,7 @@ export function ContentForm({
                 id="type"
                 name="type"
                 defaultValue={values.type}
+                onChange={(event) => setType(event.target.value)}
                 className="w-full"
                 required
               >
@@ -151,6 +205,7 @@ export function ContentForm({
                 name="publishDate"
                 type="date"
                 defaultValue={values.publishDate}
+                onChange={(event) => setPublishDate(event.target.value)}
                 className="tabular-nums"
               />
             </Field>
@@ -187,61 +242,108 @@ export function ContentForm({
         </Section>
       </div>
 
-      {/* On narrow screens an existing item opens on status and owner, the fields people change most. */}
+      {/* On narrow screens an existing item without tasks opens on status and owner, the fields people change most. */}
       <div
         className={cn(
           "flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-1",
-          id && "max-xl:order-first",
+          id && side === "status" && "max-xl:order-first",
         )}
       >
-        <Section title={t("contentEditor.statusAndOwner")}>
-          {approving ? (
-            // Approving always starts it as planned; a status picker here would contradict the badge.
-            <div className="flex flex-col gap-2">
-              <input type="hidden" name="status" value="planned" />
-              <span className="pl-1 text-[13px] leading-none font-medium">
-                {t("contentEditor.status")}
-              </span>
-              <p className="pl-1 text-sm text-muted-foreground">
-                {t("contentEditor.proposal.approvedAs", {
-                  status: t("content.status.planned"),
-                })}
-              </p>
-            </div>
-          ) : (
-            <Field label={t("contentEditor.status")} htmlFor="status">
+        {side === "tasks" ? (
+          <Section title={t("contentEditor.tasks.title")}>
+            {/* Status and owner follow the tasks; the server ignores these. */}
+            <input type="hidden" name="status" value={values.status} />
+            <p className="-mt-2 text-[13px] text-muted-foreground">
+              {t("contentEditor.tasks.formHint")}
+            </p>
+            <ol className="flex flex-col gap-3">
+              {tasks?.map((task) => (
+                <li key={task.id} className="flex flex-col gap-0.5 pl-1">
+                  <span className="text-[13px] font-medium">{task.name}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {task.assigneeName ?? t("common.unassigned")}
+                    {publishDate ? (
+                      <>
+                        {" · "}
+                        <DueDay
+                          dueDate={dueDate(publishDate, task.daysBefore)}
+                          today={today}
+                          done={task.done}
+                        />
+                      </>
+                    ) : null}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </Section>
+        ) : side === "plan" ? (
+          <Section title={t("contentEditor.proposal.whoDoesWhat")}>
+            {/* It starts as planned; the tasks move it on from there. */}
+            <input type="hidden" name="status" value="planned" />
+            <p className="-mt-2 text-[13px] text-muted-foreground">
+              {t("contentEditor.proposal.whoDoesWhatHint")}
+            </p>
+            <WhoDoesWhat
+              steps={steps}
+              members={members}
+              publishDate={publishDate}
+              today={today}
+              picked={picked}
+              onPick={pick}
+              canSetUp={canSetUp}
+            />
+          </Section>
+        ) : (
+          <Section title={t("contentEditor.statusAndOwner")}>
+            {approving ? (
+              // Approving always starts it as planned; a status picker here would contradict the badge.
+              <div className="flex flex-col gap-2">
+                <input type="hidden" name="status" value="planned" />
+                <span className="pl-1 text-[13px] leading-none font-medium">
+                  {t("contentEditor.status")}
+                </span>
+                <p className="pl-1 text-sm text-muted-foreground">
+                  {t("contentEditor.proposal.approvedAs", {
+                    status: t("content.status.planned"),
+                  })}
+                </p>
+              </div>
+            ) : (
+              <Field label={t("contentEditor.status")} htmlFor="status">
+                <NativeSelect
+                  id="status"
+                  name="status"
+                  defaultValue={values.status}
+                  className="w-full"
+                >
+                  {PLAN_STATUSES.map((status) => (
+                    <NativeSelectOption key={status} value={status}>
+                      {t(`content.status.${status}`)}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </Field>
+            )}
+            <Field label={t("contentEditor.assignee")} htmlFor="assigneeId">
               <NativeSelect
-                id="status"
-                name="status"
-                defaultValue={values.status}
+                id="assigneeId"
+                name="assigneeId"
+                defaultValue={values.assigneeId}
                 className="w-full"
               >
-                {PLAN_STATUSES.map((status) => (
-                  <NativeSelectOption key={status} value={status}>
-                    {t(`content.status.${status}`)}
+                <NativeSelectOption value="">
+                  {t("common.unassigned")}
+                </NativeSelectOption>
+                {members.map((member) => (
+                  <NativeSelectOption key={member.id} value={member.id}>
+                    {member.name}
                   </NativeSelectOption>
                 ))}
               </NativeSelect>
             </Field>
-          )}
-          <Field label={t("contentEditor.assignee")} htmlFor="assigneeId">
-            <NativeSelect
-              id="assigneeId"
-              name="assigneeId"
-              defaultValue={values.assigneeId}
-              className="w-full"
-            >
-              <NativeSelectOption value="">
-                {t("common.unassigned")}
-              </NativeSelectOption>
-              {members.map((member) => (
-                <NativeSelectOption key={member.id} value={member.id}>
-                  {member.name}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </Field>
-        </Section>
+          </Section>
+        )}
       </div>
 
       {/* On phones the error and buttons stay above the bottom navigation while the form scrolls. */}

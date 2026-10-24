@@ -6,7 +6,7 @@ import { statusColorClasses } from "@/entities/content";
 import { type ContentStatus, PLAN_STATUSES } from "@/shared/db/schema";
 import { cn } from "@/shared/lib";
 import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select";
-import { updateTaskStatus } from "../api/update-status";
+import { updateItemStatus } from "../api/update-status";
 
 export function StatusSelect({
   id,
@@ -36,7 +36,7 @@ export function StatusSelect({
           setValue(next);
           setError(undefined);
           startTransition(async () => {
-            const result = await updateTaskStatus(id, next);
+            const result = await updateItemStatus(id, next);
             if (result.error) {
               setValue(status);
               setError(result.error);

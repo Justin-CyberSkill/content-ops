@@ -5,9 +5,11 @@ import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
+import { createTasks } from "@/entities/task/index.server";
 import { requireAdmin } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, contentEvent } from "@/shared/db/schema";
+import { type AssignmentValues, parseAssignments } from "../model/assignments";
 import { createRejectionSchema } from "../model/rejection";
 import { pendingProposalError } from "./pending-proposal";
 
@@ -62,12 +64,14 @@ export async function rejectProposal(
 export type ApproveState = { error?: string };
 
 /**
- * Approves a proposal as the agent sent it; it joins the plan as planned.
+ * Approves a proposal as the agent sent it; it joins the plan as planned, and its
+ * content type's steps become tasks for the people in `assignments`.
  * `revision` is the version the admin saw, so an agent's later change isn't approved unseen.
  */
 export async function approveProposal(
   id: string,
   revision: number,
+  assignments: AssignmentValues,
 ): Promise<ApproveState> {
   const me = await requireAdmin();
   const t = await getTranslations("contentEditor.errors");
@@ -86,7 +90,11 @@ export async function approveProposal(
           eq(content.revision, revision),
         ),
       )
-      .returning({ id: content.id });
+      .returning({
+        id: content.id,
+        type: content.type,
+        publishDate: content.publishDate,
+      });
     if (rows.length) {
       await tx.insert(contentEvent).values({
         contentId: id,
@@ -94,6 +102,7 @@ export async function approveProposal(
         userId: me.id,
         actorName: me.name,
       });
+      await createTasks(tx, rows[0], parseAssignments(assignments));
     }
     return rows;
   });

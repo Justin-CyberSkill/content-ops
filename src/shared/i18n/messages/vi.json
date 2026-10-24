@@ -92,7 +92,7 @@
   "admin": {
     "title": "Thành viên",
     "metaTitle": "Thành viên · CS Content Ops",
-    "intro": "Ai trong nhóm và mỗi người được làm gì.",
+    "intro": "Ai trong nhóm, mỗi người được làm gì và nhận loại việc nào.",
     "addMember": "Thêm thành viên",
     "team": "Nhóm",
     "peopleCount": "{count} người",
@@ -112,7 +112,9 @@
       "invalidEmail": "Nhập email hợp lệ."
     },
     "addMemberHint": "Người mới nhận một mật khẩu tạm, bạn gửi riêng cho họ. Họ đổi mật khẩu sau khi đăng nhập.",
-    "roleHint": "Thành viên lên kế hoạch và làm nội dung. Quản trị viên còn duyệt đề xuất, quản lý thành viên và khoá API."
+    "roleHint": "Thành viên lên kế hoạch và làm nội dung. Quản trị viên còn duyệt đề xuất, quản lý thành viên và khoá API.",
+    "sections": "Các mục Thành viên",
+    "noWork": "Chưa nhận loại việc nào"
   },
   "contentList": {
     "title": "Kế hoạch nội dung",
@@ -216,7 +218,10 @@
       "proposalWithdrawn": "Agent đã rút lại đề xuất này nên không duyệt được. Hãy khôi phục trước.",
       "proposalChanged": "Agent vừa sửa ý tưởng này trong lúc bạn đang xem. Xem lại thay đổi rồi quyết định lại.",
       "proposalChangedWhileEditing": "Agent vừa sửa ý tưởng này trong lúc bạn đang chỉnh. Bấm Huỷ để xem bản mới, hoặc lưu lần nữa để giữ phần bạn đã sửa.",
-      "notWithdrawn": "Ý tưởng này không còn bị rút lại. Tải lại trang để xem trạng thái hiện tại."
+      "notWithdrawn": "Ý tưởng này không còn bị rút lại. Tải lại trang để xem trạng thái hiện tại.",
+      "followsTasks": "Trạng thái và người phụ trách của nội dung này đi theo các việc. Tải lại trang để xem.",
+      "alreadyTasks": "Nội dung này đã có các việc. Tải lại trang để xem.",
+      "noSteps": "Loại nội dung này chưa có bước nào. Thêm ở Thành viên, mục Quy trình."
     },
     "comments": {
       "title": "Bình luận",
@@ -244,10 +249,10 @@
       "rejectConfirm": "Từ chối đề xuất",
       "approvedAs": "Sẽ là {status} khi bạn duyệt.",
       "decideTitle": "Bạn muốn làm gì với đề xuất này?",
-      "approveHint": "Đưa vào kế hoạch nội dung với trạng thái Đã lên kế hoạch, đúng như đang hiển thị.",
+      "approveHint": "Đưa vào kế hoạch nội dung, và mỗi người nhận việc của mình.",
       "approving": "Đang duyệt…",
       "editOption": "Chỉnh sửa rồi duyệt",
-      "editOptionHint": "Đổi ý tưởng, định dạng, ngày đăng hoặc người phụ trách trước.",
+      "editOptionHint": "Đổi ý tưởng, định dạng, ngày đăng hoặc ai làm việc gì trước.",
       "rejectOptionHint": "Đề xuất rời khỏi danh sách chờ. Bạn cho agent biết lý do để lần sau gợi ý tốt hơn.",
       "rejectTitle": "Từ chối đề xuất này",
       "editTitle": "Chỉnh sửa trước khi duyệt",
@@ -278,21 +283,36 @@
         "why": "“Vì sao đề xuất”",
         "sources": "“Dựa trên”"
       },
-      "withdrawn": "Đã rút lại"
+      "withdrawn": "Đã rút lại",
+      "whoDoesWhat": "Ai làm việc gì",
+      "whoDoesWhatHint": "Mỗi bước thành một việc. Hệ thống gợi ý người làm loại việc đó và đang ít việc nhất.",
+      "approveHintNoTasks": "Đưa vào kế hoạch nội dung với trạng thái Đã lên kế hoạch, đúng như đang hiển thị."
     },
     "details": "Chi tiết",
     "editDetails": "Sửa chi tiết",
     "editDetailsHint": "Đổi tóm tắt, định dạng, lịch đăng hoặc link.",
     "saveProgress": "Lưu",
     "saved": "Đã lưu",
-    "sources": "Dựa trên"
+    "sources": "Dựa trên",
+    "tasks": {
+      "title": "Các việc",
+      "doneCount": "Xong {done}/{total}",
+      "panelHint": "Mỗi lúc làm một việc. Việc trước xong thì người tiếp theo bắt đầu.",
+      "formHint": "Hạn của từng việc đổi theo ngày đăng. Đổi người làm ở mục Các việc, ngoài biểu mẫu này.",
+      "split": "Chia thành các việc",
+      "splitHint": "Cho nội dung thêm trước khi có việc: mỗi bước trong quy trình thành một việc.",
+      "splitTitle": "Chia thành các việc",
+      "splitFormHint": "Bắt đầu từ bước đầu tiên. Sau đó đánh dấu Xong cho các bước đã làm.",
+      "splitConfirm": "Tạo các việc",
+      "splitting": "Đang tạo…"
+    }
   },
   "myTasks": {
     "title": "Việc của tôi",
     "metaTitle": "Việc của tôi · CS Content Ops",
-    "intro": "Mọi việc được giao cho bạn. Cập nhật trạng thái khi làm để cả nhóm biết tiến độ.",
-    "emptyTitle": "Bạn chưa được giao việc",
-    "emptyBody": "Khi có người giao nội dung cho bạn, việc sẽ hiện ở đây. Kế hoạch nội dung có mọi việc cả nhóm đang làm.",
+    "intro": "Việc của bạn, việc nào tới hạn trước nằm trước. Làm xong thì chọn Xong để người tiếp theo bắt đầu.",
+    "emptyTitle": "Bạn chưa có việc nào",
+    "emptyBody": "Khi bạn được giao việc, việc sẽ hiện ở đây. Kế hoạch nội dung có mọi việc cả nhóm đang làm.",
     "statusOf": "Trạng thái của {idea}",
     "errors": {
       "invalidStatus": "Chọn trạng thái hợp lệ.",
@@ -301,7 +321,13 @@
     "openPlan": "Mở kế hoạch nội dung",
     "upNext": "Cần làm",
     "upNextEmpty": "Bạn đã làm xong hết.",
-    "published": "Đã đăng"
+    "taskStatusOf": "Trạng thái {task} của {idea}",
+    "waiting": "Chưa tới lượt",
+    "waitingHint": "Các việc này tới lượt bạn khi việc trước đó xong.",
+    "waitingFor": "Sau {task} của {name}",
+    "waitingForUnassigned": "Sau {task}",
+    "done": "Xong",
+    "doneHint": "Những việc bạn làm xong trong 30 ngày qua."
   },
   "agents": {
     "title": "Agent",
@@ -339,6 +365,71 @@
       "step2": "Chạy lệnh này trong terminal để thêm Content Ops vào Claude Code. Thay csops_… bằng khoá bạn vừa sao chép.",
       "step3": "Sau đó nhờ Claude lên ý tưởng nội dung. Skill propose-content trong repo này hướng dẫn Claude, kèm REST API cho các agent khác.",
       "limits": "Mỗi khoá được gửi 30 yêu cầu mỗi phút."
+    }
+  },
+  "task": {
+    "status": {
+      "waiting": "Chưa tới lượt",
+      "todo": "Cần làm",
+      "in_progress": "Đang làm",
+      "done": "Xong"
+    },
+    "due": "Hạn {day}",
+    "overdue": "Trễ hạn: {day}",
+    "daysBefore": "Trước ngày đăng {count} ngày",
+    "onPublishDay": "Đúng ngày đăng",
+    "candidate": "{name} · {count, plural, =0 {chưa có việc} other {# việc đang mở}}",
+    "others": "Người khác",
+    "noDoers": "Chưa ai làm {work}.",
+    "setUpDoers": "Chọn người làm",
+    "statusOf": "Trạng thái của {task}",
+    "assigneeOf": "Người phụ trách {task}",
+    "errors": {
+      "invalidStatus": "Chọn trạng thái trong danh sách.",
+      "notFound": "Việc này đã bị xoá. Tải lại trang để xem các việc hiện tại.",
+      "notYours": "Việc này không phải của bạn. Nhờ quản trị viên giao cho bạn.",
+      "waiting": "Việc này bắt đầu khi việc trước đó xong.",
+      "memberGone": "Thành viên này không còn tồn tại. Hãy chọn người khác."
+    }
+  },
+  "workflow": {
+    "tab": "Quy trình",
+    "metaTitle": "Quy trình · CS Content Ops",
+    "intro": "Một ý tưởng đã duyệt được làm ra sao: các loại việc, ai làm từng loại, và mỗi loại nội dung cần những bước nào.",
+    "workTypes": "Loại việc",
+    "workTypesHint": "Theo thứ tự thực hiện. Khi duyệt ý tưởng, hệ thống gợi ý người làm loại việc đó và đang ít việc nhất.",
+    "noWorkTypes": "Chưa có loại việc nào. Thêm một loại để bắt đầu quy trình.",
+    "ideaShowsAs": "Trong lúc làm, nội dung hiện là {status}",
+    "whoDoesIt": "Ai làm",
+    "noDoers": "Chưa có ai, nên các việc này sẽ chưa được giao.",
+    "moveUp": "Đưa {work} lên trước",
+    "moveDown": "Đưa {work} ra sau",
+    "edit": "Sửa {work}",
+    "name": "Tên",
+    "namePlaceholder": "Dịch thuật",
+    "ideaStatus": "Nội dung hiện là",
+    "ideaStatusHint": "Trạng thái kế hoạch nội dung hiển thị khi việc này đang được làm.",
+    "save": "Lưu",
+    "delete": "Xoá loại việc",
+    "deleting": "Đang xoá…",
+    "confirmDelete": "Xoá {work}? Các loại nội dung sẽ không cần bước này nữa. Các việc đã tạo vẫn giữ tên.",
+    "addWorkType": "Thêm loại việc",
+    "addWorkTypeHint": "Loại mới nằm cuối thứ tự. Sau đó đánh dấu các loại nội dung cần nó.",
+    "add": "Thêm loại việc",
+    "adding": "Đang thêm…",
+    "stepsTitle": "Các bước của từng loại nội dung",
+    "stepsHint": "Các bước đi theo thứ tự loại việc. Hạn tính lùi từ ngày đăng. Thay đổi áp dụng cho ý tưởng được duyệt sau khi bạn lưu.",
+    "stepCount": "{count, plural, =0 {Chưa có bước} other {# bước}}",
+    "daysBefore": "ngày trước",
+    "daysBeforeOf": "Số ngày trước ngày đăng cho {work}",
+    "saveSteps": "Lưu các bước",
+    "saved": "Đã lưu",
+    "errors": {
+      "nameRequired": "Nhập tên.",
+      "nameTooLong": "Tên không được quá 60 ký tự.",
+      "ideaStatusRequired": "Chọn trạng thái nội dung hiển thị.",
+      "invalidDays": "Số ngày phải là số nguyên từ 0 đến 60.",
+      "gone": "Loại việc này đã bị xoá. Tải lại trang."
     }
   }
 }
