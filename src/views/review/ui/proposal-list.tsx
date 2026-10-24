@@ -87,6 +87,16 @@ export function ProposalList({
                     now,
                   ),
                 })}
+                {proposal.revision > 0
+                  ? ` · ${t("review.changedAt", {
+                      time: formatProposedAt(
+                        proposal.updatedAt,
+                        locale,
+                        timeZone,
+                        now,
+                      ),
+                    })}`
+                  : null}
               </span>
             </div>
 

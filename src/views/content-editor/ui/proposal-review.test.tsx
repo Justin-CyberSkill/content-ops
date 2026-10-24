@@ -17,6 +17,7 @@ const renderReview = () =>
   renderWithIntl(
     <ProposalReview
       id={id}
+      revision={3}
       from="review"
       initial={emptyContentForm}
       members={[]}
@@ -38,18 +39,21 @@ test("starts with the summary and three choices, without the form", () => {
   expect(screen.queryByLabelText("Goal")).not.toBeInTheDocument();
 });
 
-test("approves in one step", () => {
+test("approves in one step, the version on screen", () => {
   renderReview();
   fireEvent.click(
     screen.getByRole("button", { name: /Approve and add to plan/ }),
   );
-  expect(approveProposal).toHaveBeenCalledWith(id);
+  expect(approveProposal).toHaveBeenCalledWith(id, 3);
 });
 
 test("opens the form to edit first, and goes back on cancel", () => {
   renderReview();
   fireEvent.click(screen.getByRole("button", { name: /Edit, then approve/ }));
   expect(screen.getByLabelText("Goal")).toBeInTheDocument();
+  expect(
+    document.querySelector<HTMLInputElement>('input[name="revision"]')?.value,
+  ).toBe("3");
   expect(
     screen.getByRole("button", { name: "Save and approve" }),
   ).toBeInTheDocument();
