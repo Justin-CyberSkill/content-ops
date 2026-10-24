@@ -80,9 +80,9 @@ async function Members() {
                 <p className="truncate text-[13px] text-muted-foreground">
                   {user.email}
                 </p>
-                {/* Who does which work is set on Workflow, so the line links there. */}
+                {/* Who does which work is set on Work types, so the line links there. */}
                 <Link
-                  href="/settings/workflow"
+                  href="/settings/work-types"
                   className="w-fit text-[13px] break-words underline-offset-4 hover:underline"
                 >
                   {workByMember.has(user.id) ? (

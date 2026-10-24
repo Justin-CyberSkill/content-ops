@@ -5,8 +5,8 @@ import { SETTINGS_PAGES } from "../_ui/settings-pages";
 import { SettingsTabs } from "../_ui/settings-tabs";
 
 /**
- * Admin setup that people visit now and then: who's on the team, how ideas get made,
- * and agent keys. One nav item for all three keeps the phone tab bar to four.
+ * Admin setup that people visit now and then: who's on the team, the kinds of work and
+ * who does each, which work each content type needs, and agent keys. One nav item for all three keeps the phone tab bar to four.
  */
 export default function SettingsLayout({
   children,
@@ -14,6 +14,7 @@ export default function SettingsLayout({
   const t = useTranslations();
   const labels = {
     members: t("admin.title"),
+    workTypes: t("workflow.workTypes"),
     workflow: t("workflow.title"),
     agents: t("agents.title"),
   };
