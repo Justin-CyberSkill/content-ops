@@ -43,39 +43,34 @@ async function Members() {
     headers: await headers(),
   });
 
+  // The team is what you come to see, so it leads; adding someone sits beside it.
   return (
-    <>
+    <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
       <section
-        aria-labelledby="add-member-heading"
-        className="flex flex-col gap-4 rounded-2xl bg-card p-6 shadow-card md:p-7"
+        aria-labelledby="team-heading"
+        className="flex min-w-0 flex-col gap-2 rounded-2xl bg-card p-3 shadow-card md:p-4"
       >
-        <h2 id="add-member-heading" className="text-lg font-semibold">
-          {t("admin.addMember")}
-        </h2>
-        <CreateMemberForm />
-      </section>
-      <section aria-labelledby="team-heading" className="flex flex-col gap-4">
         <h2
           id="team-heading"
-          className="flex items-baseline gap-2 px-1 text-xl font-semibold"
+          className="flex items-baseline gap-2 px-3 pt-2 text-lg font-semibold"
         >
           {t("admin.team")}
           <span className="font-sans text-[13px] font-normal text-muted-foreground">
             {t("admin.peopleCount", { count: users.length })}
           </span>
         </h2>
-        <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(16rem,100%),1fr))] gap-5">
+        <ul className="flex flex-col">
           {users.map((user) => (
             <li
               key={user.id}
-              className="flex flex-col items-center gap-3 rounded-2xl bg-card p-6 text-center shadow-card"
+              className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-3 py-3 [&+&]:border-t [&+&]:border-border"
             >
-              <Avatar name={user.name} size="lg" />
-              <div className="flex max-w-full min-w-0 flex-col gap-0.5">
-                <p className="font-heading text-[17px] font-semibold">
+              <Avatar name={user.name} />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <p className="truncate font-semibold">
                   {user.name}
                   {user.id === me.id ? (
-                    <span className="font-sans text-[13px] font-normal text-muted-foreground">
+                    <span className="text-[13px] font-normal text-muted-foreground">
                       {" "}
                       {t("admin.you")}
                     </span>
@@ -99,13 +94,30 @@ async function Members() {
                     : "common.roles.member",
                 )}
               </Badge>
-              {user.id === me.id ? null : (
+              {/* An empty slot of the same width for you, so badges line up down the list. */}
+              {user.id === me.id ? (
+                <div aria-hidden="true" className="hidden sm:block sm:w-40" />
+              ) : (
                 <ResetPasswordButton userId={user.id} email={user.email} />
               )}
             </li>
           ))}
         </ul>
       </section>
-    </>
+      <section
+        aria-labelledby="add-member-heading"
+        className="flex flex-col gap-4 rounded-2xl bg-card p-6 shadow-card xl:sticky xl:top-8"
+      >
+        <div className="flex flex-col gap-1">
+          <h2 id="add-member-heading" className="text-lg font-semibold">
+            {t("admin.addMember")}
+          </h2>
+          <p className="text-[13px] text-muted-foreground">
+            {t("admin.addMemberHint")}
+          </p>
+        </div>
+        <CreateMemberForm />
+      </section>
+    </div>
   );
 }

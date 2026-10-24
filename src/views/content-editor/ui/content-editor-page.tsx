@@ -4,6 +4,12 @@ import { notFound } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import {
+  type ContentOrigin,
+  formatSchedule,
+  originHref,
+  StatusBadge,
+} from "@/entities/content";
 import { requireUser } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
@@ -13,18 +19,38 @@ import { formatCommentTime } from "../lib/format-comment-time";
 import { emptyContentForm, toFormValues } from "../model/content-form";
 import { CommentThread } from "./comment-thread";
 import { ContentForm } from "./content-form";
+import { ContentSummary } from "./content-summary";
+import { ContentView } from "./content-view";
 import { DeleteContentButton } from "./delete-content-button";
 import { ProposalCard } from "./proposal-card";
-import { RejectProposalForm } from "./reject-proposal-form";
+import { ProposalReview } from "./proposal-review";
+
+// The same item page sits under each list it opens from: /content/[id], /my-tasks/[id]
+// and /review/[id]. The path says where you are, so the sidebar and Back follow it.
+type EditProps = { params: Promise<{ id: string }> };
+
+// Long ideas would crowd the browser tab, so the title keeps the start of one.
+const TITLE_LENGTH = 60;
 
 export async function generateNewMetadata(): Promise<Metadata> {
   const t = await getTranslations("contentEditor");
   return { title: t("newMetaTitle") };
 }
 
-export async function generateEditMetadata(): Promise<Metadata> {
-  const t = await getTranslations("contentEditor");
-  return { title: t("editMetaTitle") };
+export async function generateEditMetadata({
+  params,
+}: EditProps): Promise<Metadata> {
+  const { id } = await params;
+  const [t, item] = await Promise.all([
+    getTranslations("contentEditor"),
+    getContent(id),
+  ]);
+  if (!item) return { title: t("editMetaTitle") };
+  const idea =
+    item.idea.length > TITLE_LENGTH
+      ? `${item.idea.slice(0, TITLE_LENGTH - 1).trimEnd()}…`
+      : item.idea;
+  return { title: t("itemMetaTitle", { idea }) };
 }
 
 function Loading() {
@@ -35,70 +61,123 @@ function Loading() {
 export function NewContentPage() {
   const t = useTranslations("contentEditor");
   return (
-    <Shell title={t("newTitle")}>
+    <main className="flex w-full flex-1 flex-col gap-6 px-4 pb-8 md:pt-8 md:pr-8 md:pl-2">
+      <PageHeader from="plan" title={t("newTitle")} />
       <Suspense fallback={<Loading />}>
         <NewContentForm />
       </Suspense>
-    </Shell>
+    </main>
   );
 }
 
-export function EditContentPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const t = useTranslations("contentEditor");
+function EditShell({ params, from }: EditProps & { from: ContentOrigin }) {
   return (
-    <Shell title={t("editTitle")}>
-      <Suspense fallback={<Loading />}>
-        <EditContentForm params={params} />
+    <main className="flex w-full flex-1 flex-col gap-6 px-4 pb-8 md:pt-8 md:pr-8 md:pl-2">
+      <Suspense fallback={<EditLoading />}>
+        <EditContent params={params} from={from} />
       </Suspense>
-    </Shell>
+    </main>
   );
 }
 
-function Shell({
+export function EditContentPage({ params }: EditProps) {
+  return <EditShell params={params} from="plan" />;
+}
+
+export function TaskContentPage({ params }: EditProps) {
+  return <EditShell params={params} from="tasks" />;
+}
+
+export function ReviewContentPage({ params }: EditProps) {
+  return <EditShell params={params} from="review" />;
+}
+
+const sectionLabel = {
+  plan: "nav.contentPlan",
+  tasks: "nav.myTasks",
+  review: "nav.review",
+} as const;
+
+/**
+ * Names the list the item was opened from and goes back to it. On phones it stays
+ * at the top while the long form scrolls, so the way out is always in reach.
+ */
+function PageHeader({
+  from,
   title,
-  children,
+  meta,
 }: {
+  from: ContentOrigin;
   title: string;
-  children: React.ReactNode;
+  meta?: React.ReactNode;
 }) {
-  const t = useTranslations("contentEditor");
+  const t = useTranslations();
   return (
-    <main className="flex w-full flex-1 flex-col gap-6 px-4 py-8 md:pr-8 md:pl-2">
-      <div className="flex items-center gap-3.5">
-        <Link
-          href="/content"
-          aria-label={t("backToPlan")}
+    <div className="sticky top-0 z-20 -mx-4 flex items-center gap-3.5 bg-background/95 px-4 py-3 backdrop-blur-sm md:static md:mx-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
+      <Link
+        href={originHref(from)}
+        aria-label={t(`contentEditor.backTo.${from}`)}
+        className={buttonVariants({
+          variant: "outline",
+          size: "icon-lg",
+          className: "shrink-0",
+        })}
+      >
+        <ArrowLeftIcon aria-hidden="true" />
+      </Link>
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="text-[13px] text-muted-foreground">
+          {t(sectionLabel[from])}
+        </span>
+        <h1 className="line-clamp-1 text-xl font-semibold tracking-tight break-words md:line-clamp-2 md:text-3xl">
+          {title}
+        </h1>
+        {meta ? (
+          <div className="mt-1 hidden flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:flex">
+            {meta}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/** Holds the header's place, so the form doesn't jump when the item arrives. */
+function EditLoading() {
+  return (
+    <>
+      <div className="flex items-center gap-3.5 py-3 md:py-0">
+        <span
+          aria-hidden="true"
           className={buttonVariants({ variant: "outline", size: "icon-lg" })}
-        >
-          <ArrowLeftIcon aria-hidden="true" />
-        </Link>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-[13px] text-muted-foreground">
-            {t("contentPlan")}
-          </span>
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
+        />
+        <div className="flex flex-col gap-1.5">
+          <span className="h-4 w-24 rounded-full bg-muted-strong" />
+          <span className="h-7 w-64 max-w-full rounded-full bg-muted-strong md:h-9" />
         </div>
       </div>
-      {children}
-    </main>
+      <Loading />
+    </>
   );
 }
 
 async function NewContentForm() {
   await requireUser();
   const members = await listMembers();
-  return <ContentForm id={null} initial={emptyContentForm} members={members} />;
+  return (
+    <ContentForm
+      id={null}
+      from="plan"
+      initial={emptyContentForm}
+      members={members}
+    />
+  );
 }
 
-async function EditContentForm({
+async function EditContent({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+  from: origin,
+}: EditProps & { from: ContentOrigin }) {
   const [{ id }, me] = await Promise.all([params, requireUser()]);
   const [item, members] = await Promise.all([getContent(id), listMembers()]);
   if (!item) notFound();
@@ -113,59 +192,121 @@ async function EditContentForm({
     listComments(item.id),
   ]);
   const now = new Date();
+  const readerLocale = isLocale(locale) ? locale : DEFAULT_LOCALE;
+  // A proposal reached through the plan's address still belongs to Review.
+  const from = isProposal ? "review" : origin;
+  const schedule = formatSchedule(
+    item.publishDate,
+    item.goldenTime,
+    readerLocale,
+  );
+  const assigneeName =
+    members.find((member) => member.id === item.assigneeId)?.name ?? null;
+  const commentThread = (
+    <CommentThread
+      contentId={item.id}
+      comments={comments.map((comment) => ({
+        id: comment.id,
+        body: comment.body,
+        authorName: comment.authorName,
+        createdAt: comment.createdAt.toISOString(),
+        time: formatCommentTime(
+          comment.createdAt,
+          readerLocale,
+          TEAM_TIME_ZONE,
+          now,
+        ),
+        canDelete: isAdmin || comment.authorId === me.id,
+      }))}
+    />
+  );
+  // Rare and permanent, so it sits quietly under the panel rather than in a card of its own.
+  const deleteCard = (
+    <div className="flex flex-col items-start gap-1.5 px-2">
+      <DeleteContentButton id={item.id} from={from} />
+      <p className="text-[13px] text-muted-foreground">{t("deleteHint")}</p>
+    </div>
+  );
+
+  if (isProposal) {
+    // Read, then decide: a summary and three choices instead of the whole form at once.
+    const summary = (
+      <ProposalCard
+        item={item}
+        proposedAt={formatCommentTime(
+          item.createdAt,
+          readerLocale,
+          TEAM_TIME_ZONE,
+          now,
+        )}
+        schedule={schedule}
+        assigneeName={assigneeName}
+      />
+    );
+    return (
+      <>
+        <PageHeader
+          from={from}
+          title={item.idea}
+          meta={
+            <>
+              <StatusBadge status={item.status} />
+              {schedule ? (
+                <span className="tabular-nums">{schedule}</span>
+              ) : null}
+            </>
+          }
+        />
+        {pendingProposal ? (
+          <ProposalReview
+            id={item.id}
+            from={from}
+            initial={toFormValues(item)}
+            members={members}
+            summary={summary}
+            comments={commentThread}
+          />
+        ) : (
+          // Already rejected: the record and its reason, with delete beside it.
+          <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start">
+            <div className="flex min-w-0 flex-col gap-6">
+              {summary}
+              {commentThread}
+            </div>
+            {deleteCard}
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
-      {isProposal ? <ProposalCard item={item} /> : null}
-      <ContentForm
-        id={item.id}
-        initial={toFormValues(item)}
-        members={members}
-        approving={pendingProposal}
-        aside={
-          isAdmin ? (
-            <section
-              aria-labelledby="delete-heading"
-              className="flex flex-col gap-3 rounded-2xl bg-card p-6 shadow-card"
-            >
-              <div className="flex flex-col gap-1">
-                <h2 id="delete-heading" className="text-lg font-semibold">
-                  {t("deleteTitle")}
-                </h2>
-                <p className="text-[13px] text-muted-foreground">
-                  {t("deleteHint")}
-                </p>
-              </div>
-              <DeleteContentButton id={item.id} />
-            </section>
-          ) : null
+      <PageHeader
+        from={from}
+        title={item.idea}
+        meta={
+          <>
+            <StatusBadge status={item.status} />
+            {schedule ? <span className="tabular-nums">{schedule}</span> : null}
+          </>
         }
       />
-      {/* Same columns as the form, so the thread lines up under the brief. */}
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
-        {/* Outside the content form: a form can't hold another form. */}
-        {pendingProposal ? (
-          <div className="xl:col-start-2 xl:row-start-1">
-            <RejectProposalForm id={item.id} />
-          </div>
-        ) : null}
-        <CommentThread
-          className="xl:col-start-1 xl:row-start-1"
-          contentId={item.id}
-          comments={comments.map((comment) => ({
-            id: comment.id,
-            body: comment.body,
-            authorName: comment.authorName,
-            createdAt: comment.createdAt.toISOString(),
-            time: formatCommentTime(
-              comment.createdAt,
-              isLocale(locale) ? locale : DEFAULT_LOCALE,
-              TEAM_TIME_ZONE,
-              now,
-            ),
-            canDelete: isAdmin || comment.authorId === me.id,
-          }))}
-        />
-      </div>
+      <ContentView
+        id={item.id}
+        from={from}
+        initial={toFormValues(item)}
+        members={members}
+        summary={
+          <ContentSummary
+            item={item}
+            schedule={schedule}
+            assigneeName={assigneeName}
+          />
+        }
+        comments={commentThread}
+        danger={isAdmin ? deleteCard : undefined}
+      />
     </>
   );
 }

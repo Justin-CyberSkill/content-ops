@@ -17,19 +17,27 @@ const proposal: Proposal = {
   createdAt: new Date("2026-10-23T09:00:00Z"),
 };
 
-test("shows who proposed it, why, and a link to review it", () => {
-  renderWithIntl(<ProposalList proposals={[proposal]} />);
+test("shows who proposed it, its format and date, why, and a link to decide", () => {
+  renderWithIntl(
+    <ProposalList proposals={[proposal]} timeZone="Asia/Ho_Chi_Minh" />,
+  );
   expect(screen.getByText("Claude planner")).toBeInTheDocument();
   expect(
     screen.getByText("Phishing posts got 2x saves last month."),
   ).toBeInTheDocument();
   expect(screen.getByText("Fri, 30 Oct 2026 · 20:00")).toBeInTheDocument();
+  expect(screen.getByText("Carousel · Instagram")).toBeInTheDocument();
+  expect(screen.getByText("proposed 23 Oct, 16:00")).toBeInTheDocument();
   expect(
-    screen.getByRole("link", { name: "Review Carousel: 5 phishing signs" }),
-  ).toHaveAttribute("href", `/en/content/${proposal.id}`);
+    screen.getByRole("link", { name: "Carousel: 5 phishing signs" }),
+  ).toHaveAttribute("href", `/en/review/${proposal.id}`);
 });
 
 test("shows an empty state", () => {
-  renderWithIntl(<ProposalList proposals={[]} />);
-  expect(screen.getByText("Nothing to review")).toBeInTheDocument();
+  renderWithIntl(<ProposalList proposals={[]} timeZone="Asia/Ho_Chi_Minh" />);
+  expect(screen.getByText("No proposals right now")).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Manage agents" })).toHaveAttribute(
+    "href",
+    "/en/agents",
+  );
 });

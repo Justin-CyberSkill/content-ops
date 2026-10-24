@@ -1,6 +1,5 @@
 import {
   BotIcon,
-  CalendarDaysIcon,
   InboxIcon,
   LayoutDashboardIcon,
   LogOutIcon,
@@ -39,15 +38,12 @@ export function AppSidebar() {
         </Link>
         <nav
           aria-label={t("label")}
-          className="order-last flex w-full gap-1 overflow-x-auto md:order-none md:flex-col md:overflow-visible"
+          // A bottom tab bar on phones, so every section stays in reach; the sidebar list from md.
+          className="fixed inset-x-0 bottom-0 z-30 flex h-(--bottom-nav) gap-1 border-t border-border bg-sidebar/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-sm md:static md:z-auto md:h-auto md:flex-col md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
         >
           <SidebarLink href="/content">
             <LayoutDashboardIcon aria-hidden="true" />
             {t("contentPlan")}
-          </SidebarLink>
-          <SidebarLink href="/calendar">
-            <CalendarDaysIcon aria-hidden="true" />
-            {t("calendar")}
           </SidebarLink>
           <SidebarLink href="/my-tasks">
             <SquareCheckBigIcon aria-hidden="true" />
@@ -109,7 +105,7 @@ async function AdminLink() {
         <InboxIcon aria-hidden="true" />
         {t("review")}
         {waiting ? (
-          <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums">
+          <span className="absolute top-1 right-[calc(50%-1.5rem)] flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums md:static md:ml-auto">
             <span aria-hidden="true">{waiting}</span>
             <span className="sr-only">
               {t("reviewWaiting", { count: waiting })}

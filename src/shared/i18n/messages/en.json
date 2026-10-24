@@ -15,13 +15,12 @@
   "nav": {
     "label": "Main",
     "contentPlan": "Content plan",
-    "calendar": "Calendar",
     "myTasks": "My tasks",
     "members": "Members",
     "account": "Account: {name}",
     "signOut": "Sign out",
     "language": "Language",
-    "review": "Review",
+    "review": "Proposals",
     "reviewWaiting": "{count} waiting",
     "agents": "Agents"
   },
@@ -87,12 +86,13 @@
       "tooShort": "Use at least 8 characters.",
       "mismatch": "The new passwords don't match.",
       "wrongCurrent": "Your current password is wrong."
-    }
+    },
+    "intro": "Your profile and password."
   },
   "admin": {
     "title": "Members",
     "metaTitle": "Members · CS Content Ops",
-    "intro": "Add teammates here. Each gets a temporary password to change after signing in.",
+    "intro": "Who's on the team and what they can do.",
     "addMember": "Add a member",
     "team": "Team",
     "peopleCount": "{count, plural, one {# person} other {# people}}",
@@ -110,15 +110,17 @@
     "errors": {
       "nameRequired": "Enter a name.",
       "invalidEmail": "Enter a valid email."
-    }
+    },
+    "addMemberHint": "They get a temporary password to send them privately. They change it after signing in.",
+    "roleHint": "Members plan and make content. Admins can also handle proposals, members and agent keys."
   },
   "contentList": {
     "title": "Content plan",
     "metaTitle": "Content plan · CS Content Ops",
-    "intro": "Everything we plan to publish, soonest first.",
-    "newContent": "New content",
+    "intro": "Everything we plan to publish, soonest first. Open an item to see it, update its status or edit it.",
+    "newContent": "Add content",
     "emptyTitle": "Nothing planned yet",
-    "emptyBody": "Add the first piece of content.",
+    "emptyBody": "Add the first idea so the team can plan around it.",
     "columns": {
       "publish": "Publish",
       "idea": "Idea",
@@ -137,42 +139,37 @@
     },
     "assetLinks": "{count, plural, one {# asset link} other {# asset links}}"
   },
-  "calendar": {
-    "title": "Calendar",
-    "metaTitle": "Calendar · CS Content Ops",
-    "intro": "Every dated item by publish day and golden time.",
-    "mineOnly": "Mine only",
-    "dragHint": "Drag an item to change its publish day or golden time.",
-    "legend": "Status colours",
-    "proposedHint": "Faded items are proposed ideas waiting for review. Only admins see them.",
-    "noTime": "All day",
-    "errors": {
-      "invalidSchedule": "Pick a valid day and time.",
-      "deleted": "This content was deleted.",
-      "failed": "Couldn't move it. Try again."
-    }
-  },
   "review": {
-    "title": "Review",
-    "metaTitle": "Review · CS Content Ops",
-    "intro": "Ideas agents proposed. Open one to edit, assign and date it, then approve or reject it.",
-    "emptyTitle": "Nothing to review",
-    "emptyBody": "New agent proposals show up here.",
+    "title": "Proposals",
+    "metaTitle": "Proposals · CS Content Ops",
+    "intro": "Content ideas from agents. Open one to check it, then add it to the plan or turn it down with a reason.",
+    "emptyTitle": "No proposals right now",
+    "emptyBody": "When an agent suggests a content idea, it shows up here for you to approve or reject.",
     "unknownAgent": "An agent",
     "whyThis": "Why this",
-    "open": "Review",
-    "openLabel": "Review {idea}"
+    "open": "Review and decide",
+    "waiting": "{count, plural, one {# idea waiting for your decision} other {# ideas waiting for your decision}}",
+    "proposedAt": "proposed {time}",
+    "format": "Format",
+    "publish": "Publish",
+    "manageAgents": "Manage agents",
+    "doneApproved": "Approved and added to the content plan.",
+    "doneRejected": "Rejected. The agent can read your reason.",
+    "openPlan": "Open content plan"
   },
   "contentEditor": {
     "newTitle": "New content",
     "editTitle": "Edit content",
     "newMetaTitle": "New content · CS Content Ops",
     "editMetaTitle": "Edit content · CS Content Ops",
-    "backToPlan": "Back to content plan",
-    "contentPlan": "Content plan",
+    "itemMetaTitle": "{idea} · CS Content Ops",
+    "backTo": {
+      "plan": "Back to content plan",
+      "tasks": "Back to my tasks",
+      "review": "Back to proposals"
+    },
     "deleteTitle": "Delete content",
     "deleteHint": "Removes it from the plan for everyone. This can't be undone.",
-    "delete": "Delete",
     "deleting": "Deleting…",
     "confirmDelete": "Delete this content from the plan?",
     "brief": "Brief",
@@ -208,9 +205,10 @@
       "commentRequired": "Write something before you send.",
       "commentTooLong": "Keep the comment under 5,000 characters.",
       "adminOnly": "Only admins can approve proposals.",
-      "proposalReviewed": "This proposal was already reviewed.",
+      "proposalReviewed": "Someone already approved or rejected this proposal.",
       "rejectReasonRequired": "Write why you're rejecting it.",
-      "rejectReasonTooLong": "Keep the reason under 1,000 characters."
+      "rejectReasonTooLong": "Keep the reason under 1,000 characters.",
+      "invalidProgress": "Pick a status and an owner from the lists."
     },
     "comments": {
       "title": "Comments",
@@ -219,7 +217,7 @@
       "label": "Write a comment",
       "placeholder": "Write a comment…",
       "hint": "Press Ctrl+Enter (⌘+Enter on Mac) to send.",
-      "send": "Comment",
+      "send": "Send",
       "sending": "Sending…",
       "delete": "Delete comment by {name}",
       "confirmDelete": "Delete this comment?",
@@ -229,33 +227,52 @@
       "title": "Proposed by {name}",
       "unknownAgent": "an agent",
       "whyThis": "Why this",
-      "reviewHint": "Edit, assign and date it, then approve to add it to the plan.",
       "approve": "Approve and add to plan",
       "rejectedTitle": "Rejected",
-      "rejectTitle": "Reject proposal",
-      "rejectHint": "The agent can read your reason, so say what would make the next idea better.",
+      "rejectHint": "The agent reads this, so say what would make the next idea better.",
       "rejectReason": "Reason",
       "reject": "Reject",
-      "rejecting": "Rejecting…"
-    }
+      "rejecting": "Rejecting…",
+      "rejectConfirm": "Reject proposal",
+      "approvedAs": "Becomes {status} when you approve it.",
+      "decideTitle": "What do you want to do with it?",
+      "approveHint": "It goes into the content plan as Planned, exactly as shown above.",
+      "approving": "Approving…",
+      "editOption": "Edit, then approve",
+      "editOptionHint": "Change the idea, format, date or owner first.",
+      "rejectOptionHint": "It leaves the queue. You tell the agent why, so its next idea is better.",
+      "rejectTitle": "Reject this proposal",
+      "editTitle": "Edit before approving",
+      "editHint": "Saving approves it and adds it to the content plan.",
+      "saveAndApprove": "Save and approve"
+    },
+    "details": "Details",
+    "editDetails": "Edit details",
+    "editDetailsHint": "Change the brief, format, schedule or links.",
+    "saveProgress": "Save",
+    "saved": "Saved"
   },
   "myTasks": {
     "title": "My tasks",
     "metaTitle": "My tasks · CS Content Ops",
-    "intro": "Content assigned to you. Change the status as you go.",
-    "emptyTitle": "All clear",
-    "emptyBody": "Nothing is assigned to you yet.",
+    "intro": "Everything assigned to you. Update the status as you work, so the team knows where things stand.",
+    "emptyTitle": "Nothing assigned to you",
+    "emptyBody": "When someone assigns you content, it shows up here. The content plan has everything the team is working on.",
     "statusOf": "Status of {idea}",
     "errors": {
       "invalidStatus": "Pick a valid status.",
       "notAssigned": "This task is no longer assigned to you."
-    }
+    },
+    "openPlan": "Open content plan",
+    "upNext": "To do",
+    "upNextEmpty": "You're all caught up.",
+    "published": "Published"
   },
   "agents": {
     "title": "Agents",
     "metaTitle": "Agents · CS Content Ops",
-    "intro": "Keys let AI agents read the plan and propose ideas. Their proposals wait in Review; agents can't edit, delete or approve anything.",
-    "keysTitle": "Agent keys",
+    "intro": "API keys let AI agents read the plan and suggest ideas. Their ideas wait in Proposals; agents can't edit, delete or approve anything.",
+    "keysTitle": "API keys",
     "keyName": "Key name",
     "keyNamePlaceholder": "Such as Claude planner",
     "create": "Create key",
@@ -263,11 +280,11 @@
     "copyNow": "Copy the key for {name} now. It won't be shown again.",
     "copy": "Copy",
     "copied": "Copied",
-    "empty": "No keys yet. Create one for each agent, so you can turn one off without touching the others.",
+    "empty": "No keys yet. Create one per agent, so you can turn one off without touching the others.",
     "unnamed": "Unnamed key",
     "active": "Active",
     "disabled": "Disabled",
-    "createdBy": "made by {name} on {when}",
+    "createdBy": "created by {name} on {when}",
     "lastUsed": "last used {when}",
     "neverUsed": "never used",
     "removedMember": "a removed member",
@@ -276,7 +293,7 @@
     "disableLabel": "Disable {name}",
     "enableLabel": "Enable {name}",
     "deleteLabel": "Delete {name}",
-    "confirmDelete": "Delete the key {name}? Agents using it stop working. Its proposals stay.",
+    "confirmDelete": "Delete the key {name}? Agents using it stop working. Their past proposals stay.",
     "errors": {
       "nameRequired": "Name the key after the agent that will use it.",
       "nameTooLong": "Keep the name under 40 characters."

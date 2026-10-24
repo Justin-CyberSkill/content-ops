@@ -18,33 +18,39 @@ export function ResetPasswordButton({
   const [pending, startTransition] = useTransition();
   const t = useTranslations("admin");
 
+  // Lays out inside a member row: the button keeps a fixed slot at the end, and the
+  // new password or an error takes a line of its own underneath.
   return (
-    <div className="mt-1 flex w-full flex-col items-center gap-2">
-      <Button
-        variant="secondary"
-        size="sm"
-        disabled={pending}
-        onClick={() => {
-          if (!confirm(t("confirmReset", { email }))) return;
-          startTransition(async () =>
-            setState(await resetMemberPassword(userId, email)),
-          );
-        }}
-      >
-        <RotateCcwIcon aria-hidden="true" />
-        {pending ? t("resetting") : t("resetPassword")}
-      </Button>
+    <>
+      <div className="flex justify-end sm:w-40">
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={pending}
+          onClick={() => {
+            if (!confirm(t("confirmReset", { email }))) return;
+            startTransition(async () =>
+              setState(await resetMemberPassword(userId, email)),
+            );
+          }}
+        >
+          <RotateCcwIcon aria-hidden="true" />
+          {pending ? t("resetting") : t("resetPassword")}
+        </Button>
+      </div>
       {state.status === "error" ? (
-        <p role="alert" className="text-[13px] text-destructive">
+        <p role="alert" className="basis-full text-[13px] text-destructive">
           {state.message}
         </p>
       ) : null}
       {state.status === "done" ? (
-        <TemporaryPasswordNotice
-          email={state.email}
-          password={state.password}
-        />
+        <div className="basis-full">
+          <TemporaryPasswordNotice
+            email={state.email}
+            password={state.password}
+          />
+        </div>
       ) : null}
-    </div>
+    </>
   );
 }

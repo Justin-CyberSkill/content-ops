@@ -4,6 +4,7 @@ import { StatusBadge } from "@/entities/content";
 import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
 import { Avatar } from "@/shared/ui/avatar";
+import { buttonVariants } from "@/shared/ui/button";
 import type { ContentRow } from "../api/list-content";
 import { formatDay } from "../lib/format-day";
 import { type ContentGroup, groupContent } from "../model/content-groups";
@@ -36,11 +37,18 @@ export function ContentTable({
   const t = useTranslations();
   if (!rows.length)
     return (
-      <div className="flex flex-col items-center gap-1.5 rounded-xl bg-muted px-6 py-12 text-center">
-        <p className="font-heading text-lg font-semibold">
-          {t("contentList.emptyTitle")}
-        </p>
-        <p className="text-muted-foreground">{t("contentList.emptyBody")}</p>
+      <div className="flex flex-col items-center gap-3 rounded-xl bg-muted px-6 py-12 text-center">
+        <div className="flex flex-col gap-1">
+          <p className="font-heading text-lg font-semibold">
+            {t("contentList.emptyTitle")}
+          </p>
+          <p className="max-w-sm text-muted-foreground">
+            {t("contentList.emptyBody")}
+          </p>
+        </div>
+        <Link href="/content/new" className={buttonVariants({ size: "sm" })}>
+          {t("contentList.newContent")}
+        </Link>
       </div>
     );
   return (

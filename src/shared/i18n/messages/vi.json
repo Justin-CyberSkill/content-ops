@@ -15,13 +15,12 @@
   "nav": {
     "label": "Chính",
     "contentPlan": "Kế hoạch nội dung",
-    "calendar": "Lịch",
     "myTasks": "Việc của tôi",
     "members": "Thành viên",
     "account": "Tài khoản: {name}",
     "signOut": "Đăng xuất",
     "language": "Ngôn ngữ",
-    "review": "Duyệt đề xuất",
+    "review": "Đề xuất",
     "reviewWaiting": "{count} đang chờ",
     "agents": "Agent"
   },
@@ -30,7 +29,7 @@
       "proposed": "Đề xuất",
       "planned": "Đã lên kế hoạch",
       "in_progress": "Đang làm",
-      "in_review": "Đang duyệt",
+      "in_review": "Chờ duyệt",
       "scheduled": "Đã lên lịch",
       "published": "Đã đăng"
     },
@@ -41,7 +40,7 @@
       "live": "Livestream",
       "image": "Hình ảnh",
       "carousel": "Carousel",
-      "text_post": "Bài đăng chữ",
+      "text_post": "Bài đăng văn bản",
       "quiz": "Câu đố",
       "article": "Bài viết"
     },
@@ -87,14 +86,15 @@
       "tooShort": "Dùng ít nhất 8 ký tự.",
       "mismatch": "Hai mật khẩu mới không khớp.",
       "wrongCurrent": "Mật khẩu hiện tại không đúng."
-    }
+    },
+    "intro": "Hồ sơ và mật khẩu của bạn."
   },
   "admin": {
     "title": "Thành viên",
     "metaTitle": "Thành viên · CS Content Ops",
-    "intro": "Thêm đồng đội tại đây. Mỗi người nhận một mật khẩu tạm để đổi sau khi đăng nhập.",
+    "intro": "Ai trong nhóm và mỗi người được làm gì.",
     "addMember": "Thêm thành viên",
-    "team": "Đội ngũ",
+    "team": "Nhóm",
     "peopleCount": "{count} người",
     "you": "(bạn)",
     "name": "Tên",
@@ -110,15 +110,17 @@
     "errors": {
       "nameRequired": "Nhập tên.",
       "invalidEmail": "Nhập email hợp lệ."
-    }
+    },
+    "addMemberHint": "Người mới nhận một mật khẩu tạm, bạn gửi riêng cho họ. Họ đổi mật khẩu sau khi đăng nhập.",
+    "roleHint": "Thành viên lên kế hoạch và làm nội dung. Quản trị viên còn duyệt đề xuất, quản lý thành viên và khoá API."
   },
   "contentList": {
     "title": "Kế hoạch nội dung",
     "metaTitle": "Kế hoạch nội dung · CS Content Ops",
-    "intro": "Mọi nội dung sắp đăng, gần nhất lên trước.",
-    "newContent": "Nội dung mới",
+    "intro": "Mọi nội dung sắp đăng, gần nhất lên trước. Mở một mục để xem, cập nhật trạng thái hoặc chỉnh sửa.",
+    "newContent": "Thêm nội dung",
     "emptyTitle": "Chưa có kế hoạch nào",
-    "emptyBody": "Thêm nội dung đầu tiên.",
+    "emptyBody": "Thêm ý tưởng đầu tiên để cả nhóm cùng lên kế hoạch.",
     "columns": {
       "publish": "Ngày đăng",
       "idea": "Ý tưởng",
@@ -131,48 +133,43 @@
       "overdue": "Quá hạn",
       "thisWeek": "Tuần này",
       "nextWeek": "Tuần sau",
-      "later": "Sau đó",
+      "later": "Sau nữa",
       "noDate": "Chưa có ngày",
       "published": "Đã đăng"
     },
     "assetLinks": "{count} liên kết tài nguyên"
   },
-  "calendar": {
-    "title": "Lịch",
-    "metaTitle": "Lịch · CS Content Ops",
-    "intro": "Mọi nội dung có ngày đăng, theo ngày và khung giờ vàng.",
-    "mineOnly": "Chỉ của tôi",
-    "dragHint": "Kéo một mục để đổi ngày đăng hoặc khung giờ vàng.",
-    "legend": "Màu trạng thái",
-    "proposedHint": "Mục mờ là ý tưởng đề xuất đang chờ duyệt. Chỉ admin nhìn thấy.",
-    "noTime": "Cả ngày",
-    "errors": {
-      "invalidSchedule": "Chọn ngày và giờ hợp lệ.",
-      "deleted": "Nội dung này đã bị xoá.",
-      "failed": "Không di chuyển được. Hãy thử lại."
-    }
-  },
   "review": {
-    "title": "Duyệt đề xuất",
-    "metaTitle": "Duyệt đề xuất · CS Content Ops",
-    "intro": "Ý tưởng do agent đề xuất. Mở từng ý tưởng để chỉnh sửa, giao người, chọn ngày, rồi duyệt hoặc từ chối.",
-    "emptyTitle": "Không có gì cần duyệt",
-    "emptyBody": "Đề xuất mới của agent sẽ hiện ở đây.",
+    "title": "Đề xuất",
+    "metaTitle": "Đề xuất · CS Content Ops",
+    "intro": "Ý tưởng nội dung do agent gợi ý. Mở từng ý tưởng để xem, rồi thêm vào kế hoạch hoặc từ chối kèm lý do.",
+    "emptyTitle": "Chưa có đề xuất nào",
+    "emptyBody": "Khi agent gợi ý một ý tưởng nội dung, ý tưởng sẽ hiện ở đây để bạn duyệt hoặc từ chối.",
     "unknownAgent": "Một agent",
     "whyThis": "Vì sao đề xuất",
-    "open": "Xem xét",
-    "openLabel": "Xem xét {idea}"
+    "open": "Xem và quyết định",
+    "waiting": "{count} ý tưởng đang chờ bạn quyết định",
+    "proposedAt": "đề xuất lúc {time}",
+    "format": "Định dạng",
+    "publish": "Ngày đăng",
+    "manageAgents": "Quản lý agent",
+    "doneApproved": "Đã duyệt và thêm vào kế hoạch nội dung.",
+    "doneRejected": "Đã từ chối. Agent đọc được lý do của bạn.",
+    "openPlan": "Mở kế hoạch nội dung"
   },
   "contentEditor": {
     "newTitle": "Nội dung mới",
     "editTitle": "Sửa nội dung",
     "newMetaTitle": "Nội dung mới · CS Content Ops",
     "editMetaTitle": "Sửa nội dung · CS Content Ops",
-    "backToPlan": "Quay lại kế hoạch nội dung",
-    "contentPlan": "Kế hoạch nội dung",
+    "itemMetaTitle": "{idea} · CS Content Ops",
+    "backTo": {
+      "plan": "Quay lại kế hoạch nội dung",
+      "tasks": "Quay lại việc của tôi",
+      "review": "Quay lại đề xuất"
+    },
     "deleteTitle": "Xoá nội dung",
     "deleteHint": "Xoá khỏi kế hoạch của mọi người. Không thể hoàn tác.",
-    "delete": "Xoá",
     "deleting": "Đang xoá…",
     "confirmDelete": "Xoá nội dung này khỏi kế hoạch?",
     "brief": "Tóm tắt",
@@ -207,10 +204,11 @@
       "deleted": "Nội dung này đã bị xoá.",
       "commentRequired": "Hãy viết gì đó trước khi gửi.",
       "commentTooLong": "Bình luận không được quá 5.000 ký tự.",
-      "adminOnly": "Chỉ admin mới duyệt được đề xuất.",
-      "proposalReviewed": "Đề xuất này đã được xem xét.",
+      "adminOnly": "Chỉ quản trị viên mới duyệt được đề xuất.",
+      "proposalReviewed": "Đề xuất này đã được duyệt hoặc từ chối.",
       "rejectReasonRequired": "Hãy viết lý do từ chối.",
-      "rejectReasonTooLong": "Lý do không được quá 1.000 ký tự."
+      "rejectReasonTooLong": "Lý do không được quá 1.000 ký tự.",
+      "invalidProgress": "Chọn trạng thái và người phụ trách trong danh sách."
     },
     "comments": {
       "title": "Bình luận",
@@ -219,43 +217,62 @@
       "label": "Viết bình luận",
       "placeholder": "Viết bình luận…",
       "hint": "Nhấn Ctrl+Enter (⌘+Enter trên Mac) để gửi.",
-      "send": "Bình luận",
+      "send": "Gửi",
       "sending": "Đang gửi…",
       "delete": "Xoá bình luận của {name}",
       "confirmDelete": "Xoá bình luận này?",
       "removedMember": "Thành viên đã bị xoá"
     },
     "proposal": {
-      "title": "Đề xuất bởi {name}",
+      "title": "{name} đề xuất",
       "unknownAgent": "một agent",
       "whyThis": "Vì sao đề xuất",
-      "reviewHint": "Chỉnh sửa, giao người và chọn ngày, rồi duyệt để thêm vào kế hoạch.",
       "approve": "Duyệt và thêm vào kế hoạch",
       "rejectedTitle": "Đã từ chối",
-      "rejectTitle": "Từ chối đề xuất",
-      "rejectHint": "Agent đọc được lý do của bạn, nên hãy nói điều gì sẽ giúp ý tưởng sau tốt hơn.",
+      "rejectHint": "Agent sẽ đọc lý do này, nên hãy nói điều gì sẽ giúp ý tưởng sau tốt hơn.",
       "rejectReason": "Lý do",
       "reject": "Từ chối",
-      "rejecting": "Đang từ chối…"
-    }
+      "rejecting": "Đang từ chối…",
+      "rejectConfirm": "Từ chối đề xuất",
+      "approvedAs": "Sẽ là {status} khi bạn duyệt.",
+      "decideTitle": "Bạn muốn làm gì với đề xuất này?",
+      "approveHint": "Đưa vào kế hoạch nội dung với trạng thái Đã lên kế hoạch, đúng như bên trên.",
+      "approving": "Đang duyệt…",
+      "editOption": "Chỉnh sửa rồi duyệt",
+      "editOptionHint": "Đổi ý tưởng, định dạng, ngày đăng hoặc người phụ trách trước.",
+      "rejectOptionHint": "Đề xuất rời khỏi danh sách chờ. Bạn cho agent biết lý do để lần sau gợi ý tốt hơn.",
+      "rejectTitle": "Từ chối đề xuất này",
+      "editTitle": "Chỉnh sửa trước khi duyệt",
+      "editHint": "Lưu sẽ duyệt và thêm vào kế hoạch nội dung.",
+      "saveAndApprove": "Lưu và duyệt"
+    },
+    "details": "Chi tiết",
+    "editDetails": "Sửa chi tiết",
+    "editDetailsHint": "Đổi tóm tắt, định dạng, lịch đăng hoặc link.",
+    "saveProgress": "Lưu",
+    "saved": "Đã lưu"
   },
   "myTasks": {
     "title": "Việc của tôi",
     "metaTitle": "Việc của tôi · CS Content Ops",
-    "intro": "Nội dung được giao cho bạn. Cập nhật trạng thái khi làm.",
-    "emptyTitle": "Xong hết rồi",
-    "emptyBody": "Bạn chưa được giao việc nào.",
+    "intro": "Mọi việc được giao cho bạn. Cập nhật trạng thái khi làm để cả nhóm biết tiến độ.",
+    "emptyTitle": "Bạn chưa được giao việc",
+    "emptyBody": "Khi có người giao nội dung cho bạn, việc sẽ hiện ở đây. Kế hoạch nội dung có mọi việc cả nhóm đang làm.",
     "statusOf": "Trạng thái của {idea}",
     "errors": {
       "invalidStatus": "Chọn trạng thái hợp lệ.",
       "notAssigned": "Việc này không còn được giao cho bạn."
-    }
+    },
+    "openPlan": "Mở kế hoạch nội dung",
+    "upNext": "Cần làm",
+    "upNextEmpty": "Bạn đã làm xong hết.",
+    "published": "Đã đăng"
   },
   "agents": {
     "title": "Agent",
     "metaTitle": "Agent · CS Content Ops",
-    "intro": "Khoá cho phép agent AI đọc kế hoạch và đề xuất ý tưởng. Đề xuất chờ ở mục Duyệt đề xuất; agent không thể sửa, xoá hay duyệt gì cả.",
-    "keysTitle": "Khoá agent",
+    "intro": "Khoá API cho phép agent AI đọc kế hoạch và gợi ý ý tưởng. Ý tưởng chờ ở mục Đề xuất; agent không thể sửa, xoá hay duyệt gì cả.",
+    "keysTitle": "Khoá API",
     "keyName": "Tên khoá",
     "keyNamePlaceholder": "Ví dụ: Claude planner",
     "create": "Tạo khoá",
@@ -263,7 +280,7 @@
     "copyNow": "Sao chép khoá cho {name} ngay. Khoá sẽ không hiện lại.",
     "copy": "Sao chép",
     "copied": "Đã sao chép",
-    "empty": "Chưa có khoá. Hãy tạo một khoá cho mỗi agent để có thể tắt từng cái riêng.",
+    "empty": "Chưa có khoá nào. Tạo một khoá cho mỗi agent để có thể tắt từng agent riêng.",
     "unnamed": "Khoá chưa đặt tên",
     "active": "Đang bật",
     "disabled": "Đã tắt",
@@ -276,7 +293,7 @@
     "disableLabel": "Tắt {name}",
     "enableLabel": "Bật {name}",
     "deleteLabel": "Xoá {name}",
-    "confirmDelete": "Xoá khoá {name}? Agent đang dùng khoá này sẽ ngừng hoạt động. Các đề xuất vẫn được giữ.",
+    "confirmDelete": "Xoá khoá {name}? Agent đang dùng khoá này sẽ ngừng hoạt động. Các đề xuất trước đó vẫn được giữ.",
     "errors": {
       "nameRequired": "Đặt tên khoá theo agent sẽ dùng nó.",
       "nameTooLong": "Tên không được quá 40 ký tự."

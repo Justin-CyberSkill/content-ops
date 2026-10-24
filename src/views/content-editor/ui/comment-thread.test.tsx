@@ -63,7 +63,7 @@ test("shows an empty state and sends a new comment", async () => {
   renderWithIntl(<CommentThread contentId={contentId} comments={[]} />);
   expect(screen.getByText(/No comments yet/)).toBeInTheDocument();
 
-  const send = screen.getByRole("button", { name: "Comment" });
+  const send = screen.getByRole("button", { name: "Send" });
   expect(send).toBeDisabled();
 
   const box = screen.getByRole("textbox", { name: "Write a comment" });

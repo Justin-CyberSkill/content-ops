@@ -14,6 +14,7 @@ export function NavLink({
   className?: string;
 }) {
   // Without the language prefix. After sign-in it can be "/" while next.config redirects to /content.
+  // Items open under their list (/my-tasks/[id]), so the list stays lit.
   const current = usePathname();
   const pathname = current === "/" ? "/content" : current;
   const active = pathname === href || pathname.startsWith(`${href}/`);

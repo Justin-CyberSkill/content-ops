@@ -3,6 +3,7 @@
 import { and, eq, isNull } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { originHref, parseOrigin } from "@/entities/content";
 import { requireAdmin, requireUser } from "@/shared/auth/index.server";
 import { db } from "@/shared/db";
 import { content, user } from "@/shared/db/schema";
@@ -34,6 +35,7 @@ export async function saveContent(
     if (!assignee) return { error: t("assigneeGone") };
   }
 
+  let approving = false;
   if (id) {
     const [current] = await db
       .select({ status: content.status, rejectedAt: content.rejectedAt })
@@ -42,7 +44,7 @@ export async function saveContent(
     if (!current) return { error: t("deleted") };
 
     // Saving a proposal approves it, which only admins do.
-    const approving = current.status === "proposed";
+    approving = current.status === "proposed";
     if (approving) {
       if (me.role !== "admin") return { error: t("adminOnly") };
       if (current.rejectedAt) return { error: t("proposalReviewed") };
@@ -62,15 +64,20 @@ export async function saveContent(
       )
       .returning({ id: content.id });
     if (!updated.length) return { error: t("proposalReviewed") };
-    if (approving) redirect("/review");
   } else {
     await db.insert(content).values({ ...data, createdById: me.id });
   }
-  redirect("/content");
+  // Back to the list the item was opened from. Review says what just happened.
+  const from = parseOrigin(formData.get("from"));
+  redirect(
+    approving && from === "review"
+      ? `${originHref(from)}?done=approved`
+      : originHref(from),
+  );
 }
 
-export async function deleteContent(id: string) {
+export async function deleteContent(id: string, from: unknown) {
   await requireAdmin();
   await db.delete(content).where(eq(content.id, id));
-  redirect("/content");
+  redirect(originHref(parseOrigin(from)));
 }

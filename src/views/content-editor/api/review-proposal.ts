@@ -41,5 +41,28 @@ export async function rejectProposal(
     )
     .returning({ id: content.id });
   if (!updated.length) return { error: t("proposalReviewed") };
-  redirect("/review");
+  redirect("/review?done=rejected");
+}
+
+export type ApproveState = { error?: string };
+
+/** Approves a proposal as the agent sent it; it joins the plan as planned. */
+export async function approveProposal(id: string): Promise<ApproveState> {
+  const me = await requireAdmin();
+  const t = await getTranslations("contentEditor.errors");
+  if (!z.uuid().safeParse(id).success) return { error: t("deleted") };
+
+  const updated = await db
+    .update(content)
+    .set({ status: "planned", reviewedById: me.id })
+    .where(
+      and(
+        eq(content.id, id),
+        eq(content.status, "proposed"),
+        isNull(content.rejectedAt),
+      ),
+    )
+    .returning({ id: content.id });
+  if (!updated.length) return { error: t("proposalReviewed") };
+  redirect("/review?done=approved");
 }

@@ -3,6 +3,7 @@
 import { CheckIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { startTransition, useActionState } from "react";
+import { type ContentOrigin, originHref } from "@/entities/content";
 import { CONTENT_TYPES, PLAN_STATUSES, PLATFORMS } from "@/shared/db/schema";
 import { Link } from "@/shared/i18n";
 import { cn } from "@/shared/lib";
@@ -17,20 +18,23 @@ import type { ContentFormValues } from "../model/content-form";
 
 type Props = {
   id: string | null;
+  /** The list the item was opened from; cancelling and saving go back there. */
+  from: ContentOrigin;
   initial: ContentFormValues;
   members: Member[];
-  /** Extra cards under the status card, such as the admin-only delete. */
-  aside?: React.ReactNode;
   /** Reviewing an agent's proposal: saving approves it. */
   approving?: boolean;
+  /** Set when the form opens inside another view: Cancel closes it instead of leaving. */
+  onCancel?: () => void;
 };
 
 export function ContentForm({
   id,
+  from,
   initial: values,
   members,
-  aside,
   approving,
+  onCancel,
 }: Props) {
   const [state, action, pending] = useActionState<SaveContentState, FormData>(
     saveContent.bind(null, id),
@@ -48,8 +52,10 @@ export function ContentForm({
       }}
       // One column on narrow screens, in the order people fill it: brief, format, schedule,
       // links, status and owner, then save. From xl, status and owner move to a side column.
-      className="grid items-start gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]"
+      // A flex column below xl, so the phone save bar can stick across the whole form.
+      className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)] xl:items-start"
     >
+      <input type="hidden" name="from" value={from} />
       <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-span-2 xl:row-start-1">
         <Section title={t("contentEditor.brief")}>
           <Field
@@ -175,22 +181,43 @@ export function ContentForm({
         </Section>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-1">
+      {/* On narrow screens an existing item opens on status and owner, the fields people change most. */}
+      <div
+        className={cn(
+          "flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-1",
+          id && "max-xl:order-first",
+        )}
+      >
         <Section title={t("contentEditor.statusAndOwner")}>
-          <Field label={t("contentEditor.status")} htmlFor="status">
-            <NativeSelect
-              id="status"
-              name="status"
-              defaultValue={values.status}
-              className="w-full"
-            >
-              {PLAN_STATUSES.map((status) => (
-                <NativeSelectOption key={status} value={status}>
-                  {t(`content.status.${status}`)}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </Field>
+          {approving ? (
+            // Approving always starts it as planned; a status picker here would contradict the badge.
+            <div className="flex flex-col gap-2">
+              <input type="hidden" name="status" value="planned" />
+              <span className="pl-1 text-[13px] leading-none font-medium">
+                {t("contentEditor.status")}
+              </span>
+              <p className="pl-1 text-sm text-muted-foreground">
+                {t("contentEditor.proposal.approvedAs", {
+                  status: t("content.status.planned"),
+                })}
+              </p>
+            </div>
+          ) : (
+            <Field label={t("contentEditor.status")} htmlFor="status">
+              <NativeSelect
+                id="status"
+                name="status"
+                defaultValue={values.status}
+                className="w-full"
+              >
+                {PLAN_STATUSES.map((status) => (
+                  <NativeSelectOption key={status} value={status}>
+                    {t(`content.status.${status}`)}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
+            </Field>
+          )}
           <Field label={t("contentEditor.assignee")} htmlFor="assigneeId">
             <NativeSelect
               id="assigneeId"
@@ -211,7 +238,8 @@ export function ContentForm({
         </Section>
       </div>
 
-      <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-start-3">
+      {/* On phones the error and buttons stay above the bottom navigation while the form scrolls. */}
+      <div className="sticky bottom-(--bottom-nav,0px) z-10 -mx-4 flex min-w-0 flex-col gap-3 bg-background/95 px-4 py-3 backdrop-blur-sm md:static md:mx-0 md:gap-6 md:bg-transparent md:p-0 md:backdrop-blur-none xl:col-start-1 xl:row-start-3">
         {state.error ? (
           <p
             role="alert"
@@ -222,29 +250,29 @@ export function ContentForm({
         ) : null}
 
         <div className="flex justify-end gap-2">
-          <Link
-            href="/content"
-            className={buttonVariants({ variant: "ghost" })}
-          >
-            {t("common.cancel")}
-          </Link>
+          {onCancel ? (
+            <Button type="button" variant="ghost" onClick={onCancel}>
+              {t("common.cancel")}
+            </Button>
+          ) : (
+            <Link
+              href={originHref(from)}
+              className={buttonVariants({ variant: "ghost" })}
+            >
+              {t("common.cancel")}
+            </Link>
+          )}
           <Button type="submit" disabled={pending}>
             {pending
               ? t("common.saving")
               : approving
-                ? t("contentEditor.proposal.approve")
+                ? t("contentEditor.proposal.saveAndApprove")
                 : id
                   ? t("contentEditor.saveChanges")
                   : t("contentEditor.addToPlan")}
           </Button>
         </div>
       </div>
-
-      {aside ? (
-        <div className="flex min-w-0 flex-col gap-6 xl:col-start-2 xl:row-start-2">
-          {aside}
-        </div>
-      ) : null}
     </form>
   );
 }

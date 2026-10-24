@@ -36,5 +36,4 @@ Suggest one pick with a short reason, the main alternative and any cost. After a
 ## Project deviations
 
 - i18n: next-intl, approved 2026-10-23. Vietnamese (default) and English. The language is the first URL segment (`/vi/content`, `/en/content`) so each screen prerenders per language; the `NEXT_LOCALE` cookie remembers the last choice. Setup in `src/shared/i18n`.
-- Calendar: FullCalendar v7 (`@fullcalendar/react`, MIT, with `temporal-polyfill`), approved 2026-10-23. Its shadcn "monarch" block lives in `src/shared/ui/event-calendar*.tsx`; edits from the registry are marked in comments. Standard plugins only, no premium scheduler.
 - Agent API keys: `@better-auth/api-key` (MIT), approved 2026-10-23. Keys are hashed, rate limited per key and made by admins in Settings > Agents; `/api/agent` only accepts keys an admin owns. `enableSessionForAPIKeys` stays off so a key never acts as a signed-in user.

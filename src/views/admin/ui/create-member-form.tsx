@@ -22,10 +22,7 @@ export function CreateMemberForm() {
 
   return (
     <div className="flex flex-col gap-4">
-      <form
-        action={action}
-        className="grid gap-3 sm:grid-cols-2 sm:items-end xl:grid-cols-[1fr_1fr_10rem_auto]"
-      >
+      <form action={action} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <Label htmlFor="member-name">{t("admin.name")}</Label>
           <Input id="member-name" name="name" required />
@@ -48,8 +45,11 @@ export function CreateMemberForm() {
               </NativeSelectOption>
             ))}
           </NativeSelect>
+          <p className="pl-1 text-xs text-muted-foreground">
+            {t("admin.roleHint")}
+          </p>
         </div>
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending} className="self-start">
           {pending ? t("admin.adding") : t("admin.add")}
         </Button>
       </form>

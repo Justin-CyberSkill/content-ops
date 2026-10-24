@@ -25,7 +25,7 @@ test("shows each task with its schedule and current status", () => {
   expect(screen.getByText("TikTok")).toBeInTheDocument();
   expect(
     screen.getByRole("link", { name: "60s reel: 3 security myths" }),
-  ).toHaveAttribute("href", `/en/content/${task.id}`);
+  ).toHaveAttribute("href", `/en/my-tasks/${task.id}`);
   expect(
     screen.getByRole("combobox", {
       name: "Status of 60s reel: 3 security myths",
@@ -35,7 +35,24 @@ test("shows each task with its schedule and current status", () => {
 
 test("shows an empty state", () => {
   renderWithIntl(<TaskList tasks={[]} />);
-  expect(
-    screen.getByText("Nothing is assigned to you yet."),
-  ).toBeInTheDocument();
+  expect(screen.getByText("Nothing assigned to you")).toBeInTheDocument();
+});
+
+test("lists open tasks first and published ones apart", () => {
+  renderWithIntl(
+    <TaskList
+      tasks={[
+        task,
+        {
+          ...task,
+          id: "8f6c1c1e-0000-4000-8000-000000000001",
+          idea: "Old carousel",
+          status: "published",
+        },
+      ]}
+    />,
+  );
+  const [toDo, published] = screen.getAllByRole("heading", { level: 2 });
+  expect(toDo).toHaveTextContent("To do");
+  expect(published).toHaveTextContent("Published");
 });
