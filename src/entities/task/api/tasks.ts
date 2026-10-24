@@ -1,10 +1,12 @@
 import { asc, count, eq, inArray, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { db } from "@/shared/db";
 import {
   CONTENT_TYPES,
   type ContentType,
   content,
   memberWorkType,
+  review,
   type TaskStatus,
   task,
   user,
@@ -17,14 +19,20 @@ import {
   dueDate,
   ideaProgress,
   suggestAssignees,
+  taskKind,
 } from "../model/task-flow";
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type Db = Tx | typeof db;
 
-/** An idea's tasks in order, with who has each and who else does that kind of work. */
+const reviewer = alias(user, "reviewer");
+
+/**
+ * An idea's tasks in order, with who has each and who else does that kind of work.
+ * A task a review sent back carries what the reviewer asked for, until it's done again.
+ */
 export async function listTasks(contentId: string, conn: Db = db) {
-  const tasks = await conn
+  const rows = await conn
     .select({
       id: task.id,
       workTypeId: task.workTypeId,
@@ -37,11 +45,22 @@ export async function listTasks(contentId: string, conn: Db = db) {
       dueDate: task.dueDate,
       daysBefore: task.daysBefore,
       doneAt: task.doneAt,
+      reopenNote: review.note,
+      reopenedByName: reviewer.name,
     })
     .from(task)
     .leftJoin(user, eq(task.assigneeId, user.id))
+    .leftJoin(review, eq(task.reopenedByReviewId, review.id))
+    .leftJoin(reviewer, eq(review.reviewerId, reviewer.id))
     .where(eq(task.contentId, contentId))
     .orderBy(asc(task.position));
+  const tasks = rows.map(({ reopenNote, reopenedByName, ...row }) => ({
+    ...row,
+    changesRequested:
+      reopenNote !== null && row.status !== "done"
+        ? { note: reopenNote, by: reopenedByName }
+        : null,
+  }));
   const workTypeIds = [
     ...new Set(
       tasks.flatMap((row) => (row.workTypeId ? [row.workTypeId] : [])),
@@ -70,23 +89,28 @@ export async function syncIdea(tx: Tx, contentId: string) {
       status: task.status,
       ideaStatus: task.ideaStatus,
       assigneeId: task.assigneeId,
+      reopenedByReviewId: task.reopenedByReviewId,
     })
     .from(task)
     .where(eq(task.contentId, contentId))
     .for("update");
   if (!tasks.length) return;
+  const flow = tasks.map((row) => ({
+    ...row,
+    reopened: row.reopenedByReviewId !== null,
+  }));
 
-  for (const change of advanceTasks(tasks)) {
+  for (const change of advanceTasks(flow)) {
     await tx
       .update(task)
       .set({ status: change.status })
       .where(eq(task.id, change.id));
-    const row = tasks.find((t) => t.id === change.id);
+    const row = flow.find((t) => t.id === change.id);
     if (row) row.status = change.status;
   }
   await tx
     .update(content)
-    .set(ideaProgress(tasks))
+    .set(ideaProgress(flow))
     .where(eq(content.id, contentId));
 }
 
@@ -225,11 +249,16 @@ export async function hasTasks(contentId: string, conn: Db = db) {
   return (row?.n ?? 0) > 0;
 }
 
-export type TaskChangeError = "notFound" | "notYours" | "waiting";
+export type TaskChangeError =
+  | "notFound"
+  | "notYours"
+  | "waiting"
+  | "needsVerdict";
 
 /**
  * Sets a task's status. The assignee or an admin can; a waiting task can't change
- * until the one before it is done. The idea's status follows.
+ * until the one before it is done. An open review is finished by approving it, which
+ * keeps a record, so it can't be marked done here. The idea's status follows.
  */
 export async function setTaskStatus(
   taskId: string,
@@ -242,6 +271,7 @@ export async function setTaskStatus(
         contentId: task.contentId,
         assigneeId: task.assigneeId,
         status: task.status,
+        ideaStatus: task.ideaStatus,
       })
       .from(task)
       .where(eq(task.id, taskId))
@@ -250,6 +280,12 @@ export async function setTaskStatus(
     if (!actor.isAdmin && row.assigneeId !== actor.id)
       return { error: "notYours" as const };
     if (row.status === "waiting") return { error: "waiting" as const };
+    if (
+      taskKind(row.ideaStatus) === "review" &&
+      status === "done" &&
+      row.status !== "done"
+    )
+      return { error: "needsVerdict" as const };
     if (row.status !== status) {
       await tx
         .update(task)

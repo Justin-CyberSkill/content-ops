@@ -10,7 +10,10 @@
     "roles": {
       "admin": "Quản trị viên",
       "member": "Thành viên"
-    }
+    },
+    "copy": "Sao chép",
+    "copied": "Đã chép",
+    "copyFailed": "Không sao chép được. Hãy chọn đoạn chữ rồi tự sao chép."
   },
   "nav": {
     "label": "Chính",
@@ -128,7 +131,7 @@
       "idea": "Ý tưởng",
       "assignee": "Người phụ trách",
       "status": "Trạng thái",
-      "assets": "Tài nguyên",
+      "assets": "Link",
       "format": "Định dạng"
     },
     "groups": {
@@ -139,7 +142,7 @@
       "noDate": "Chưa có ngày",
       "published": "Đã đăng"
     },
-    "assetLinks": "{count} liên kết tài nguyên"
+    "assetLinks": "{count} link tham khảo"
   },
   "review": {
     "title": "Đề xuất",
@@ -190,9 +193,9 @@
     "publishDay": "Ngày đăng",
     "goldenTime": "Khung giờ vàng",
     "goldenTimeHint": "Giờ địa phương khi khán giả hoạt động nhiều nhất.",
-    "assetLinks": "Link tài nguyên",
+    "referenceLinks": "Link tham khảo",
     "links": "Link",
-    "linksHint": "Mỗi dòng một URL.",
+    "linksHint": "Mỗi dòng một URL, như brief hoặc nguồn cảm hứng. Tệp làm xong để ở mục Asset.",
     "statusAndOwner": "Trạng thái và người phụ trách",
     "status": "Trạng thái",
     "assignee": "Người phụ trách",
@@ -205,7 +208,7 @@
       "typeRequired": "Chọn loại nội dung.",
       "invalidDate": "Chọn ngày đăng hợp lệ.",
       "invalidTime": "Chọn khung giờ vàng hợp lệ.",
-      "invalidLinks": "Link tài nguyên phải là URL http(s), mỗi dòng một link.",
+      "invalidLinks": "Link tham khảo phải là URL http(s), mỗi dòng một link.",
       "assigneeGone": "Thành viên này không còn tồn tại. Hãy chọn người khác.",
       "deleted": "Nội dung này đã bị xoá.",
       "commentRequired": "Hãy viết gì đó trước khi gửi.",
@@ -221,7 +224,27 @@
       "notWithdrawn": "Ý tưởng này không còn bị rút lại. Tải lại trang để xem trạng thái hiện tại.",
       "followsTasks": "Trạng thái và người phụ trách của nội dung này đi theo các việc. Tải lại trang để xem.",
       "alreadyTasks": "Nội dung này đã có các việc. Tải lại trang để xem.",
-      "noSteps": "Loại nội dung này chưa có bước nào. Thêm ở Thành viên, mục Quy trình."
+      "noSteps": "Loại nội dung này chưa có bước nào. Thêm ở Thành viên, mục Quy trình.",
+      "scriptTooLong": "Kịch bản không được quá 20.000 ký tự.",
+      "captionTooLong": "Mỗi caption không được quá 10.000 ký tự.",
+      "hashtagsTooLong": "Hashtag không được quá 1.000 ký tự.",
+      "pinnedCommentTooLong": "Bình luận ghim không được quá 2.000 ký tự.",
+      "assetLabelRequired": "Đặt tên cho asset, ví dụ Thumbnail.",
+      "assetLabelTooLong": "Tên không được quá 60 ký tự.",
+      "assetLinkInvalid": "Dán link bắt đầu bằng http:// hoặc https://.",
+      "assetNoteTooLong": "Ghi chú không được quá 500 ký tự.",
+      "assetPlatformGone": "Nội dung này không còn đăng trên nền tảng đó. Hãy chọn nền tảng khác.",
+      "assetGone": "Asset này đã bị xoá. Tải lại trang.",
+      "notYourAsset": "Chỉ người thêm asset hoặc quản trị viên mới xoá được.",
+      "reviewNotOpen": "Việc duyệt này không còn mở. Tải lại trang để xem trạng thái hiện tại.",
+      "notYourReview": "Việc duyệt này không phải của bạn. Nhờ quản trị viên giao cho bạn.",
+      "changesNoteRequired": "Hãy nói cần sửa gì.",
+      "changesNoteTooLong": "Ghi chú không được quá 2.000 ký tự.",
+      "pickTasksToReopen": "Chọn ít nhất một việc để gửi lại.",
+      "liveLinkInvalid": "Dán link bài đăng, bắt đầu bằng https://.",
+      "notYourPublishing": "Chỉ người làm việc đăng bài hoặc quản trị viên mới thêm được link.",
+      "publishingNotOpen": "Link bài đăng được thêm khi tới lượt đăng bài.",
+      "platformGone": "Nội dung này không còn đăng trên nền tảng đó. Tải lại trang."
     },
     "comments": {
       "title": "Bình luận",
@@ -279,7 +302,7 @@
         "type": "loại nội dung",
         "publishDate": "ngày đăng",
         "goldenTime": "khung giờ vàng",
-        "assetLinks": "link tài nguyên",
+        "assetLinks": "link tham khảo",
         "why": "“Vì sao đề xuất”",
         "sources": "“Dựa trên”"
       },
@@ -304,7 +327,104 @@
       "splitTitle": "Chia thành các việc",
       "splitFormHint": "Bắt đầu từ bước đầu tiên. Sau đó đánh dấu Xong cho các bước đã làm.",
       "splitConfirm": "Tạo các việc",
-      "splitting": "Đang tạo…"
+      "splitting": "Đang tạo…",
+      "changesRequestedBy": "{name} yêu cầu sửa",
+      "changesRequested": "Cần sửa"
+    },
+    "sinceReview": "Đổi sau lần duyệt trước",
+    "captions": {
+      "title": "Kịch bản và caption",
+      "intro": "Nội dung nói hoặc chiếu, và phần đăng kèm trên từng nền tảng.",
+      "empty": "Chưa viết gì. Kịch bản và caption cho từng nền tảng nằm ở đây, sẵn để sao chép khi đăng.",
+      "write": "Viết kịch bản và caption",
+      "edit": "Sửa kịch bản và caption",
+      "editHint": "Ai trong nhóm cũng sửa được. Lần duyệt sau sẽ thấy phần nào đã đổi.",
+      "script": "Kịch bản",
+      "scriptHint": "Nội dung nói hoặc chiếu: lời thoại, cảnh quay hoặc slide.",
+      "noScript": "Chưa có kịch bản.",
+      "caption": "Caption",
+      "hashtags": "Hashtag",
+      "hashtagsHint": "Cách nhau bằng dấu cách. Dấu # được tự thêm.",
+      "pinnedComment": "Bình luận ghim",
+      "pinnedCommentHint": "Đăng làm bình luận đầu tiên rồi ghim lại.",
+      "noCaption": "Chưa có caption.",
+      "count": "{count, number} ký tự, tính cả hashtag",
+      "countOfLimit": "{count, number}/{limit, number} ký tự, tính cả hashtag",
+      "overLimit": "{count, number}/{limit, number} ký tự, tính cả hashtag: vượt mức của {platform} {over, number} ký tự",
+      "save": "Lưu kịch bản và caption",
+      "copyScript": "Sao chép kịch bản",
+      "copyCaption": "Sao chép caption cho {platform}",
+      "copyHashtags": "Sao chép hashtag cho {platform}",
+      "copyPinned": "Sao chép bình luận ghim cho {platform}"
+    },
+    "assets": {
+      "title": "Asset",
+      "count": "{count} asset",
+      "empty": "Chưa có asset nào. Thêm link tới từng tệp, như video hoặc thumbnail, để cả nhóm dùng bản mới nhất.",
+      "add": "Thêm asset",
+      "adding": "Đang thêm…",
+      "addTitle": "Thêm asset",
+      "label": "Tên",
+      "labelHint": "Đây là gì, ví dụ Thumbnail.",
+      "labelSuggestions": "Video, Thumbnail, Ảnh bìa, Phụ đề, Slide, Hình ảnh",
+      "platform": "Dùng cho",
+      "allPlatforms": "Mọi nền tảng",
+      "link": "Link",
+      "linkHint": "Nơi để tệp, như Google Drive hoặc Canva. Cả nhóm phải mở được.",
+      "note": "Ghi chú",
+      "noteHint": "Không bắt buộc: trong đó có gì hoặc đã đổi gì.",
+      "open": "Mở {version}",
+      "version": "v{number}",
+      "addedBy": "{name}, {time}",
+      "addVersion": "Thêm phiên bản",
+      "addVersionTitle": "Phiên bản mới của {label}",
+      "addVersionHint": "Cả nhóm dùng phiên bản mới nhất. Bản cũ vẫn nằm trong danh sách.",
+      "allVersions": "{count, plural, other {Cả # phiên bản}}",
+      "delete": "Xoá {label}",
+      "confirmDelete": "Xoá {label} và mọi phiên bản? Tệp gốc vẫn còn ở chỗ cũ.",
+      "removedMember": "Thành viên đã bị xoá"
+    },
+    "reviews": {
+      "title": "Các lần duyệt",
+      "approved": "{name} đã duyệt",
+      "changesRequested": "{name} yêu cầu sửa",
+      "sentBack": "Gửi lại: {tasks}",
+      "removedMember": "Thành viên đã bị xoá"
+    },
+    "verdict": {
+      "title": "Duyệt hoặc yêu cầu sửa",
+      "intro": "Xem kịch bản, caption và asset rồi quyết định.",
+      "introAgain": "Xem kịch bản, caption và asset rồi quyết định. Phần nào đổi sau lần duyệt trước đều có nhãn.",
+      "approve": "Duyệt",
+      "approving": "Đang duyệt…",
+      "approveNext": "Tới lượt {name} làm {task}.",
+      "approveNextUnassigned": "Tới lượt {task}. Chưa ai nhận việc này.",
+      "approveLast": "Nội dung được đánh dấu Đã đăng.",
+      "requestChanges": "Yêu cầu sửa",
+      "requestChangesHint": "Nói cần sửa gì và việc nào cần làm lại.",
+      "requestHint": "Các việc bạn chọn quay về Cần làm, kèm ghi chú của bạn. Bạn duyệt lại khi chúng xong.",
+      "note": "Cần sửa gì",
+      "sendBackTo": "Gửi lại cho",
+      "send": "Gửi lại để sửa",
+      "sending": "Đang gửi…"
+    },
+    "publish": {
+      "title": "Link bài đăng",
+      "hint": "Đăng lên từng nền tảng rồi dán link vào đây. Khi nền tảng nào cũng có link, {task} xong và nội dung chuyển sang Đã đăng.",
+      "liveCount": "Đã đăng {live}/{total}",
+      "live": "Đã đăng",
+      "notLive": "Chưa đăng",
+      "copyPost": "Sao chép bài",
+      "copyPostFor": "Sao chép caption và hashtag cho {platform}",
+      "copyPinned": "Sao chép bình luận ghim",
+      "copyPinnedFor": "Sao chép bình luận ghim cho {platform}",
+      "linkLabel": "Link bài đăng trên {platform}",
+      "save": "Lưu",
+      "saving": "Đang lưu…",
+      "change": "Đổi",
+      "changeLabel": "Đổi link bài đăng trên {platform}",
+      "publishedBy": "{name}, {time}",
+      "noCaption": "Chưa có caption."
     }
   },
   "myTasks": {
@@ -327,7 +447,11 @@
     "waitingFor": "Sau {task} của {name}",
     "waitingForUnassigned": "Sau {task}",
     "done": "Xong",
-    "doneHint": "Những việc bạn làm xong trong 30 ngày qua."
+    "doneHint": "Những việc bạn làm xong trong 30 ngày qua.",
+    "changesRequestedBy": "{name} yêu cầu sửa",
+    "changesRequested": "Cần sửa",
+    "openToReview": "Mở để duyệt",
+    "liveCount": "Đã đăng {live}/{total}"
   },
   "agents": {
     "title": "Agent",
@@ -389,7 +513,8 @@
       "notFound": "Việc này đã bị xoá. Tải lại trang để xem các việc hiện tại.",
       "notYours": "Việc này không phải của bạn. Nhờ quản trị viên giao cho bạn.",
       "waiting": "Việc này bắt đầu khi việc trước đó xong.",
-      "memberGone": "Thành viên này không còn tồn tại. Hãy chọn người khác."
+      "memberGone": "Thành viên này không còn tồn tại. Hãy chọn người khác.",
+      "needsVerdict": "Hãy duyệt hoặc yêu cầu sửa trên trang nội dung để lưu lại lần duyệt."
     }
   },
   "workflow": {
@@ -408,7 +533,7 @@
     "name": "Tên",
     "namePlaceholder": "Dịch thuật",
     "ideaStatus": "Nội dung hiện là",
-    "ideaStatusHint": "Trạng thái kế hoạch nội dung hiển thị khi việc này đang được làm.",
+    "ideaStatusHint": "Trạng thái kế hoạch nội dung hiển thị khi việc này đang được làm. Chờ duyệt cho việc này nút Duyệt và Yêu cầu sửa. Đã lên lịch cho việc này ô dán link bài đăng của từng nền tảng.",
     "save": "Lưu",
     "delete": "Xoá loại việc",
     "deleting": "Đang xoá…",

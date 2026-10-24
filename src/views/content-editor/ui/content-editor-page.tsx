@@ -10,13 +10,14 @@ import {
   originHref,
   StatusBadge,
 } from "@/entities/content";
-import { todayIn } from "@/entities/task";
+import { taskKind, todayIn } from "@/entities/task";
 import { listTasks, planWork } from "@/entities/task/index.server";
 import { requireUser } from "@/shared/auth/index.server";
 import { TEAM_TIME_ZONE } from "@/shared/config";
 import { DEFAULT_LOCALE, isLocale, Link } from "@/shared/i18n";
 import { Badge } from "@/shared/ui/badge";
 import { buttonVariants } from "@/shared/ui/button";
+import { listAssets, listPosts, listReviews } from "../api/production";
 import {
   getContent,
   listComments,
@@ -24,7 +25,9 @@ import {
   listMembers,
 } from "../api/queries";
 import { formatCommentTime } from "../lib/format-comment-time";
+import { postText } from "../model/captions";
 import { emptyContentForm, toFormValues } from "../model/content-form";
+import { AssetsCard } from "./assets-card";
 import { CommentThread } from "./comment-thread";
 import { ContentForm } from "./content-form";
 import { ContentSummary } from "./content-summary";
@@ -32,7 +35,11 @@ import { ContentView } from "./content-view";
 import { DeleteContentButton } from "./delete-content-button";
 import { ProposalCard } from "./proposal-card";
 import { ProposalReview } from "./proposal-review";
+import { PublishPanel } from "./publish-panel";
 import { RestoreProposal } from "./restore-proposal";
+import { ReviewHistory } from "./review-history";
+import { ScriptAndCaptions } from "./script-and-captions";
+import { VerdictPanel } from "./verdict-panel";
 
 // The same item page sits under each list it opens from: /content/[id], /my-tasks/[id]
 // and /review/[id]. The path says where you are, so the sidebar and Back follow it.
@@ -199,13 +206,17 @@ async function EditContent({
   if (isProposal && !isAdmin) notFound();
   const pendingProposal =
     isProposal && item.rejectedAt === null && item.withdrawnAt === null;
-  const [t, locale, comments, events, tasks] = await Promise.all([
-    getTranslations("contentEditor"),
-    getLocale(),
-    listComments(item.id),
-    isProposal ? listEvents(item.id) : [],
-    isProposal ? [] : listTasks(item.id),
-  ]);
+  const [t, locale, comments, events, tasks, posts, assets, reviews] =
+    await Promise.all([
+      getTranslations("contentEditor"),
+      getLocale(),
+      listComments(item.id),
+      isProposal ? listEvents(item.id) : [],
+      isProposal ? [] : listTasks(item.id),
+      isProposal ? [] : listPosts(item.id),
+      isProposal ? [] : listAssets(item.id),
+      isProposal ? [] : listReviews(item.id),
+    ]);
   // Who's suggested per step: for approving, or for splitting an item from before tasks.
   const plan =
     pendingProposal || (isAdmin && !isProposal && !tasks.length)
@@ -341,6 +352,123 @@ async function EditContent({
     );
   }
 
+  const time = (at: Date) =>
+    formatCommentTime(at, readerLocale, TEAM_TIME_ZONE, now);
+  // What changed after the last review gets a badge, so the reviewer checks only that.
+  const lastReviewAt = reviews[0]?.createdAt ?? null;
+  const changedSinceReview = (at: Date | null) =>
+    lastReviewAt !== null && at !== null && at > lastReviewAt;
+  const postOf = (platform: (typeof item.platforms)[number]) =>
+    posts.find((row) => row.platform === platform);
+
+  // The open task decides the panel's next card: a review's decision, or the live links.
+  const openTask = tasks.find((task) => task.status !== "done") ?? null;
+  const canAct = (assigneeId: string | null) => isAdmin || assigneeId === me.id;
+  const publishTask =
+    tasks.find(
+      (task) =>
+        taskKind(task.ideaStatus) === "publish" && task.status !== "done",
+    ) ?? tasks.findLast((task) => taskKind(task.ideaStatus) === "publish");
+  let actions: React.ReactNode = null;
+  if (
+    openTask &&
+    taskKind(openTask.ideaStatus) === "review" &&
+    openTask.status !== "waiting" &&
+    canAct(openTask.assigneeId)
+  ) {
+    const next = tasks.find(
+      (task) => task.position > openTask.position && task.status !== "done",
+    );
+    actions = (
+      <VerdictPanel
+        taskId={openTask.id}
+        earlier={tasks
+          .filter(
+            (task) =>
+              task.position < openTask.position && task.status === "done",
+          )
+          .map((task) => ({
+            id: task.id,
+            name: task.name,
+            assigneeName: task.assigneeName,
+          }))}
+        next={
+          next
+            ? { id: next.id, name: next.name, assigneeName: next.assigneeName }
+            : null
+        }
+        reviewedBefore={reviews.length > 0}
+      />
+    );
+  } else if (publishTask && publishTask.status !== "waiting") {
+    actions = (
+      <PublishPanel
+        contentId={item.id}
+        taskName={publishTask.name}
+        canEdit={canAct(publishTask.assigneeId)}
+        rows={item.platforms.map((platform) => {
+          const row = postOf(platform);
+          return {
+            platform,
+            postText: postText(row?.caption ?? "", row?.hashtags ?? ""),
+            pinnedComment: row?.pinnedComment ?? "",
+            liveUrl: row?.liveUrl ?? null,
+            publishedByName: row?.publishedByName ?? null,
+            publishedTime: row?.publishedAt ? time(row.publishedAt) : null,
+          };
+        })}
+      />
+    );
+  }
+
+  const work = (
+    <>
+      <ScriptAndCaptions
+        contentId={item.id}
+        script={item.script}
+        scriptChanged={changedSinceReview(item.scriptUpdatedAt)}
+        posts={item.platforms.map((platform) => {
+          const row = postOf(platform);
+          return {
+            platform,
+            caption: row?.caption ?? "",
+            hashtags: row?.hashtags ?? "",
+            pinnedComment: row?.pinnedComment ?? "",
+            changed: changedSinceReview(row?.copyUpdatedAt ?? null),
+          };
+        })}
+      />
+      <AssetsCard
+        contentId={item.id}
+        platforms={item.platforms}
+        assets={assets.map((asset) => ({
+          id: asset.id,
+          label: asset.label,
+          platform: asset.platform,
+          changed: changedSinceReview(asset.versions.at(-1)?.createdAt ?? null),
+          canDelete: isAdmin || asset.createdById === me.id,
+          versions: asset.versions.map((version) => ({
+            id: version.id,
+            url: version.url,
+            note: version.note,
+            byName: version.createdByName,
+            createdAt: version.createdAt.toISOString(),
+            time: time(version.createdAt),
+          })),
+        }))}
+      />
+      {reviews.length ? (
+        <ReviewHistory
+          reviews={reviews.map((entry) => ({
+            ...entry,
+            createdAt: entry.createdAt.toISOString(),
+            time: time(entry.createdAt),
+          }))}
+        />
+      ) : null}
+    </>
+  );
+
   return (
     <>
       <PageHeader
@@ -367,6 +495,8 @@ async function EditContent({
           dueDate: task.dueDate,
           daysBefore: task.daysBefore,
           doers: task.doers,
+          kind: taskKind(task.ideaStatus),
+          changesRequested: task.changesRequested,
         }))}
         steps={plan?.[item.type] ?? []}
         me={{ id: me.id, isAdmin }}
@@ -378,6 +508,8 @@ async function EditContent({
             assigneeName={assigneeName}
           />
         }
+        work={work}
+        actions={actions}
         comments={commentThread}
         danger={isAdmin ? deleteCard : undefined}
       />

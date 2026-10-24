@@ -1,4 +1,5 @@
 import {
+  type AnyPgColumn,
   date,
   index,
   integer,
@@ -12,6 +13,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { content, contentStatus, contentType } from "./content";
+import { review } from "./production";
 
 /**
  * How an approved idea gets made: the kinds of work (work types), who does each,
@@ -107,6 +109,10 @@ export const task = pgTable(
     status: taskStatus().notNull().default("waiting"),
     dueDate: date({ mode: "string" }),
     doneAt: timestamp(),
+    /** The review that last sent it back to To do, for showing what to change. */
+    reopenedByReviewId: uuid().references((): AnyPgColumn => review.id, {
+      onDelete: "set null",
+    }),
     createdAt: timestamp().defaultNow().notNull(),
     updatedAt: timestamp()
       .defaultNow()

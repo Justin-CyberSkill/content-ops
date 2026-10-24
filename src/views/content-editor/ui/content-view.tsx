@@ -1,10 +1,15 @@
 "use client";
 
-import { CheckIcon, ListChecksIcon, PencilIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ListChecksIcon,
+  MessageSquareWarningIcon,
+  PencilIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import type { ContentOrigin } from "@/entities/content";
-import { DueDay, TaskStatusBadge } from "@/entities/task";
+import { DueDay, type TaskKind, TaskStatusBadge } from "@/entities/task";
 import type { PlannedStep } from "@/entities/task/index.server";
 import { TaskAssigneeSelect, TaskStatusSelect } from "@/features/task-progress";
 import { PLAN_STATUSES, type TaskStatus } from "@/shared/db/schema";
@@ -31,12 +36,16 @@ export type PanelTask = {
   daysBefore: number;
   /** Members who do this kind of work, offered first when reassigning. */
   doers: { id: string; name: string }[];
+  kind: TaskKind;
+  /** What a review asked for when it sent this task back, until it's done again. */
+  changesRequested: { note: string; by: string | null } | null;
 };
 
 /**
- * An item opens to read, not to edit: the details on the left, and on the right the
- * thing people change most: its tasks, or for an item from before tasks, its status
- * and owner. The full form opens on request and takes the whole width, one thing at a time.
+ * An item opens to read, not to edit: the details and what the tasks made on the left,
+ * and on the right the thing people change most: its tasks, then the open review or
+ * the live links. For an item from before tasks, its status and owner. The full form
+ * opens on request and takes the whole width, one thing at a time.
  */
 export function ContentView({
   id,
@@ -48,6 +57,8 @@ export function ContentView({
   me,
   today,
   summary,
+  work,
+  actions,
   comments,
   danger,
 }: {
@@ -64,6 +75,10 @@ export function ContentView({
   today: string;
   /** The read-only details, rendered on the server. */
   summary: React.ReactNode;
+  /** What the tasks make: script and captions, assets, reviews. Under the details. */
+  work?: React.ReactNode;
+  /** The open review's decision or the live links, under the tasks. */
+  actions?: React.ReactNode;
   comments: React.ReactNode;
   /** Admin-only delete, under the panel. */
   danger?: React.ReactNode;
@@ -108,13 +123,14 @@ export function ContentView({
     );
   }
 
-  // One DOM order for every size (details, panel, comments); from xl the panel moves
-  // to a right column that spans both rows and stays in view.
-  // The first row fits the details, so comments follow them however tall the panel is.
+  // One DOM order for every size (details, panel, work, comments), so on a phone the
+  // tasks and the next action come right after the details, not after a long script.
+  // From xl the panel moves to a right column that spans every row and stays in view;
+  // the last row takes any spare height, so nothing leaves a gap under a tall panel.
   return (
-    <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:grid-rows-[auto_1fr] xl:items-start">
+    <div className="flex flex-col gap-6 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:grid-rows-[auto_auto_1fr] xl:items-start">
       <div className="min-w-0 xl:col-start-1 xl:row-start-1">{summary}</div>
-      <div className="flex min-w-0 flex-col gap-6 xl:sticky xl:top-8 xl:col-start-2 xl:row-span-2 xl:row-start-1">
+      <div className="flex min-w-0 flex-col gap-6 xl:sticky xl:top-8 xl:col-start-2 xl:row-span-3 xl:row-start-1">
         {tasks.length ? (
           <TasksPanel
             tasks={tasks}
@@ -133,9 +149,13 @@ export function ContentView({
             onEdit={() => setEditing(true)}
           />
         )}
+        {actions}
         {danger}
       </div>
-      <div className="min-w-0 xl:col-start-1 xl:row-start-2">{comments}</div>
+      <div className="flex min-w-0 flex-col gap-6 xl:col-start-1 xl:row-start-2">
+        {work}
+      </div>
+      <div className="min-w-0 xl:col-start-1 xl:row-start-3">{comments}</div>
     </div>
   );
 }
@@ -175,7 +195,11 @@ function TasksPanel({
       </div>
       <ol className="flex flex-col">
         {tasks.map((task, index) => {
-          const canChange = me.isAdmin || task.assigneeId === me.id;
+          // An open review is decided with Approve or Request changes, not a status.
+          const canChange =
+            (me.isAdmin || task.assigneeId === me.id) &&
+            task.status !== "waiting" &&
+            !(task.kind === "review" && task.status !== "done");
           return (
             <li
               key={task.id}
@@ -214,6 +238,9 @@ function TasksPanel({
                     <TaskStatusBadge status={task.status} />
                   )}
                 </div>
+                {task.changesRequested ? (
+                  <ChangesRequested {...task.changesRequested} />
+                ) : null}
                 {me.isAdmin ? (
                   <TaskAssigneeSelect
                     key={task.assigneeId ?? ""}
@@ -234,6 +261,25 @@ function TasksPanel({
       </p>
       <EditDetails onEdit={onEdit} />
     </section>
+  );
+}
+
+/** What the reviewer asked for, on the task they sent back. */
+function ChangesRequested({ note, by }: { note: string; by: string | null }) {
+  const t = useTranslations("contentEditor.tasks");
+  return (
+    <div className="flex gap-2.5 rounded-xl bg-status-in-review-bg px-3.5 py-3 text-sm">
+      <MessageSquareWarningIcon
+        aria-hidden="true"
+        className="mt-0.5 size-4 shrink-0 text-status-in-review"
+      />
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="font-semibold text-status-in-review">
+          {by ? t("changesRequestedBy", { name: by }) : t("changesRequested")}
+        </span>
+        <p className="break-words whitespace-pre-wrap">{note}</p>
+      </div>
+    </div>
   );
 }
 
