@@ -75,8 +75,6 @@ export async function listTasks(contentId: string, conn: Db = db) {
   }));
 }
 
-export type IdeaTask = Awaited<ReturnType<typeof listTasks>>[number];
-
 /**
  * Opens the next task, puts later ones back to waiting, and sets the idea's status and
  * owner from its tasks. Call after any change to an idea's tasks. No tasks, no change.
@@ -178,7 +176,7 @@ async function listCandidates(workTypeIds: string[], conn: Db) {
 }
 
 /** Who takes each step, by step id; null leaves it unassigned. A step left out gets the suggestion. */
-export type Assignments = Map<string, string | null>;
+type Assignments = Map<string, string | null>;
 
 /** Turns a new or approved idea's steps into tasks. Content types without steps get none. */
 export async function createTasks(
@@ -249,11 +247,7 @@ export async function hasTasks(contentId: string, conn: Db = db) {
   return (row?.n ?? 0) > 0;
 }
 
-export type TaskChangeError =
-  | "notFound"
-  | "notYours"
-  | "waiting"
-  | "needsVerdict";
+type TaskChangeError = "notFound" | "notYours" | "waiting" | "needsVerdict";
 
 /**
  * Sets a task's status. The assignee or an admin can; a waiting task can't change

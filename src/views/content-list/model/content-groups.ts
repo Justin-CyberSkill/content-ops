@@ -1,7 +1,7 @@
 import type { ContentStatus } from "@/shared/db/schema";
 
 /** Sections of the content plan, top to bottom. */
-export const CONTENT_GROUPS = [
+const CONTENT_GROUPS = [
   "overdue",
   "thisWeek",
   "nextWeek",
