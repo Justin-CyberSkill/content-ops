@@ -33,6 +33,7 @@ The same word in both languages and on every screen:
 | Reviewer sends work back | Request changes | Yêu cầu sửa                 |
 | Where a post went live   | Live link       | Link bài đăng               |
 - Settings holds what admins set up now and then, as tabs at `/settings/…`: Members, Work types (the kinds of work and who does each), Workflow (which work each content type needs, one type at a time) and Agents. Each tab manages one thing, so no page asks people to scroll past one task to reach another.
+- The phone tab bar shortens "Kế hoạch nội dung" to "Kế hoạch" so it fits one line; everywhere else uses the full name.
 - Never reuse one word for two things. "Review" was renamed "Proposals" because it clashed with "In review". The Vietnamese calendar had three different "lịch" words. "Copy" is only the button, so the text is "captions", and "Asset links" became "Reference links" once assets got their own card.
 - Add a row when you add a concept people see, and search both message files for the old word when you rename one.
 

@@ -1,7 +1,6 @@
 import {
   InboxIcon,
   LayoutDashboardIcon,
-  LogOutIcon,
   SettingsIcon,
   SquareCheckBigIcon,
 } from "lucide-react";
@@ -10,13 +9,12 @@ import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { getSession } from "@/shared/auth/index.server";
 import { Link } from "@/shared/i18n";
-import { LanguageSwitch } from "@/shared/i18n/language-switch";
-import { Avatar } from "@/shared/ui/avatar";
-import { Button, buttonVariants } from "@/shared/ui/button";
+import { signOut } from "@/views/account";
+import { countMyTodo } from "@/views/my-tasks/index.server";
 import { countPendingProposals } from "@/views/review/index.server";
+import { AccountMenu } from "./account-menu";
 import { NavLink } from "./nav-link";
 import { navLinkClassName } from "./nav-link-class";
-import { signOut } from "./sign-out";
 
 export function AppSidebar() {
   const t = useTranslations("nav");
@@ -38,26 +36,32 @@ export function AppSidebar() {
         <nav
           aria-label={t("label")}
           // A bottom tab bar on phones, so every section stays in reach; the sidebar list from md.
-          className="fixed inset-x-0 bottom-0 z-30 flex h-(--bottom-nav) gap-1 border-t border-border bg-sidebar/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-sm md:static md:z-auto md:h-auto md:flex-col md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
+          // Daily work first; Settings, visited now and then, sits apart at the bottom.
+          className="fixed inset-x-0 bottom-0 z-30 flex h-(--bottom-nav) gap-1 border-t border-border bg-sidebar/95 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] backdrop-blur-sm md:static md:z-auto md:h-auto md:flex-1 md:flex-col md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none"
         >
           <SidebarLink href="/content">
             <LayoutDashboardIcon aria-hidden="true" />
-            {t("contentPlan")}
+            {/* A shorter word in the phone tab bar, so the label stays on one line. */}
+            <span className="md:hidden">{t("contentPlanShort")}</span>
+            <span className="hidden md:inline">{t("contentPlan")}</span>
           </SidebarLink>
-          <SidebarLink href="/my-tasks">
-            <SquareCheckBigIcon aria-hidden="true" />
-            {t("myTasks")}
-          </SidebarLink>
-          {/* Last in the list, so nothing moves when it shows up for admins. */}
+          <Suspense
+            fallback={
+              <Link href="/my-tasks" className={navLinkClassName(false)}>
+                <SquareCheckBigIcon aria-hidden="true" />
+                {t("myTasks")}
+              </Link>
+            }
+          >
+            <MyTasksLink />
+          </Suspense>
+          {/* Last in the list, so nothing moves when they show up for admins. */}
           <Suspense>
-            <AdminLink />
+            <AdminLinks />
           </Suspense>
         </nav>
-        <div className="ml-auto flex items-center gap-2 md:mt-auto md:ml-0 md:flex-wrap">
-          <LanguageSwitch
-            className="md:basis-full"
-            buttonClassName="md:flex-1"
-          />
+        {/* One row for you: account, language and sign-out open from it. */}
+        <div className="ml-auto flex md:ml-0 md:flex-col md:items-stretch">
           <Suspense fallback={<UserMenuPlaceholder />}>
             <UserMenu />
           </Suspense>
@@ -91,7 +95,35 @@ function SidebarLink({
   );
 }
 
-async function AdminLink() {
+/** A count on a nav link: the number shows, the label says what it counts. */
+function CountBadge({ count, label }: { count: number; label: string }) {
+  return (
+    <span className="absolute top-1 right-[calc(50%-1.5rem)] flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums md:static md:ml-auto">
+      <span aria-hidden="true">{count}</span>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
+}
+
+/** What's on your To do, so open work stays in view from any page. */
+async function MyTasksLink() {
+  const session = await getSession();
+  const [t, todo] = await Promise.all([
+    getTranslations("nav"),
+    session ? countMyTodo(session.user.id) : 0,
+  ]);
+  return (
+    <NavLink href="/my-tasks">
+      <SquareCheckBigIcon aria-hidden="true" />
+      {t("myTasks")}
+      {todo ? (
+        <CountBadge count={todo} label={t("tasksToDo", { count: todo })} />
+      ) : null}
+    </NavLink>
+  );
+}
+
+async function AdminLinks() {
   const session = await getSession();
   if (session?.user.role !== "admin") return null;
   const [t, waiting] = await Promise.all([
@@ -104,16 +136,13 @@ async function AdminLink() {
         <InboxIcon aria-hidden="true" />
         {t("review")}
         {waiting ? (
-          <span className="absolute top-1 right-[calc(50%-1.5rem)] flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums md:static md:ml-auto">
-            <span aria-hidden="true">{waiting}</span>
-            <span className="sr-only">
-              {t("reviewWaiting", { count: waiting })}
-            </span>
-          </span>
+          <CountBadge
+            count={waiting}
+            label={t("reviewWaiting", { count: waiting })}
+          />
         ) : null}
       </NavLink>
-      {/* Members, workflow and agent keys: set up now and then, so one item, last. */}
-      <NavLink href="/settings">
+      <NavLink href="/settings" className="md:mt-auto">
         <SettingsIcon aria-hidden="true" />
         {t("settings")}
       </NavLink>
@@ -125,58 +154,32 @@ async function UserMenu() {
   const session = await getSession();
   if (!session) return null;
   const { name, role } = session.user;
-  const t = await getTranslations();
+  const t = await getTranslations("common.roles");
   return (
-    <>
-      <Link
-        href="/account"
-        aria-label={t("nav.account", { name })}
-        className="flex min-w-0 flex-1 items-center gap-2.5 rounded-full p-1.5 transition-colors hover:bg-muted-strong md:pr-3"
-      >
-        <Avatar name={name} />
-        <span className="hidden min-w-0 flex-col md:flex">
-          <span className="truncate font-semibold">{name}</span>
-          <span className="text-xs text-muted-foreground">
-            {t(role === "admin" ? "common.roles.admin" : "common.roles.member")}
-          </span>
-        </span>
-      </Link>
-      <form action={signOut}>
-        <Button
-          type="submit"
-          variant="secondary"
-          size="icon"
-          aria-label={t("nav.signOut")}
-        >
-          <LogOutIcon aria-hidden="true" />
-        </Button>
-      </form>
-    </>
+    <AccountMenu
+      name={name}
+      role={t(role === "admin" ? "admin" : "member")}
+      signOut={signOut}
+    />
   );
 }
 
-/** Same boxes as UserMenu, so the sidebar keeps its size while the session loads. */
+/** Same box as UserMenu, so the sidebar keeps its size while the session loads. */
 function UserMenuPlaceholder() {
   return (
-    <>
-      <span
-        aria-hidden="true"
-        className="flex min-w-0 flex-1 items-center gap-2.5 p-1.5 md:pr-3"
-      >
-        <span className="size-9 shrink-0 rounded-full bg-muted-strong" />
-        <span className="hidden flex-col items-start text-transparent md:flex">
-          <span className="w-28 rounded-full bg-muted-strong font-semibold">
-            &nbsp;
-          </span>
-          <span className="w-14 rounded-full bg-muted-strong text-xs">
-            &nbsp;
-          </span>
+    <span
+      aria-hidden="true"
+      className="flex min-w-0 items-center gap-2.5 p-1.5 md:pr-3"
+    >
+      <span className="size-9 shrink-0 rounded-full bg-muted-strong" />
+      <span className="hidden flex-col items-start text-transparent md:flex">
+        <span className="w-28 rounded-full bg-muted-strong font-semibold">
+          &nbsp;
+        </span>
+        <span className="w-14 rounded-full bg-muted-strong text-xs">
+          &nbsp;
         </span>
       </span>
-      <span
-        aria-hidden="true"
-        className={buttonVariants({ variant: "secondary", size: "icon" })}
-      />
-    </>
+    </span>
   );
 }

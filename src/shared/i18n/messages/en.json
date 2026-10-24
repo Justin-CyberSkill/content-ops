@@ -19,13 +19,16 @@
   "nav": {
     "label": "Main",
     "contentPlan": "Content plan",
+    "contentPlanShort": "Content plan",
     "myTasks": "My tasks",
     "settings": "Settings",
-    "account": "Account: {name}",
+    "accountMenu": "Account menu for {name}",
+    "accountLink": "Account",
     "signOut": "Sign out",
     "language": "Language",
     "review": "Proposals",
-    "reviewWaiting": "{count} waiting"
+    "reviewWaiting": "{count} waiting",
+    "tasksToDo": "{count} to do"
   },
   "content": {
     "status": {
