@@ -101,7 +101,7 @@ export function ContentView({
             <h2 id="edit-heading" className="text-lg font-semibold">
               {t("editDetails")}
             </h2>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t("editDetailsHint")}
             </p>
           </div>
@@ -193,7 +193,7 @@ function TasksPanel({
         <h2 id="tasks-heading" className="text-lg font-semibold">
           {t("contentEditor.tasks.title")}
         </h2>
-        <span className="text-[13px] text-muted-foreground tabular-nums">
+        <span className="text-sm text-muted-foreground tabular-nums">
           {t("contentEditor.tasks.doneCount", { done, total: tasks.length })}
         </span>
       </div>
@@ -216,7 +216,7 @@ function TasksPanel({
                     <span className="font-semibold break-words">
                       {task.name}
                     </span>
-                    <span className="text-[13px] text-muted-foreground">
+                    <span className="text-sm text-muted-foreground">
                       {me.isAdmin ? null : (
                         <>
                           {task.assigneeName ?? t("common.unassigned")}
@@ -260,7 +260,7 @@ function TasksPanel({
           );
         })}
       </ol>
-      <p className="text-[13px] text-muted-foreground">
+      <p className="text-sm text-muted-foreground">
         {t("contentEditor.tasks.panelHint")}
       </p>
     </section>
@@ -420,7 +420,7 @@ function ProgressPanel({
           {state.saved && !dirty && !pending ? (
             <span
               role="status"
-              className="inline-flex items-center gap-1 text-[13px] text-success"
+              className="inline-flex items-center gap-1 text-sm text-success"
             >
               <CheckIcon aria-hidden="true" className="size-3.5" />
               {t("contentEditor.saved")}
@@ -439,7 +439,7 @@ function ProgressPanel({
             <ListChecksIcon aria-hidden="true" />
             {t("contentEditor.tasks.split")}
           </Button>
-          <p className="text-center text-[13px] text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground">
             {t("contentEditor.tasks.splitHint")}
           </p>
         </div>
@@ -476,7 +476,7 @@ function SplitIntoTasks({
         <h2 id="split-heading" className="text-lg font-semibold">
           {t("contentEditor.tasks.splitTitle")}
         </h2>
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("contentEditor.tasks.splitFormHint")}
         </p>
       </div>

@@ -31,7 +31,7 @@ export function AssetLinksMenu({ links }: { links: string[] }) {
                 href={link}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium outline-none data-highlighted:bg-muted"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium outline-none data-highlighted:bg-muted"
               >
                 <ExternalLinkIcon
                   aria-hidden="true"

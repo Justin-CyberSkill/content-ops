@@ -67,7 +67,7 @@ export function ContentSummary({
       )}
 
       <div className="flex flex-col gap-1">
-        <h3 className="text-xs text-muted-foreground">
+        <h3 className="font-sans text-xs text-muted-foreground">
           {t("contentEditor.goal")}
         </h3>
         <Markdown className="max-w-prose">{item.goal}</Markdown>
@@ -83,7 +83,7 @@ export function ContentSummary({
       </dl>
 
       {origin ? (
-        <p className="flex items-start gap-2 text-[13px] text-muted-foreground">
+        <p className="flex items-start gap-2 text-sm text-muted-foreground">
           <SparklesIcon
             aria-hidden="true"
             className="mt-0.5 size-4 shrink-0 text-status-proposed"
@@ -99,7 +99,7 @@ export function ContentSummary({
 
       {item.assetLinks.length ? (
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-xs text-muted-foreground">
+          <h3 className="font-sans text-xs text-muted-foreground">
             {t("contentEditor.referenceLinks")}
           </h3>
           <ul className="flex flex-col gap-1">
@@ -124,7 +124,7 @@ export function ContentSummary({
 
       {item.sources.length ? (
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-xs text-muted-foreground">
+          <h3 className="font-sans text-xs text-muted-foreground">
             {t("contentEditor.sources")}
           </h3>
           <ul className="flex flex-col gap-1 text-sm">

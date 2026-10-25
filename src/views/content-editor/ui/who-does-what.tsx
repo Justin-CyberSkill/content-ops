@@ -62,7 +62,7 @@ export function WhoDoesWhat({
         return (
           <li key={step.id} className="flex flex-col gap-2">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 pl-1">
-              <label htmlFor={fieldId} className="text-[13px] font-medium">
+              <label htmlFor={fieldId} className="text-sm font-medium">
                 {step.name}
               </label>
               <span className="text-xs text-muted-foreground">

@@ -12,7 +12,7 @@ export function TemporaryPasswordNotice({
   return (
     <div
       role="status"
-      className="flex w-full flex-col gap-2 rounded-xl bg-warning-soft p-4 text-left text-[13px]"
+      className="flex w-full flex-col gap-2 rounded-xl bg-warning-soft p-4 text-left text-sm"
     >
       <p className="flex items-start gap-2 font-semibold">
         <KeyRoundIcon

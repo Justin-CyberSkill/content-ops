@@ -54,9 +54,7 @@ async function WorkTypes() {
         <h2 id="work-types-heading" className="text-lg font-semibold">
           {t("workTypes")}
         </h2>
-        <p className="text-[13px] text-muted-foreground">
-          {t("workTypesHint")}
-        </p>
+        <p className="text-sm text-muted-foreground">{t("workTypesHint")}</p>
       </div>
       <WorkTypeList workTypes={workTypes} members={members} />
     </section>

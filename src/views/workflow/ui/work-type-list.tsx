@@ -95,7 +95,7 @@ export function WorkTypeList({
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-0.5">
               <h3 className="font-semibold">{t("addWorkType")}</h3>
-              <p className="text-[13px] text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {t("addWorkTypeHint")}
               </p>
             </div>
@@ -150,14 +150,14 @@ function WorkTypeRowView({
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="flex min-w-0 flex-col gap-1">
           <h3 className="font-semibold break-words">{type.name}</h3>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("workflow.ideaShowsAs", {
               status: t(`content.status.${type.ideaStatus}`),
             })}
           </p>
           <p
             className={cn(
-              "flex items-start gap-1.5 text-[13px]",
+              "flex items-start gap-1.5 text-sm",
               doers.length ? "text-foreground" : "text-muted-foreground",
             )}
           >

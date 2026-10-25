@@ -78,7 +78,7 @@ export function ScriptAndCaptions({
           <h2 id="captions-heading" className="text-lg font-semibold">
             {t("contentEditor.captions.title")}
           </h2>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {editing
               ? t("contentEditor.captions.editHint")
               : t("contentEditor.captions.intro")}
@@ -89,7 +89,7 @@ export function ScriptAndCaptions({
             {state.saved && !pending ? (
               <span
                 role="status"
-                className="inline-flex items-center gap-1 text-[13px] text-success"
+                className="inline-flex items-center gap-1 text-sm text-success"
               >
                 <CheckIcon aria-hidden="true" className="size-3.5" />
                 {t("contentEditor.saved")}
@@ -151,7 +151,7 @@ export function ScriptAndCaptions({
         </form>
       ) : empty ? (
         <div className="flex flex-col items-start gap-3">
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("contentEditor.captions.empty")}
           </p>
           <Button
@@ -200,7 +200,7 @@ function PlatformCopy({ post }: { post: CaptionsPost }) {
         {post.changed ? <SinceReviewBadge /> : null}
       </div>
       {nothing ? (
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("contentEditor.captions.noCaption")}
         </p>
       ) : (
@@ -270,7 +270,7 @@ function CopyField({
           </p>
         ))
       ) : (
-        <p className="text-[13px] text-muted-foreground">{empty}</p>
+        <p className="text-sm text-muted-foreground">{empty}</p>
       )}
       {children}
     </div>

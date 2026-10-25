@@ -41,7 +41,7 @@ export function Choice({
         <span className="font-semibold">{title}</span>
         <span
           className={cn(
-            "text-[13px]",
+            "text-sm",
             primary ? "text-primary-foreground/85" : "text-muted-foreground",
           )}
         >

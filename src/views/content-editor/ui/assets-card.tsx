@@ -71,7 +71,7 @@ export function AssetsCard({
         >
           {t("title")}
           {assets.length ? (
-            <span className="font-sans text-[13px] font-normal text-muted-foreground tabular-nums">
+            <span className="font-sans text-sm font-normal text-muted-foreground tabular-nums">
               {t("count", { count: assets.length })}
             </span>
           ) : null}
@@ -96,7 +96,7 @@ export function AssetsCard({
           ))}
         </ul>
       ) : adding ? null : (
-        <p className="text-[13px] text-muted-foreground">{t("empty")}</p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       )}
 
       {adding ? (
@@ -243,13 +243,13 @@ function VersionLine({
           className={
             primary
               ? buttonVariants({ variant: "outline", size: "xs" })
-              : "inline-flex items-center gap-1 text-[13px] font-semibold text-accent-foreground underline-offset-4 hover:underline"
+              : "inline-flex items-center gap-1 text-sm font-semibold text-accent-foreground underline-offset-4 hover:underline"
           }
         >
           <ExternalLinkIcon aria-hidden="true" className="size-3" />
           {primary ? openLabel : t("version", { number })}
         </a>
-        <span className="min-w-0 truncate text-[13px] text-muted-foreground">
+        <span className="min-w-0 truncate text-sm text-muted-foreground">
           {hostOf(version.url)}
         </span>
         <span className="text-xs text-muted-foreground tabular-nums">
@@ -395,9 +395,7 @@ function AddVersionForm({
         <h4 id={`${id}-title`} className="font-semibold">
           {t("addVersionTitle", { label })}
         </h4>
-        <p className="text-[13px] text-muted-foreground">
-          {t("addVersionHint")}
-        </p>
+        <p className="text-sm text-muted-foreground">{t("addVersionHint")}</p>
       </div>
       <VersionFields id={id} autoFocus />
       <FormFooter

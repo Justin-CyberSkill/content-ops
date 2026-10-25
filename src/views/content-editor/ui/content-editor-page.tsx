@@ -144,14 +144,14 @@ function PageHeader({
           <ArrowLeftIcon aria-hidden="true" />
         </Link>
         <div className="flex min-w-0 flex-col gap-0.5">
-          <span className="text-[13px] text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {t(sectionLabel[from])}
           </span>
           <h1 className="line-clamp-3 text-xl font-semibold tracking-tight break-words md:line-clamp-2 md:text-3xl">
             {title}
           </h1>
           {meta ? (
-            <div className="mt-1 hidden flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:flex">
+            <div className="mt-1 hidden flex-wrap items-center gap-2 text-sm text-muted-foreground md:flex">
               {meta}
             </div>
           ) : null}
@@ -159,7 +159,7 @@ function PageHeader({
       </div>
       {/* Phones keep the sticky bar short, so where the item stands shows just under it. */}
       {meta ? (
-        <div className="-mt-3 flex flex-wrap items-center gap-2 text-[13px] text-muted-foreground md:hidden">
+        <div className="-mt-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground md:hidden">
           {meta}
         </div>
       ) : null}
@@ -265,7 +265,7 @@ async function EditContent({
   const deleteCard = (
     <div className="flex flex-col items-start gap-1.5 px-2">
       <DeleteContentButton id={item.id} from={from} />
-      <p className="text-[13px] text-muted-foreground">{t("deleteHint")}</p>
+      <p className="text-sm text-muted-foreground">{t("deleteHint")}</p>
     </div>
   );
 

@@ -96,13 +96,11 @@ function TaskGroup({
       <div className="flex flex-col gap-0.5 px-1">
         <h2 className="flex items-baseline gap-2 text-lg font-semibold">
           {title}
-          <span className="font-sans text-[13px] font-normal text-muted-foreground tabular-nums">
+          <span className="font-sans text-sm font-normal text-muted-foreground tabular-nums">
             {tasks.length}
           </span>
         </h2>
-        {hint ? (
-          <p className="text-[13px] text-muted-foreground">{hint}</p>
-        ) : null}
+        {hint ? <p className="text-sm text-muted-foreground">{hint}</p> : null}
       </div>
       {!tasks.length && empty ? (
         <p className="px-1 text-muted-foreground">{empty}</p>
@@ -128,7 +126,7 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
     <li className="flex flex-col gap-4 rounded-2xl bg-card p-5 shadow-card">
       {task ? (
         // The task is what you're here for; the item it belongs to follows.
-        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[13px]">
+        <p className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm">
           <span className="font-semibold">{task.name}</span>
           <DueDay
             dueDate={task.dueDate}
@@ -171,7 +169,7 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
           >
             {item.idea}
           </Link>
-          <p className="line-clamp-2 text-[13px] break-words text-muted-foreground">
+          <p className="line-clamp-2 text-sm break-words text-muted-foreground">
             <MarkdownPreview>{item.goal}</MarkdownPreview>
           </p>
         </div>
@@ -216,7 +214,7 @@ function TaskCard({ row, today }: { row: MyTask; today: string }) {
         })}
       </ul>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t pt-4">
-        <div className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-[13px]">
+        <div className="flex min-w-0 flex-wrap gap-x-3 gap-y-1 text-sm">
           {publishing && task.status !== "waiting" ? (
             <span className="text-muted-foreground tabular-nums">
               {t("myTasks.liveCount", {
@@ -307,7 +305,7 @@ function DateTile({
     >
       {date ? (
         <>
-          <span className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
+          <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             {weekday.format(date)}
           </span>
           <span className="font-heading text-2xl leading-7 font-semibold">
@@ -315,7 +313,7 @@ function DateTile({
           </span>
         </>
       ) : (
-        <span className="text-[11px] font-semibold text-muted-foreground">
+        <span className="text-xs font-semibold text-muted-foreground">
           {noDate}
         </span>
       )}

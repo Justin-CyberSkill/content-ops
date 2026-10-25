@@ -48,11 +48,11 @@ export function PublishPanel({
         <h2 id="publish-heading" className="text-lg font-semibold">
           {t("title")}
         </h2>
-        <span className="text-[13px] text-muted-foreground tabular-nums">
+        <span className="text-sm text-muted-foreground tabular-nums">
           {t("liveCount", { live, total: rows.length })}
         </span>
       </div>
-      <p className="text-[13px] text-muted-foreground">
+      <p className="text-sm text-muted-foreground">
         {t("hint", { task: taskName })}
       </p>
       <ul className="flex flex-col">
@@ -114,8 +114,8 @@ function PlatformRow({
         <span
           className={
             row.liveUrl
-              ? "text-[13px] font-medium text-status-published"
-              : "text-[13px] text-muted-foreground"
+              ? "text-sm font-medium text-status-published"
+              : "text-sm text-muted-foreground"
           }
         >
           {row.liveUrl
@@ -143,7 +143,7 @@ function PlatformRow({
           ) : null}
         </div>
       ) : (
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("contentEditor.publish.noCaption")}
         </p>
       )}
@@ -153,7 +153,7 @@ function PlatformRow({
             href={row.liveUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex min-w-0 items-center gap-1.5 text-[13px] font-semibold text-accent-foreground underline-offset-4 hover:underline"
+            className="inline-flex min-w-0 items-center gap-1.5 text-sm font-semibold text-accent-foreground underline-offset-4 hover:underline"
           >
             <ExternalLinkIcon
               aria-hidden="true"

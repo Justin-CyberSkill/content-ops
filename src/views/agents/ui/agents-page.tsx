@@ -53,7 +53,7 @@ async function KeyList() {
     getLocale(),
   ]);
   if (!keys.length) {
-    return <p className="text-[13px] text-muted-foreground">{t("empty")}</p>;
+    return <p className="text-sm text-muted-foreground">{t("empty")}</p>;
   }
   const locale = isLocale(current) ? current : DEFAULT_LOCALE;
   const format = (at: Date) =>
@@ -123,7 +123,7 @@ function ConnectCard() {
         </li>
         <li>{t("step3")}</li>
       </ol>
-      <p className="text-[13px] text-muted-foreground">{t("limits")}</p>
+      <p className="text-sm text-muted-foreground">{t("limits")}</p>
     </section>
   );
 }

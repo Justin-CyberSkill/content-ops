@@ -70,7 +70,7 @@ export function ReviewHistory({ reviews }: { reviews: ReviewEntry[] }) {
                   </Markdown>
                 ) : null}
                 {entry.reopenedTasks.length ? (
-                  <p className="text-[13px] text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {t("sentBack", { tasks: list.format(entry.reopenedTasks) })}
                   </p>
                 ) : null}

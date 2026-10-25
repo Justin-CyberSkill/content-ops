@@ -38,7 +38,7 @@ export function PeoplePicker({
 
   return (
     <fieldset className="flex flex-col gap-2">
-      <legend className="mb-2 flex w-full items-baseline justify-between gap-3 pl-1 text-[13px] font-medium">
+      <legend className="mb-2 flex w-full items-baseline justify-between gap-3 pl-1 text-sm font-medium">
         {t("whoDoesIt")}
         <span className="font-normal text-muted-foreground tabular-nums">
           {t("pickedCount", { count: picked.size })}

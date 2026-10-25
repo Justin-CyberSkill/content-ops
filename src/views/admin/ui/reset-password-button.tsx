@@ -39,7 +39,7 @@ export function ResetPasswordButton({
         </Button>
       </div>
       {state.status === "error" ? (
-        <p role="alert" className="basis-full text-[13px] text-destructive">
+        <p role="alert" className="basis-full text-sm text-destructive">
           {state.message}
         </p>
       ) : null}

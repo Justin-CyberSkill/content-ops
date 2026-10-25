@@ -39,7 +39,7 @@ export function AccountPage() {
             <h2 id="password-heading" className="text-lg font-semibold">
               {t("account.changePassword")}
             </h2>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t("account.changePasswordHint")}
             </p>
           </div>

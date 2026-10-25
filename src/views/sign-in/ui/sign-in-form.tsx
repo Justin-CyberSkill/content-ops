@@ -41,7 +41,7 @@ export function SignInForm({ next }: { next?: string }) {
       {state.error ? (
         <p
           role="alert"
-          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px] text-foreground"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-sm text-foreground"
         >
           {state.error}
         </p>

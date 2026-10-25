@@ -58,7 +58,7 @@ export function VerdictPanel({
         <h2 id="verdict-heading" className="text-lg font-semibold">
           {t("title")}
         </h2>
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {reviewedBefore ? t("introAgain") : t("intro")}
         </p>
       </div>
@@ -126,7 +126,7 @@ function ChangesForm({
         <h2 id="changes-heading" className="text-lg font-semibold">
           {t("contentEditor.verdict.requestChanges")}
         </h2>
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("contentEditor.verdict.requestHint")}
         </p>
       </div>
@@ -145,7 +145,7 @@ function ChangesForm({
           />
         </div>
         <fieldset className="flex flex-col gap-2">
-          <legend className="mb-2 pl-1 text-[13px] font-medium">
+          <legend className="mb-2 pl-1 text-sm font-medium">
             {t("contentEditor.verdict.sendBackTo")}
           </legend>
           {earlier.map((step) => (
@@ -163,7 +163,7 @@ function ChangesForm({
               />
               <span className="flex min-w-0 flex-col">
                 <span className="font-semibold">{step.name}</span>
-                <span className="text-[13px] text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   {step.assigneeName ?? t("common.unassigned")}
                 </span>
               </span>

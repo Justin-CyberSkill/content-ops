@@ -56,7 +56,7 @@ export function ClosedProposals({
               >
                 {proposal.idea}
               </Link>
-              <p className="truncate text-[13px] text-muted-foreground">
+              <p className="truncate text-sm text-muted-foreground">
                 <span className="tabular-nums">
                   {proposal.closed.as === "rejected"
                     ? t("closedRejected", { time })

@@ -39,7 +39,7 @@ export function CommentThread({
           {t("title")}
         </h2>
         {comments.length ? (
-          <span className="text-[13px] text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             {t("count", { count: comments.length })}
           </span>
         ) : null}
@@ -74,7 +74,7 @@ export function CommentThread({
           })}
         </ol>
       ) : (
-        <p className="text-[13px] text-muted-foreground">{t("empty")}</p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       )}
 
       <CommentComposer contentId={contentId} />

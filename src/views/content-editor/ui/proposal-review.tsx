@@ -71,7 +71,7 @@ export function ProposalReview({
             <h2 id="edit-heading" className="text-lg font-semibold">
               {t("editTitle")}
             </h2>
-            <p className="text-[13px] text-muted-foreground">{t("editHint")}</p>
+            <p className="text-sm text-muted-foreground">{t("editHint")}</p>
           </div>
           <ContentForm
             id={id}
@@ -165,7 +165,7 @@ function Decision({
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-0.5 pl-1">
             <h3 className="text-sm font-semibold">{t("whoDoesWhat")}</h3>
-            <p className="text-[13px] text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t("whoDoesWhatHint")}
             </p>
           </div>
@@ -241,7 +241,7 @@ function RejectForm({ id, onCancel }: { id: string; onCancel: () => void }) {
         <h2 id="reject-heading" className="text-lg font-semibold">
           {t("contentEditor.proposal.rejectTitle")}
         </h2>
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           {t("contentEditor.proposal.rejectHint")}
         </p>
       </div>

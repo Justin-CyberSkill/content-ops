@@ -49,7 +49,7 @@ export function ChangePasswordForm() {
       {state.status === "error" ? (
         <p
           role="alert"
-          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px]"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-sm"
         >
           {state.message}
         </p>
@@ -57,7 +57,7 @@ export function ChangePasswordForm() {
       {state.status === "done" ? (
         <p
           role="status"
-          className="rounded-xl bg-success-soft px-4 py-3 text-[13px] font-medium"
+          className="rounded-xl bg-success-soft px-4 py-3 text-sm font-medium"
         >
           {t("changed")}
         </p>

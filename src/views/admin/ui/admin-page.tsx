@@ -56,7 +56,7 @@ async function Members() {
           className="flex items-baseline gap-2 px-3 pt-2 text-lg font-semibold"
         >
           {t("admin.title")}
-          <span className="font-sans text-[13px] font-normal text-muted-foreground">
+          <span className="font-sans text-sm font-normal text-muted-foreground">
             {t("admin.peopleCount", { count: users.length })}
           </span>
         </h2>
@@ -64,58 +64,61 @@ async function Members() {
           {users.map((user) => (
             <li
               key={user.id}
-              className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl px-3 py-3 [&+&]:border-t [&+&]:border-border"
+              className="flex items-start gap-4 rounded-xl px-3 py-3 [&+&]:border-t [&+&]:border-border"
             >
               <Avatar name={user.name} />
-              <div className="flex min-w-0 flex-1 flex-col">
-                <p className="truncate font-semibold">
-                  {user.name}
-                  {user.id === me.id ? (
-                    <span className="text-[13px] font-normal text-muted-foreground">
-                      {" "}
-                      {t("admin.you")}
-                    </span>
-                  ) : null}
-                </p>
-                <p className="truncate text-[13px] text-muted-foreground">
-                  {user.email}
-                </p>
-                {/* Who does which work is set on Work types, so the line links there. */}
-                <Link
-                  href="/settings/work-types"
-                  className="w-fit text-[13px] break-words underline-offset-4 hover:underline"
+              {/* When the row is too narrow for the email, the role and button wrap under the name, not under the avatar. */}
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-2">
+                <div className="flex min-w-0 flex-[1_1_14rem] flex-col">
+                  <p className="truncate font-semibold">
+                    {user.name}
+                    {user.id === me.id ? (
+                      <span className="text-sm font-normal text-muted-foreground">
+                        {" "}
+                        {t("admin.you")}
+                      </span>
+                    ) : null}
+                  </p>
+                  <p className="truncate text-sm text-muted-foreground">
+                    {user.email}
+                  </p>
+                  {/* Who does which work is set on Work types, so the line links there. */}
+                  <Link
+                    href="/settings/work-types"
+                    className="w-fit text-sm break-words underline-offset-4 hover:underline"
+                  >
+                    {workByMember.has(user.id) ? (
+                      t("admin.workTypes", {
+                        list: workByMember.get(user.id)?.join(", ") ?? "",
+                      })
+                    ) : (
+                      <span className="text-muted-foreground">
+                        {t("admin.noWork")}
+                      </span>
+                    )}
+                  </Link>
+                </div>
+                <Badge
+                  variant={user.role === "admin" ? "default" : "secondary"}
+                  className="pl-2.5"
                 >
-                  {workByMember.has(user.id) ? (
-                    t("admin.workTypes", {
-                      list: workByMember.get(user.id)?.join(", ") ?? "",
-                    })
-                  ) : (
-                    <span className="text-muted-foreground">
-                      {t("admin.noWork")}
-                    </span>
+                  <span
+                    aria-hidden="true"
+                    className="size-1.5 rounded-full bg-current"
+                  />
+                  {t(
+                    user.role === "admin"
+                      ? "common.roles.admin"
+                      : "common.roles.member",
                   )}
-                </Link>
-              </div>
-              <Badge
-                variant={user.role === "admin" ? "default" : "secondary"}
-                className="pl-2.5"
-              >
-                <span
-                  aria-hidden="true"
-                  className="size-1.5 rounded-full bg-current"
-                />
-                {t(
-                  user.role === "admin"
-                    ? "common.roles.admin"
-                    : "common.roles.member",
+                </Badge>
+                {/* An empty slot of the same width for you, so badges line up down the list. */}
+                {user.id === me.id ? (
+                  <div aria-hidden="true" className="hidden sm:block sm:w-40" />
+                ) : (
+                  <ResetPasswordButton userId={user.id} email={user.email} />
                 )}
-              </Badge>
-              {/* An empty slot of the same width for you, so badges line up down the list. */}
-              {user.id === me.id ? (
-                <div aria-hidden="true" className="hidden sm:block sm:w-40" />
-              ) : (
-                <ResetPasswordButton userId={user.id} email={user.email} />
-              )}
+              </div>
             </li>
           ))}
         </ul>
@@ -128,7 +131,7 @@ async function Members() {
           <h2 id="add-member-heading" className="text-lg font-semibold">
             {t("admin.addMember")}
           </h2>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("admin.addMemberHint")}
           </p>
         </div>

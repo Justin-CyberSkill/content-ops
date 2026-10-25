@@ -179,14 +179,14 @@ export function ContentForm({
             className="flex-[3_1_20rem]"
           >
             <fieldset className="flex flex-col" {...invalid("platforms")}>
-              <legend className="mb-2.5 pl-1 text-[13px] font-medium">
+              <legend className="mb-2.5 pl-1 text-sm font-medium">
                 {t("contentEditor.platforms")}
               </legend>
               <div className="flex flex-wrap gap-2">
                 {PLATFORMS.map((platform) => (
                   <label
                     key={platform}
-                    className="group flex h-10 cursor-pointer items-center gap-2 rounded-full bg-muted pr-4 pl-2.5 text-[13px] font-medium transition-colors hover:bg-muted-strong has-checked:bg-foreground has-checked:text-background has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                    className="group flex h-10 cursor-pointer items-center gap-2 rounded-full bg-muted pr-4 pl-2.5 text-sm font-medium transition-colors hover:bg-muted-strong has-checked:bg-foreground has-checked:text-background has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
                   >
                     <input
                       type="checkbox"
@@ -303,13 +303,13 @@ export function ContentForm({
           <Section title={t("contentEditor.tasks.title")}>
             {/* Status and owner follow the tasks; the server ignores these. */}
             <input type="hidden" name="status" value={values.status} />
-            <p className="-mt-2 text-[13px] text-muted-foreground">
+            <p className="-mt-2 text-sm text-muted-foreground">
               {t("contentEditor.tasks.formHint")}
             </p>
             <ol className="flex flex-col gap-3">
               {tasks?.map((task) => (
                 <li key={task.id} className="flex flex-col gap-0.5 pl-1">
-                  <span className="text-[13px] font-medium">{task.name}</span>
+                  <span className="text-sm font-medium">{task.name}</span>
                   <span className="text-xs text-muted-foreground">
                     {task.assigneeName ?? t("common.unassigned")}
                     {publishDate ? (
@@ -331,7 +331,7 @@ export function ContentForm({
           <Section title={t("contentEditor.proposal.whoDoesWhat")}>
             {/* It starts as planned; the tasks move it on from there. */}
             <input type="hidden" name="status" value="planned" />
-            <p className="-mt-2 text-[13px] text-muted-foreground">
+            <p className="-mt-2 text-sm text-muted-foreground">
               {t("contentEditor.proposal.whoDoesWhatHint")}
             </p>
             <WhoDoesWhat
@@ -350,7 +350,7 @@ export function ContentForm({
               // Approving always starts it as planned; a status picker here would contradict the badge.
               <div className="flex flex-col gap-2">
                 <input type="hidden" name="status" value="planned" />
-                <span className="pl-1 text-[13px] leading-none font-medium">
+                <span className="pl-1 text-sm leading-snug font-medium">
                   {t("contentEditor.status")}
                 </span>
                 <p className="pl-1 text-sm text-muted-foreground">
@@ -483,12 +483,16 @@ function Field({
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={htmlFor}>
-        {label}
-        {optional ? (
-          <span className="font-normal text-muted-foreground">
-            {t("optional")}
-          </span>
-        ) : null}
+        {/* One run of text, so a long label wraps as a sentence, not as two side-by-side columns. */}
+        <span>
+          {label}
+          {optional ? (
+            <span className="font-normal text-muted-foreground">
+              {" "}
+              {t("optional")}
+            </span>
+          ) : null}
+        </span>
       </Label>
       {children}
       {hint ? (

@@ -65,7 +65,7 @@ export function ProposalCard({
         // "Proposed" alone repeats the header, so history shows once something else happened.
         history.length > 1 ? (
           <div className="flex flex-col gap-1.5">
-            <h3 className="text-xs text-muted-foreground">
+            <h3 className="font-sans text-xs text-muted-foreground">
               {t("historyTitle")}
             </h3>
             <ol className="flex flex-col gap-1 text-sm">
@@ -75,7 +75,7 @@ export function ProposalCard({
                   className="flex flex-wrap items-baseline gap-x-2"
                 >
                   <span className="break-words">{describe(entry)}</span>
-                  <span className="text-[13px] text-muted-foreground tabular-nums">
+                  <span className="text-sm text-muted-foreground tabular-nums">
                     {entry.time}
                   </span>
                 </li>
@@ -96,7 +96,7 @@ export function ProposalCard({
             <h2 id="summary-heading" className="text-lg font-semibold">
               {t("title", { name: item.proposedByName ?? t("unknownAgent") })}
             </h2>
-            <p className="text-[13px] text-muted-foreground tabular-nums">
+            <p className="text-sm text-muted-foreground tabular-nums">
               {proposedAt}
             </p>
           </div>
@@ -105,7 +105,7 @@ export function ProposalCard({
     >
       {item.proposalReason ? (
         <div className="flex flex-col gap-1 rounded-xl bg-status-proposed-bg p-4">
-          <h3 className="text-[13px] font-semibold text-status-proposed">
+          <h3 className="text-sm font-semibold text-status-proposed">
             {t("whyThis")}
           </h3>
           <Markdown className="max-w-prose text-sm">
@@ -115,7 +115,7 @@ export function ProposalCard({
       ) : null}
       {item.withdrawnAt ? (
         <div className="flex flex-col gap-1 rounded-xl bg-muted p-4">
-          <h3 className="text-[13px] font-semibold">
+          <h3 className="text-sm font-semibold">
             {t("withdrawnTitle", {
               name:
                 history.findLast((entry) => entry.action === "withdrawn")
@@ -135,7 +135,7 @@ export function ProposalCard({
       ) : null}
       {item.rejectedAt ? (
         <div className="flex flex-col gap-1 rounded-xl bg-destructive-soft p-4">
-          <h3 className="text-[13px] font-semibold text-destructive">
+          <h3 className="text-sm font-semibold text-destructive">
             {t("rejectedTitle")}
           </h3>
           <Markdown className="max-w-prose text-sm">

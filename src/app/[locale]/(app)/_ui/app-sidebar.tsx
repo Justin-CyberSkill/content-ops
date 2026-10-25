@@ -23,7 +23,7 @@ export function AppSidebar() {
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-3xl bg-sidebar p-3 text-sidebar-foreground shadow-card md:h-full md:flex-col md:flex-nowrap md:items-stretch md:gap-6 md:px-3.5 md:py-5">
         <Link
           href="/content"
-          className="flex items-center gap-2.5 rounded-full px-1.5 font-heading text-[17px] font-semibold"
+          className="flex items-center gap-2.5 rounded-full px-1.5 font-heading text-lg font-semibold"
         >
           <span
             aria-hidden="true"
@@ -98,7 +98,7 @@ function SidebarLink({
 /** A count on a nav link: the number shows, the label says what it counts. */
 function CountBadge({ count, label }: { count: number; label: string }) {
   return (
-    <span className="absolute top-1 right-[calc(50%-1.5rem)] flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-[11px] font-semibold text-primary-foreground tabular-nums md:static md:ml-auto">
+    <span className="absolute top-1 right-[calc(50%-1.5rem)] flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs leading-none font-semibold text-primary-foreground tabular-nums md:static md:ml-auto">
       <span aria-hidden="true">{count}</span>
       <span className="sr-only">{label}</span>
     </span>

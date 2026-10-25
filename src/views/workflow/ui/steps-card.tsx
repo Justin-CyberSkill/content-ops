@@ -52,11 +52,11 @@ export function StepsCard({
             <h2 id={headingId} className="text-lg font-semibold">
               {t(`content.type.${contentType}`)}
             </h2>
-            <span className="text-[13px] text-muted-foreground tabular-nums">
+            <span className="text-sm text-muted-foreground tabular-nums">
               {t("workflow.stepCount", { count: needed.size })}
             </span>
           </div>
-          <p className="text-[13px] text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {t("workflow.stepsHint")}
           </p>
         </div>
@@ -108,7 +108,7 @@ export function StepsCard({
                     </span>
                     <span className="break-words">{type.name}</span>
                   </label>
-                  <span className="flex items-center gap-2 text-[13px] text-muted-foreground">
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Input
                       id={daysId}
                       name={`days:${type.id}`}
@@ -142,7 +142,7 @@ export function StepsCard({
             {state.saved && !dirty && !pending ? (
               <span
                 role="status"
-                className="inline-flex items-center gap-1 text-[13px] text-success"
+                className="inline-flex items-center gap-1 text-sm text-success"
               >
                 <CheckIcon aria-hidden="true" className="size-3.5" />
                 {t("workflow.saved")}

@@ -56,7 +56,7 @@ export function CreateMemberForm() {
       {state.status === "error" ? (
         <p
           role="alert"
-          className="rounded-xl bg-destructive-soft px-4 py-3 text-[13px]"
+          className="rounded-xl bg-destructive-soft px-4 py-3 text-sm"
         >
           {state.message}
         </p>

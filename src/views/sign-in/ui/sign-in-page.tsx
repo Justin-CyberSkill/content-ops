@@ -16,7 +16,7 @@ export function SignInPage({ searchParams }: { searchParams: SearchParams }) {
   const t = useTranslations("signIn");
   return (
     <main className="flex flex-1 flex-col">
-      <div className="flex items-center gap-2.5 px-6 py-6 font-heading text-[17px] font-semibold md:px-8">
+      <div className="flex items-center gap-2.5 px-6 py-6 font-heading text-lg font-semibold md:px-8">
         <span
           aria-hidden="true"
           className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground"
@@ -67,14 +67,14 @@ export function SignInPage({ searchParams }: { searchParams: SearchParams }) {
                 strokeWidth="28"
               />
             </svg>
-            <span className="self-start rounded-full bg-white/85 px-3.5 py-1.5 text-[13px] font-semibold">
+            <span className="self-start rounded-full bg-white/85 px-3.5 py-1.5 text-sm font-semibold">
               {t("teamBadge")}
             </span>
             <div className="relative flex max-w-90 flex-col gap-3">
-              <p className="font-heading text-4xl leading-11 font-semibold tracking-tight">
+              <p className="font-heading text-4xl font-semibold tracking-tight">
                 {t("heroTitle")}
               </p>
-              <p className="text-[15px]">{t("heroBody")}</p>
+              <p className="text-base">{t("heroBody")}</p>
             </div>
           </section>
           <section className="flex flex-[1_1_22rem] flex-col justify-center gap-7 rounded-4xl bg-card p-8 shadow-card md:p-10">

@@ -167,7 +167,7 @@ function ContentItem({ row, today }: { row: ContentRow; today: string }) {
         "relative rounded-xl border border-border p-3 transition-colors hover:bg-muted has-[a[data-item-link]:focus-visible]:outline-2 has-[a[data-item-link]:focus-visible]:outline-offset-2 has-[a[data-item-link]:focus-visible]:outline-ring lg:border-transparent",
       )}
     >
-      <div className="flex items-baseline gap-2 text-[13px] [grid-area:when] lg:flex-col lg:gap-0.5">
+      <div className="flex items-baseline gap-2 text-sm [grid-area:when] lg:flex-col lg:gap-0.5">
         <span
           className={cn(
             "font-semibold whitespace-nowrap",
@@ -197,7 +197,7 @@ function ContentItem({ row, today }: { row: ContentRow; today: string }) {
         >
           {row.idea}
         </Link>
-        <p className="mt-0.5 truncate text-[13px] text-muted-foreground">
+        <p className="mt-0.5 truncate text-sm text-muted-foreground">
           <MarkdownPreview>{row.goal}</MarkdownPreview>
         </p>
         {/* Phones show it under the idea; the status corner is too narrow for it. */}
@@ -224,7 +224,7 @@ function ContentItem({ row, today }: { row: ContentRow; today: string }) {
       </div>
 
       <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-2.5 [grid-area:meta] lg:flex lg:flex-wrap min-[90rem]:contents">
-        <div className="col-span-2 min-w-0 text-[13px] lg:col-span-1 min-[90rem]:[grid-area:format]">
+        <div className="col-span-2 min-w-0 text-sm lg:col-span-1 min-[90rem]:[grid-area:format]">
           <p className="truncate">{t(`content.type.${row.type}`)}</p>
           {platforms ? (
             <p
@@ -237,12 +237,12 @@ function ContentItem({ row, today }: { row: ContentRow; today: string }) {
         </div>
         <div className="min-w-0 lg:order-first min-[90rem]:[grid-area:owner]">
           {row.assigneeName ? (
-            <span className="flex items-center gap-2 text-[13px]">
+            <span className="flex items-center gap-2 text-sm">
               <Avatar name={row.assigneeName} size="sm" />
               <span className="truncate">{row.assigneeName}</span>
             </span>
           ) : (
-            <span className="flex items-center gap-2 text-[13px] text-muted-foreground">
+            <span className="flex items-center gap-2 text-sm text-muted-foreground">
               <span
                 aria-hidden="true"
                 className="size-7 shrink-0 rounded-full border-[1.5px] border-dashed border-muted-foreground"

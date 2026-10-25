@@ -71,7 +71,7 @@ export function ProposalList({
             key={proposal.id}
             className="relative flex min-w-0 flex-col gap-4 rounded-2xl bg-card p-6 shadow-card transition-shadow has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-ring hover:shadow-float"
           >
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
               <SparklesIcon
                 aria-hidden="true"
                 className="size-4 shrink-0 text-status-proposed"
@@ -134,7 +134,7 @@ export function ProposalList({
 
             {proposal.proposalReason ? (
               <div className="flex flex-col gap-1 rounded-xl bg-status-proposed-bg p-4">
-                <h3 className="text-[13px] font-semibold text-status-proposed">
+                <h3 className="text-sm font-semibold text-status-proposed">
                   {t("review.whyThis")}
                 </h3>
                 <p className="line-clamp-3 text-sm break-words">
